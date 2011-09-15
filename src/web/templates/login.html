@@ -1,13 +1,11 @@
 {% extends "layout.html" %}
 {% block body %}
 {% from "_formhelpers.html" import render_field %}
-<form method="post" action="{{ url_for('register')}}">
+<form method="post" action="{{ url_for('login')}}">
   <ul>
     <li>{{ render_field(form.username) }}</li>
-    <li>{{ render_field(form.email) }}</li>
     <li>{{ render_field(form.password) }}</li>
-    <li>{{ render_field(form.confirm) }}</li>
   </ul>
-  <p><input type="submit" value="Register" />
+  <p><input type="submit" value="Login" />
 </form>
 {%endblock%}

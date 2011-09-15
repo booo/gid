@@ -1,5 +1,6 @@
 from web import app
 from user import User, db
+from forms.registration import RegistrationForm
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
@@ -22,19 +23,21 @@ principals._init_app(app)
 # somewhere to login
 @app.route("/user/login", methods=["GET", "POST"])
 def login():
-    if request.method == 'POST':
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
         username = request.form['username']
         password = request.form['password']        
         
         user = User.query.filter_by(username=username).first()
-        if user.password == password:
-            identity = Identity(username)
-            identity_changed.send(app, identity=identity)
-            flash("Successfully logged in", "success")
-        else:
-            flash("log in failed", "error")
+        if user:
+          if user.password == password:
+              identity = Identity(username)
+              identity_changed.send(app, identity=identity)
+              flash("Successfully logged in", "success")
+          else:
+              flash("log in failed", "error")
 
-    return redirect(url_for('list'))
+    return render_template('login.html', form=form)
 
 
 # somewhere to logout
@@ -50,28 +53,23 @@ def logout():
     flash("Logged out")
     return redirect(url_for('list'))
 
-@app.route("/user/register", methods=["GET", "POST"])
+
+@app.route('/user/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-      username = request.form['username']
-      password = request.form['username']
-      email = request.form['email']
+    form = RegistrationForm(request.form)
+    if request.method == 'POST' and form.validate():
 
-      if not User.query.filter_by(username=username).count() > 0:
-          user = User(username, password, email)
-
-          db.session.add(user)
-          db.session.commit()
-
-          flash("Successfully registered!", "success")
-
-          return redirect(url_for('list'))
+      if not User.query.filter_by(username = form.username.data).count() > 0:
+        user = User(form.username.data, form.email.data,
+                    form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Thanks for registering')
+        return redirect(url_for('list'))
 
       else:
           flash("Username already exist", "error")
-
-    return render_template('register.html')
-
+    return render_template('register.html', form=form)
 
 @app.route('/')
 def list():
