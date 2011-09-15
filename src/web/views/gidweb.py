@@ -15,11 +15,11 @@ g = Gid()
 @app.route('/')
 def list():
     if "application/json" in request.headers['Accept']:
-      return jsonify(repos=g.list())
+      return jsonify(repositories=g.list())
     else:
-      return render_template('list.html', repos=g.list())
+      return render_template('list.html', repositories=g.list())
 
-@app.route('/repository/create', methods=['POST'])
+@app.route('/repositories/create', methods=['POST'])
 @normal_permission.require(http_exception=403)
 def create():
     try:
@@ -30,7 +30,7 @@ def create():
 
     return redirect(url_for('list'))
 
-@app.route('/repository/<repo>/delete')
+@app.route('/repositories/<repo>/delete')
 @normal_permission.require(http_exception=403)
 def delete(repo):
     g.delete(repo)
@@ -38,14 +38,14 @@ def delete(repo):
 
     return redirect(url_for('list'))
 
-@app.route('/repository/<repo>')
+@app.route('/repositories/<repo>')
 def view(repo):
     if "application/json" in request.headers['Accept']:
       return jsonify(repo=g.detail(repo))
     else:
       return render_template('detail.html', repo=g.detail(repo))
 
-@app.route('/repository/<repo_name>/commit/<commit_sha>')
+@app.route('/repositories/<repo_name>/commits/<commit_sha>')
 def commit(repo_name, commit_sha):
     commit = g.commit(repo_name, commit_sha)
 
