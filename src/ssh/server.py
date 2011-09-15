@@ -7,6 +7,7 @@ from twisted.conch.ssh import factory, userauth, connection, keys, session, chan
 from twisted.internet import reactor, protocol, defer
 from twisted.python import log, components
 import sys, re, os, shlex
+from web.models.user import User
 
 log.startLogging(sys.stderr)
 
