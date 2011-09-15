@@ -19,4 +19,4 @@ app.config.update(
 
 
 # views
-from web.views.views import *
+import web.views.gidweb
