@@ -13,4 +13,5 @@ app.config.update(
 db = SQLAlchemy(app)
 
 # views
-import web.views.gidweb
+import web.views.commit
+import web.views.repository
