@@ -63,6 +63,7 @@ class Gid:
         "author": commit.author,
         "committer": commit.committer,
         "commit_time": commit.commit_time,
+        "message" : commit.message,
         "repository" : repo_name,
         "tree": tree
       }
