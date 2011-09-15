@@ -1,3 +1,3 @@
-from web.user import db
+from web.models.user import db
 
 db.create_all()

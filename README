@@ -28,6 +28,12 @@ Install Dependencies
 pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy dulwich
 
 
+Creating the database
+---------------------
+
+python src/createDatabase.py
+
+
 Start the server
 ----------------
 

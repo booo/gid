@@ -31,6 +31,7 @@ def login():
               identity = Identity(username)
               identity_changed.send(app, identity=identity)
               flash("Successfully logged in", "success")
+              return redirect(url_for('list'))
           else:
               flash("log in failed", "error")
 
