@@ -125,7 +125,10 @@ class GitCommand:
         if not self.authorize(): return True
 
         # Build absolute path.
-        path = os.path.join(os.getcwd(), self.repository)
+        path = os.path.join(os.getcwd(), "data", "git", self.repository)
+
+
+        print "Path: "+path
 
         # Reconstruct the command.
         command = ' '.join([self.command, "'%s'" % path])

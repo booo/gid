@@ -3,6 +3,15 @@ from web.models.repository import Repository
 from twisted.conch.ssh.keys import Key as SSHKey
 
 
+class _KeyBlobUpdater(db.MapperExtension):
+    def before_create(self, mapper, connection, instance):
+        if instance.key:
+          instance.keyBlob = SSHKey.fromString(data = instance.key).blob()
+
+    def before_update(self, mapper, connection, instance):
+        if instance.key:
+          instance.keyBlob = SSHKey.fromString(data = instance.key).blob()
+
 class User(db.Model):
     id        = db.Column(db.Integer,     primary_key=True)
     username  = db.Column(db.String(80),  unique=True)
@@ -14,12 +23,13 @@ class User(db.Model):
     repositories = db.relationship('Repository', backref='owner',
                                 lazy='dynamic')
 
+    __mapper_args__ = {'extension': _KeyBlobUpdater()}
+
+
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
         self.password = password
-        self.key = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAzZCCriNjaN6wpB7T049mRQXZTHtnTQSUW3k5D+scqUOuijQeOEmDp99CEOqnAzCSon5aLTBYKtdQiLSDt4+YSKlnQsJ8JydZXWIX7wxyiPMqixZpigStQN5TO57mB6WonShWW7fcPfgVCABhmApASHJ8rSLYSm5iwx5Ke+A2lC8Nr5m9r9r8tkxyTgMn5Sp60ziZ+fsKI3/EW6SWmFIyISmyZB8KXp911Hv72QVYtcbCUP9ABxuW4CUMWB9SFog+UzvhtJeDo7Z+eKeXYkOQagDzO1SAHaa6eD8CPj85hXuHQvXsJAiSOILaj8zf8ej7WOkjlRL1Z0QFnzk/AKBCcQ== john@John-Does-MacBook-Pro.local'
-        self.keyBlob = SSHKey.fromString(data = self.key).blob()
 
     def __repr__(self):
         return '<User %r>' % self.username

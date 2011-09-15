@@ -9,7 +9,7 @@ class GitRepository:
 
     @staticmethod
     def _sanitize(value):
-      return unicode(re.sub('[^\w-]', '', value).strip().lower())
+      return unicode(re.sub('[^\w-]', '', value).strip())
 
     @staticmethod
     def _path(userName, repoName):
@@ -29,7 +29,7 @@ class GitRepository:
     def create(repoName, userName):
         path = GitRepository._path(userName, repoName)
         os.makedirs(path)
-        Repo.init(path)
+        Repo.init_bare(path)
 
     @staticmethod
     def delete(repoName, userName):

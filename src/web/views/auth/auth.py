@@ -29,7 +29,7 @@ def userList():
     users.append(data)
   
   if "application/json" in request.headers['Accept']:
-    return jsonify(users = AndShausers)
+    return jsonify(users = users)
   else:
     return render_template('auth/users.html', users=users)
 
