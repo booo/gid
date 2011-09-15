@@ -7,6 +7,7 @@ from twisted.conch.ssh import factory, userauth, connection, keys, session, chan
 from twisted.internet import reactor, protocol, defer
 from twisted.python import log, components
 import sys, re, os, shlex
+from web.models.user import User
 
 log.startLogging(sys.stderr)
 
@@ -27,145 +28,145 @@ EhQ0wahUTCk1gKA4uPD6TMTChavbh4K63OvbKg==
 
 class PubKeyChecker(SSHPublicKeyDatabase):
 
-  def checkKey(self, credentials):
-    return True
-    #return credentials.username == 'user' and keys.Key.fromString(data=publicKey).blob() == credentials.blob
+    def checkKey(self, credentials):
+        return True
+        #return credentials.username == 'user' and keys.Key.fromString(data=publicKey).blob() == credentials.blob
 
 # Work around weird bug in Conch.
 class PatchedSSHSession(session.SSHSession):
 
-  def loseConnection(self):
-    if getattr(self.client, 'transport', None) is not None:
-      self.client.transport.loseConnection()
-    channel.SSHChannel.loseConnection(self)
+    def loseConnection(self):
+        if getattr(self.client, 'transport', None) is not None:
+            self.client.transport.loseConnection()
+        channel.SSHChannel.loseConnection(self)
 
 class GitUser(avatar.ConchUser):
-  def __init__(self, name):
-    avatar.ConchUser.__init__(self)
-    self.name = name
-    self.channelLookup['session'] = PatchedSSHSession
+    def __init__(self, name):
+        avatar.ConchUser.__init__(self)
+        self.name = name
+        self.channelLookup['session'] = PatchedSSHSession
 
-  """ Checks for permission to a repository """
-  def can(self, perm, repo):
-    if perm == 'write': return True
-    else: return True
+    """ Checks for permission to a repository """
+    def can(self, perm, repo):
+        if perm == 'write': return True
+        else: return True
 
 class GitRealm:
-  def requestAvatar(self, avatarId, mind, *interfaces):
-    user = GitUser(avatarId)
-    return interfaces[0], user, lambda: None
+    def requestAvatar(self, avatarId, mind, *interfaces):
+        user = GitUser(avatarId)
+        return interfaces[0], user, lambda: None
 
 class GitChannel:
 
-  def __init__(self, avatar):
-    self.avatar = avatar
+    def __init__(self, avatar):
+        self.avatar = avatar
 
-  """
-  Just accept PTY requests to make the client happy.
-  Not necessary for git though.
-  """
-  def getPty(self, term, windowSize, attrs):
-    pass
+    """
+    Just accept PTY requests to make the client happy.
+    Not necessary for git though.
+    """
+    def getPty(self, term, windowSize, attrs):
+        pass
 
-  """
-  When the client requests a shell, we tell him that he won't get one
-  and close the connection.
-  """
-  def openShell(self, proto):
-    proto.write("No shell here. Go away.\r\n")
-    proto.loseConnection()
-    return True
+    """
+    When the client requests a shell, we tell him that he won't get one
+    and close the connection.
+    """
+    def openShell(self, proto):
+        proto.write("No shell here. Go away.\r\n")
+        proto.loseConnection()
+        return True
 
-  """
-  An exec request will be processed by the GitCommand class.
-  """
-  def execCommand(self, proto, raw_command):
-    GitCommand(self.avatar, proto, raw_command).run()
+    """
+    An exec request will be processed by the GitCommand class.
+    """
+    def execCommand(self, proto, raw_command):
+        GitCommand(self.avatar, proto, raw_command).run()
 
-  def eofReceived(self):
-    pass
+    def eofReceived(self):
+        pass
 
-  def closed(self):
-    pass
+    def closed(self):
+        pass
 
 class GitCommand:
 
-  """ Maps git commands to the permission they require. """
-  command_permissions = {
-      'git-upload-pack':    'read',
-      'git-upload-archive': 'read',
-      'git-receive-pack':   'write'
-  }
+    """ Maps git commands to the permission they require. """
+    command_permissions = {
+            'git-upload-pack':    'read',
+            'git-upload-archive': 'read',
+            'git-receive-pack':   'write'
+    }
 
-  def __init__(self, avatar, protocol, raw_command):
-    self.avatar      = avatar
-    self.protocol    = protocol
+    def __init__(self, avatar, protocol, raw_command):
+        self.avatar            = avatar
+        self.protocol        = protocol
 
-    (self.command, self.repository) = self.processCommand(raw_command)
+        (self.command, self.repository) = self.processCommand(raw_command)
 
-  """ Parses a full git command line into its command and its repository. """
-  def processCommand(self, raw_command):
-    argv = shlex.split(raw_command)
+    """ Parses a full git command line into its command and its repository. """
+    def processCommand(self, raw_command):
+        argv = shlex.split(raw_command)
 
-    cmd_name  = argv[0]
+        cmd_name    = argv[0]
 
-    # Grab the requested path and remove leading slashes.
-    repo_name = re.sub('^/+', '', argv[-1])
+        # Grab the requested path and remove leading slashes.
+        repo_name = re.sub('^/+', '', argv[-1])
 
-    return (cmd_name, repo_name)
+        return (cmd_name, repo_name)
 
-  """ Entry point for this handler. """
-  def run(self):
-    if not self.validate():  return True
-    if not self.authorize(): return True
+    """ Entry point for this handler. """
+    def run(self):
+        if not self.validate():  return True
+        if not self.authorize(): return True
 
-    # Build absolute path.
-    path = os.path.join(os.getcwd(), self.repository)
+        # Build absolute path.
+        path = os.path.join(os.getcwd(), self.repository)
 
-    # Reconstruct the command.
-    command = ' '.join([self.command, "'%s'" % path])
+        # Reconstruct the command.
+        command = ' '.join([self.command, "'%s'" % path])
 
-    shell = '/usr/bin/git-shell'
+        shell = '/usr/bin/git-shell'
 
-    # Actually fire the whole thing.
-    reactor.spawnProcess(self.protocol, shell, [shell, '-c', command])
+        # Actually fire the whole thing.
+        reactor.spawnProcess(self.protocol, shell, [shell, '-c', command])
 
-  """ Validates this request before actually executing anything. """
-  def validate(self):
-    # Check repository format.
-    if not re.match('^\w+/\w+', self.repository):
-      return self.error("ERROR: Invalid repository name.\n")
+    """ Validates this request before actually executing anything. """
+    def validate(self):
+        # Check repository format.
+        if not re.match('^\w+/\w+', self.repository):
+            return self.error("ERROR: Invalid repository name.\n")
 
-    return True
+        return True
 
-  """ Makes sure that the current user has permission to execute. """
-  def authorize(self):
-    permission = self.command_permissions[self.command]
+    """ Makes sure that the current user has permission to execute. """
+    def authorize(self):
+        permission = self.command_permissions[self.command]
 
-    if permission and self.avatar.can(permission, self.repository):
-      return True
-    else:
-      return self.error("ERROR: Unknown or restricted repository.\n")
+        if permission and self.avatar.can(permission, self.repository):
+            return True
+        else:
+            return self.error("ERROR: Unknown or restricted repository.\n")
 
-  """ Writes an error to the client and closes the connection. """
-  def error(self, message):
-    self.protocol.errReceived(message)
-    self.protocol.loseConnection()
-    return False
+    """ Writes an error to the client and closes the connection. """
+    def error(self, message):
+        self.protocol.errReceived(message)
+        self.protocol.loseConnection()
+        return False
 
 class GitFactory(factory.SSHFactory):
-  publicKeys = {
-    'ssh-rsa': keys.Key.fromString(data=publicKey)
-  }
+    publicKeys = {
+        'ssh-rsa': keys.Key.fromString(data=publicKey)
+    }
 
-  privateKeys = {
-    'ssh-rsa': keys.Key.fromString(data=privateKey)
-  }
+    privateKeys = {
+        'ssh-rsa': keys.Key.fromString(data=privateKey)
+    }
 
-  services = {
-    'ssh-userauth':   userauth.SSHUserAuthServer,
-    'ssh-connection': connection.SSHConnection
-  }
+    services = {
+        'ssh-userauth':   userauth.SSHUserAuthServer,
+        'ssh-connection': connection.SSHConnection
+    }
 
 components.registerAdapter(GitChannel, GitUser, session.ISession)
 
@@ -176,6 +177,6 @@ portal.registerChecker(PubKeyChecker())
 
 GitFactory.portal = portal
 
-if __name__ == '__main__':
-    reactor.listenTCP(5022, GitFactory())
+def run(port = 5022):
+    reactor.listenTCP(port, GitFactory())
     reactor.run()
