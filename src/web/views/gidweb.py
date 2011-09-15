@@ -17,7 +17,7 @@ def list():
     if "application/json" in request.headers['Accept']:
       return jsonify(repositories=g.list())
     else:
-      return render_template('list.html', repositories=g.list())
+      return render_template('repository/list.html', repositories=g.list())
 
 @app.route('/repositories/create', methods=['POST'])
 @normal_permission.require(http_exception=403)
@@ -39,11 +39,11 @@ def delete(repo):
     return redirect(url_for('list'))
 
 @app.route('/repositories/<repo>')
-def view(repo):
+def show(repo):
     if "application/json" in request.headers['Accept']:
-      return jsonify(repo=g.detail(repo))
+      return jsonify(repo=g.show(repo))
     else:
-      return render_template('detail.html', repo=g.detail(repo))
+      return render_template('repository/show.html', repo=g.show(repo))
 
 @app.route('/repositories/<repo_name>/commits/<commit_sha>')
 def commit(repo_name, commit_sha):
@@ -52,4 +52,4 @@ def commit(repo_name, commit_sha):
     if "application/json" in request.headers['Accept']:
       return jsonify(commit=commit)
     else:
-      return render_template('commit.html', commit = commit)
+      return render_template('commit/show.html', commit = commit)

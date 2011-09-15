@@ -76,7 +76,7 @@ class Gid:
       }
      
 
-    def detail(self, name):
+    def show(self, name):
       repo_name = self._sanitize(name)
       repo = Repo(self.prefix_dir + os.path.sep + repo_name)
      
