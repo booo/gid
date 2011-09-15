@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+
+import path
+
+from web.models.user import User, db
+
+users = []
+for i in range(0,10):
+  num = str(i)
+  users.append(User("user_" + num, "user" + num + "@test.de", num))
+  print "added user " + num + "(pass: '"+num+"')"
+
+
+for user in users:
+  db.session.add(user) 
+db.session.commit()

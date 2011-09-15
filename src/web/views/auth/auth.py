@@ -35,7 +35,7 @@ def login():
           else:
               flash("log in failed", "error")
 
-    return render_template('login.html', form=form)
+    return render_template('auth/login.html', form=form)
 
 
 # somewhere to logout
@@ -67,7 +67,7 @@ def register():
 
       else:
           flash("Username already exist", "error")
-    return render_template('register.html', form=form)
+    return render_template('auth/register.html', form=form)
 
 
 @app.errorhandler(401)

@@ -1,4 +1,4 @@
-from wtforms import Form, BooleanField, TextField, PasswordField, validators
+from flaskext.wtf import Form, TextField, PasswordField, validators
 
 class LoginForm(Form):
     username = TextField('Username', [validators.Length(min=4, max=25)])

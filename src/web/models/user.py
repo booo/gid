@@ -14,6 +14,8 @@ class User(db.Model):
     key       = db.Column(db.String(512))
     keyBlob   = db.Column(db.Binary(512))
 
+    repositories = db.relationship('AssociationUserRepo')
+
     def __init__(self, username, email, password):
         self.username = username
         self.email = email
