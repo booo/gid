@@ -2,7 +2,7 @@
 {% block body %}
   <h1>{{repo.name}}</h1>
   <p>
-    <a href="{{ url_for('list')}}">back</a>
+    <a href="{{ url_for('repo_list')}}">back</a>
   </p>
 
   <h3>Refs</h3>
@@ -16,7 +16,7 @@
   <ul class="tree">
   {% for commit in repo.commits %}
     <li>
-      <a href="{{ url_for('commit', repo_name = repo.name, commit_sha =
+      <a href="{{ url_for('commit_show', repo_name = repo.name, commit_sha =
       commit.sha)}}">{{commit.sha}}</a>
       {{commit.message}}
       <ul>

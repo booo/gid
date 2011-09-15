@@ -11,8 +11,8 @@ from web.views.auth.auth import *
 from gid.Gid import Gid
 
 @app.route('/repositories/<repo_name>/commits/<commit_sha>')
-def commit(repo_name, commit_sha):
-    commit = g.commit(repo_name, commit_sha)
+def commit_show(repo_name, commit_sha):
+    commit = Gid().commit(repo_name, commit_sha)
 
     if "application/json" in request.headers['Accept']:
       return jsonify(commit=commit)

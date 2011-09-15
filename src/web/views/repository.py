@@ -12,7 +12,7 @@ from gid.Gid import Gid
 
 
 @app.route('/')
-def list():
+def repo_list():
     if "application/json" in request.headers['Accept']:
       return jsonify(repositories=Gid().list())
     else:
@@ -20,7 +20,7 @@ def list():
 
 @app.route('/repositories/create', methods=['POST'])
 @normal_permission.require(http_exception=403)
-def create():
+def repo_create():
     try:
       name = Gid().create(request.form['repo'])[0]
       flash(u'Successfully created: ' + name, 'success')
@@ -31,14 +31,14 @@ def create():
 
 @app.route('/repositories/<repo>/delete')
 @normal_permission.require(http_exception=403)
-def delete(repo):
+def repo_delete(repo):
     Gid().delete(repo)
     flash('Successfully deleted: ' + repo, 'success')
 
     return redirect(url_for('list'))
 
 @app.route('/repositories/<repo>')
-def show(repo):
+def repo_show(repo):
     if "application/json" in request.headers['Accept']:
       return jsonify(repo=Gid().show(repo))
     else:

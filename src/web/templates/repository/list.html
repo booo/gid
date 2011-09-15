@@ -2,7 +2,7 @@
 {% block body %}
 <h1>Available Repositories</h1>
 
-<form action="{{url_for('create')}}" method="post">
+<form action="{{url_for('repo_create')}}" method="post">
 <p>
   <input type="text" name="repo" />
 </p>
@@ -17,10 +17,10 @@
     <li>
       <ul class="row">
         <li>
-          <a href="{{ url_for('show', repo=repo)}}">{{repo}}</a>
+          <a href="{{ url_for('repo_show', repo=repo)}}">{{repo}}</a>
         </li>
         <li>
-          <a href="{{url_for('delete', repo=repo)}}">
+          <a href="{{url_for('repo_delete', repo=repo)}}">
             <img src="{{url_for('static', filename='images/remove.png')}}"
             class="delete" alt="delete" />
           </a>
