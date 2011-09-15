@@ -1,5 +1,5 @@
 from flask import Flask
-from user import User
+from user import User, db
 
 
 app = Flask(__name__)
@@ -12,7 +12,11 @@ app.config.update(
 
 
 # create some users
-users = [User(id) for id in range(1, 21)]
+#users = [User("user" + str(id), "user@"+str(id)) for id in range(1, 21)]
+#for user in users:
+#  db.session.add(user)
+#db.session.commit()
+
 
 # views
 import web.views

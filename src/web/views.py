@@ -1,5 +1,5 @@
 from web import app
-from user import User
+from user import User, db
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
@@ -20,12 +20,14 @@ normal_permission = Permission(normal_role)
 principals._init_app(app)
 
 # somewhere to login
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/user/login", methods=["GET", "POST"])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']        
-        if password == username + "_secret":
+        
+        user = User.query.filter_by(username=username).first()
+        if user.password == password:
             identity = Identity(username)
             identity_changed.send(app, identity=identity)
             flash("Successfully logged in", "success")
@@ -36,7 +38,7 @@ def login():
 
 
 # somewhere to logout
-@app.route("/logout")
+@app.route("/user/logout")
 @normal_permission.require(http_exception=403)
 def logout():
     for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
@@ -47,6 +49,29 @@ def logout():
 
     flash("Logged out")
     return redirect(url_for('list'))
+
+@app.route("/user/register", methods=["GET", "POST"])
+def register():
+    if request.method == 'POST':
+      username = request.form['username']
+      password = request.form['username']
+      email = request.form['email']
+
+      if not User.query.filter_by(username=username).count() > 0:
+          user = User(username, password, email)
+
+          db.session.add(user)
+          db.session.commit()
+
+          flash("Successfully registered!", "success")
+
+          return redirect(url_for('list'))
+
+      else:
+          flash("Username already exist", "error")
+
+    return render_template('register.html')
+
 
 @app.route('/')
 def list():
