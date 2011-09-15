@@ -1,10 +1,4 @@
-from flask import Flask
-from flaskext.sqlalchemy import SQLAlchemy
-from twisted.conch.ssh.keys import Key as SSHKey
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
-db = SQLAlchemy(app)
+from web import app, db
 
 class User(db.Model):
     id        = db.Column(db.Integer,     primary_key=True)
@@ -20,7 +14,7 @@ class User(db.Model):
         self.username = username
         self.email = email
         self.password = password
-        self.key = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAGEArzJx8OYOnJmzf4tfBEvLi8DVPrJ3/c9k2I/Az64fxjHf9imyRJbixtQhlH9lfNjUIx+4LmrJH5QNRsFporcHDKOTwTTYLh5KmRpslkYHRivcJSkbh/C+BR3utDS555mV'
+        self.key = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAzZCCriNjaN6wpB7T049mRQXZTHtnTQSUW3k5D+scqUOuijQeOEmDp99CEOqnAzCSon5aLTBYKtdQiLSDt4+YSKlnQsJ8JydZXWIX7wxyiPMqixZpigStQN5TO57mB6WonShWW7fcPfgVCABhmApASHJ8rSLYSm5iwx5Ke+A2lC8Nr5m9r9r8tkxyTgMn5Sp60ziZ+fsKI3/EW6SWmFIyISmyZB8KXp911Hv72QVYtcbCUP9ABxuW4CUMWB9SFog+UzvhtJeDo7Z+eKeXYkOQagDzO1SAHaa6eD8CPj85hXuHQvXsJAiSOILaj8zf8ej7WOkjlRL1Z0QFnzk/AKBCcQ== john@John-Does-MacBook-Pro.local'
         self.keyBlob = SSHKey.fromString(data = self.key).blob()
 
     def __repr__(self):
