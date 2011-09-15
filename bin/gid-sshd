@@ -6,7 +6,5 @@ from os import path
 sys.path.insert(0, path.join(path.dirname(path.abspath(__file__)), '..', 'src'))
 
 from ssh import server
-from twisted.internet import reactor
 
-reactor.listenTCP(5022, server.GitFactory())
-reactor.run()
+server.run()

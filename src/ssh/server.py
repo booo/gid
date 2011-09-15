@@ -177,6 +177,6 @@ portal.registerChecker(PubKeyChecker())
 
 GitFactory.portal = portal
 
-if __name__ == '__main__':
-    reactor.listenTCP(5022, GitFactory())
-    reactor.run()
+def run(port = 5022):
+  reactor.listenTCP(port, GitFactory())
+  reactor.run()
