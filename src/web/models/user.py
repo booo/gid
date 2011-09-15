@@ -1,9 +1,4 @@
-from flask import Flask
-from flaskext.sqlalchemy import SQLAlchemy
-
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../../../data/db/sqlite.db'
-db = SQLAlchemy(app)
+from web import app, db
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
