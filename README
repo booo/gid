@@ -31,10 +31,13 @@ pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy dulwich
 Creating the database
 ---------------------
 
-python src/createDatabase.py
+bin/gid-web-db-create
+
+if you want some samples for testing
+  bin/gid-web-db-samples
 
 
 Start the server
 ----------------
 
-bin/startWebServer
+bin/gid-web
