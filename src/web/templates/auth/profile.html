@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+<h2>{{ user.name }}</h2>
+<ul>
+  <li>
+  Email: {{ user.email }}
+  </li>
+  <li>
+  SSH-Key: {{ user.key }}
+  </li>
+</ul>
+{% endblock %}

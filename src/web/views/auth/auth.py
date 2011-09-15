@@ -31,7 +31,7 @@ def login():
               identity = Identity(username)
               identity_changed.send(app, identity=identity)
               flash("Successfully logged in", "success")
-              return redirect(url_for('list'))
+              return redirect(url_for('repo_list'))
           else:
               flash("log in failed", "error")
 
@@ -49,7 +49,7 @@ def logout():
             pass
 
     flash("Logged out")
-    return redirect(url_for('list'))
+    return redirect(url_for('repo_list'))
 
 
 @app.route('/user/register', methods=['GET', 'POST'])
@@ -63,11 +63,29 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Thanks for registering')
-        return redirect(url_for('list'))
+        return redirect(url_for('repo_list'))
 
       else:
           flash("Username already exist", "error")
     return render_template('auth/register.html', form=form)
+
+
+@app.route("/user/profile")
+@normal_permission.require(http_exception=403)
+def profile():
+    obj = User.query.filter_by(username = session['identity.name']).first()
+
+    user = {
+      'name' : obj.username,
+      'id' : obj.id,
+      'email' : obj.email,
+      'key' : obj.key,
+    }
+
+    if "application/json" in request.headers['Accept']:
+      return jsonify(user=user)
+    else:
+      return render_template('auth/profile.html', user=user)
 
 
 @app.errorhandler(401)

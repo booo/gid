@@ -1,4 +1,6 @@
 from web import app, db
+from web.models.associationUserRepo import AssociationUserRepo
+from twisted.conch.ssh.keys import Key as SSHKey
 
 class User(db.Model):
     id        = db.Column(db.Integer,     primary_key=True)

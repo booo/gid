@@ -12,10 +12,13 @@
 
     {% if session["identity.name"] %}
     <p>
+      <a href="{{ url_for('profile') }}">profile</a>
+      -
       <a href="{{ url_for('logout') }}">logout</a>
     </p>
     {% else %}
       <a href="{{ url_for('login') }}">login</a>
+      -
       <a href="{{ url_for('register') }}">register</a>
     {%endif%}
 
