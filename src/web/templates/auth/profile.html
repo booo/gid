@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 {% block body %}
-<h2>{{ user.name }}</h2>
-<ul>
-  <li>
-  Email: {{ user.email }}
-  </li>
-  <li>
-  SSH-Key: {{ user.key }}
-  </li>
-</ul>
-{% endblock %}
+{% from "_formhelpers.html" import render_field %}
+<form method="post" action="{{ url_for('profile')}}">
+  {{ form.hidden_tag() }}
+  <ul>
+    <li>{{ render_field(form.username) }}</li>
+    <li>{{ render_field(form.email) }}</li>
+    <li>{{ render_field(form.key) }}</li>
+  </ul>
+  <p><input type="submit" value="Update" />
+</form>
+{%endblock%}

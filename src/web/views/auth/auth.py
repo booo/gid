@@ -10,6 +10,7 @@ from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
 from web.models.user import User, db
 from web.forms.registration import RegistrationForm
 from web.forms.login import LoginForm
+from web.forms.profile import ProfileForm
 
 # flask-principal
 principals = Principal()
@@ -70,22 +71,29 @@ def register():
     return render_template('auth/register.html', form=form)
 
 
-@app.route("/user/profile")
+@app.route("/user/profile", methods=['GET', 'POST'])
 @normal_permission.require(http_exception=403)
 def profile():
-    obj = User.query.filter_by(username = session['identity.name']).first()
+    if request.method == 'POST':
+      form = ProfileForm(request.form)
+      if form.validate():
+        user = User.query.filter_by(username = session['identity.name']).first()
+        user.username = form.username.data 
+        user.email = form.email.data 
+        user.key = form.key.data 
+        
+        db.session.add(user)
+        db.session.commit()
 
-    user = {
-      'name' : obj.username,
-      'id' : obj.id,
-      'email' : obj.email,
-      'key' : obj.key,
-    }
+        flash("Updated profile informations")
 
-    if "application/json" in request.headers['Accept']:
-      return jsonify(user=user)
     else:
-      return render_template('auth/profile.html', user=user)
+      user = User.query.filter_by(username = session['identity.name']).first()
+
+      form = ProfileForm(obj = user)
+
+    return render_template('auth/profile.html', form=form)
+
 
 
 @app.errorhandler(401)

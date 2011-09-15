@@ -10,17 +10,19 @@
 
   <body>
 
-    {% if session["identity.name"] %}
     <p>
+      <a href="{{ url_for('repo_list') }}">index</a>
+      -
+    {% if session["identity.name"] %}
       <a href="{{ url_for('profile') }}">profile</a>
       -
       <a href="{{ url_for('logout') }}">logout</a>
-    </p>
     {% else %}
       <a href="{{ url_for('login') }}">login</a>
       -
       <a href="{{ url_for('register') }}">register</a>
     {%endif%}
+    </p>
 
     {% with messages = get_flashed_messages(with_categories = true) %}
       {% if messages %}
