@@ -29,8 +29,12 @@ EhQ0wahUTCk1gKA4uPD6TMTChavbh4K63OvbKg==
 class PubKeyChecker(SSHPublicKeyDatabase):
 
     def checkKey(self, credentials):
-        return True
-        #return credentials.username == 'user' and keys.Key.fromString(data=publicKey).blob() == credentials.blob
+        user = User.query.filter_by(
+            username = credentials.username,
+            keyBlob = credentials.blob
+        ).first()
+
+        return user != None
 
 # Work around weird bug in Conch.
 class PatchedSSHSession(session.SSHSession):
