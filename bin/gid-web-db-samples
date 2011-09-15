@@ -1,16 +1,24 @@
 #!/usr/bin/env python
 
 import path
+import string
 
+from random import choice
 from web.models.user import User, db
+from web.models.repository import Repository
 
-users = []
-for i in range(0,10):
-  num = str(i)
-  users.append(User("user_" + num, "user" + num + "@test.de", num))
-  print "added user " + num + "(pass: '"+num+"')"
+names = ["john", "alice", "bob"]
+for name in names:
+  user = User(name, name + "@bla.de", name)
 
-
-for user in users:
   db.session.add(user) 
-db.session.commit()
+
+  for j in range(0,3):
+    repoName = ''.join([choice(string.letters) for k in xrange(8)])
+    repo = Repository(repoName, user)
+    db.session.add(repo) 
+    user.repositories.append(repo)
+    
+  db.session.commit()
+
+  print "added user '"+name+"' with pass '"+name+"'"

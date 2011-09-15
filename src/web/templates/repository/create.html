@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block body %}
+{% from "_formhelpers.html" import render_field %}
+<form method="post" action="{{ url_for('repoCreateByUser', username=username)}}">
+  {{ form.hidden_tag() }}
+  <ul>
+    <li>{{ render_field(form.name) }}</li>
+    <li>{{ render_field(form.description) }}</li>
+  </ul>
+  <p><input type="submit" value="Create Repository" />
+</form>
+{%endblock%}

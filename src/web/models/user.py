@@ -1,6 +1,7 @@
 from web import app, db
-from web.models.associationUserRepo import AssociationUserRepo
+from web.models.repository import Repository
 from twisted.conch.ssh.keys import Key as SSHKey
+
 
 class User(db.Model):
     id        = db.Column(db.Integer,     primary_key=True)
@@ -10,7 +11,8 @@ class User(db.Model):
     key       = db.Column(db.String(512))
     keyBlob   = db.Column(db.Binary(512))
 
-    repositories = db.relationship('AssociationUserRepo')
+    repositories = db.relationship('Repository', backref='owner',
+                                lazy='dynamic')
 
     def __init__(self, username, email, password):
         self.username = username

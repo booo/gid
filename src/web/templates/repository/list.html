@@ -1,33 +1,28 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>Available Repositories</h1>
 
-<form action="{{url_for('repo_create')}}" method="post">
-<p>
-  <input type="text" name="repo" />
-</p>
-<p>
-  <input type="submit" value="create repo" />
-</p>
-</form>
+<h2>{{ user['name'] }}</h2>
 
+<h3>Repositories</h3>
 
 <ul class="repos">
 {% for repo in repositories %}
     <li>
-      <ul class="row">
-        <li>
-          <a href="{{ url_for('repo_show', repo=repo)}}">{{repo}}</a>
-        </li>
-        <li>
-          <a href="{{url_for('repo_delete', repo=repo)}}">
-            <img src="{{url_for('static', filename='images/remove.png')}}"
-            class="delete" alt="delete" />
-          </a>
-        </li>
-      </ul>
+      <em>
+        <a href="{{ url_for('repoShowByUserAndRepository', username=user['name'],repository=repo['name']) }}">
+          {{ repo['name'] }}
+        </a>
+      </em>
+      -
+      {% if repo['description'] %}
+          {{ repo['description'] }}
+      {% else %}
+        No description available
+      {% endif %}
     </li>
+{% else %}
 {% endfor %}
+  <li>No repositories yet created</li>
 </ul>
 
 {%endblock%}

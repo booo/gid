@@ -8,39 +8,92 @@ from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
 from web.views.auth.auth import *
-from gid.Gid import Gid
+from web.forms.repository import RepositoryForm
+from web.models.repository import Repository
+
+from gid.gitrepository import GitRepository
 
 
-@app.route('/')
-def repo_list():
+@app.route('/users/<username>/repositories')
+def repoListByUser(username):
+    user = User.query.filter_by(username=username).first()
+    
+    repositories = []
+    for repo in user.repositories:
+      repositories.append({
+          'name': repo.name,
+          'description': repo.description
+        })
+
+    data = {
+      'user' : {
+        'name': user.username,
+        'email': user.email
+      },
+      'repositories': repositories
+    }
+
     if "application/json" in request.headers['Accept']:
-      return jsonify(repositories=Gid().list())
+      return jsonify(data)
     else:
-      return render_template('repository/list.html', repositories=Gid().list())
+      return render_template('repository/list.html', user=data['user'], \
+                                repositories=data['repositories'])
 
-@app.route('/repositories/create', methods=['POST'])
+@app.route('/users/<username>/repositories/create', methods=['GET', 'POST'])
 @normal_permission.require(http_exception=403)
-def repo_create():
-    try:
-      name = Gid().create(request.form['repo'])[0]
-      flash(u'Successfully created: ' + name, 'success')
-    except OSError:
-      flash(u'Error.', 'error')
+def repoCreateByUser(username):
+    form = RepositoryForm(request.form)
 
-    return redirect(url_for('list'))
+    if request.method == 'POST' and form.validate():
+      user = User.query.filter_by(username=session['identity.name']).first()
+      if user.username == username:
+        repoName = form.name.data
 
-@app.route('/repositories/<repo>/delete')
-@normal_permission.require(http_exception=403)
-def repo_delete(repo):
-    Gid().delete(repo)
-    flash('Successfully deleted: ' + repo, 'success')
+        repo = Repository(repoName, user)
+        repo.owner = user
 
-    return redirect(url_for('list'))
+        db.session.add(repo) 
+        db.session.commit()
 
-@app.route('/repositories/<repo>')
-def repo_show(repo):
+        flash(u'Successfully created repository: ' + repoName, 'success')
+
+    return render_template('repository/create.html', form=form,
+    username=username)
+
+@app.route('/users/<username>/repositories/<repository>')
+def repoShowByUserAndRepository(username, repository):
+    user = User.query.filter_by(username=username).first()
+    repo = Repository.query.filter_by(name = repository, owner = user).first()
+   
+    data = {
+      'name' : repo.name,
+      'description' : repo.description,
+      'owner' : {
+        'name' : user.username,
+        'email' : user.email,
+      },
+      'git' : GitRepository.show(repo.name, user.username) 
+    }
+
     if "application/json" in request.headers['Accept']:
-      return jsonify(repo=Gid().show(repo))
+      return jsonify(data)
     else:
-      return render_template('repository/show.html', repo=Gid().show(repo))
+      return render_template('repository/show.html', repo = data)
+
+    
+
+#@app.route('/repositories/<repo>/delete')
+#@normal_permission.require(http_exception=403)
+#def repo_delete(repo):
+#    Gid().delete(repo)
+#    flash('Successfully deleted: ' + repo, 'success')
+#
+#    return redirect(url_for('list'))
+#
+#@app.route('/repositories/<repo>')
+#def repo_show(repo):
+#    if "application/json" in request.headers['Accept']:
+#      return jsonify(repo=Gid().show(repo))
+#    else:
+#      return render_template('repository/show.html', repo=Gid().show(repo))
 

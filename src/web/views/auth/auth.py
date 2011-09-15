@@ -18,8 +18,23 @@ normal_role = RoleNeed('normal')
 normal_permission = Permission(normal_role)
 principals._init_app(app)
 
+@app.route("/users")
+def userList():
+  users = []
+  for user in User.query.all():
+    data = {
+      'name' : user.username,
+      'email' : user.email
+    }
+    users.append(data)
+  
+  if "application/json" in request.headers['Accept']:
+    return jsonify(users = AndShausers)
+  else:
+    return render_template('auth/users.html', users=users)
+
 # somewhere to login
-@app.route("/user/login", methods=["GET", "POST"])
+@app.route("/users/login", methods=["GET", "POST"])
 def login():
     form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -32,7 +47,8 @@ def login():
               identity = Identity(username)
               identity_changed.send(app, identity=identity)
               flash("Successfully logged in", "success")
-              return redirect(url_for('repo_list'))
+              return redirect(url_for('userList'))
+              #return Response("Logged in")
           else:
               flash("log in failed", "error")
 
@@ -40,7 +56,7 @@ def login():
 
 
 # somewhere to logout
-@app.route("/user/logout")
+@app.route("/users/logout")
 @normal_permission.require(http_exception=403)
 def logout():
     for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
@@ -50,10 +66,11 @@ def logout():
             pass
 
     flash("Logged out", "success")
-    return redirect(url_for('repo_list'))
+    #return Response("Logged out")
+    return redirect(url_for('userList'))
 
 
-@app.route('/user/register', methods=['GET', 'POST'])
+@app.route('/users/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -64,14 +81,15 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Thanks for registering',"success")
-        return redirect(url_for('repo_list'))
+        return redirect(url_for('userList'))
+        #return Response("Registered in")
 
       else:
           flash("Username already exist", "error")
     return render_template('auth/register.html', form=form)
 
 
-@app.route("/user/profile", methods=['GET', 'POST'])
+@app.route("/users/profile", methods=['GET', 'POST'])
 @normal_permission.require(http_exception=403)
 def profile():
     if request.method == 'POST':
