@@ -80,20 +80,8 @@ def repoShowByUserAndRepository(username, repository):
     else:
       return render_template('repository/show.html', repo = data)
 
-    
 
-#@app.route('/repositories/<repo>/delete')
-#@normal_permission.require(http_exception=403)
-#def repo_delete(repo):
-#    Gid().delete(repo)
-#    flash('Successfully deleted: ' + repo, 'success')
-#
-#    return redirect(url_for('list'))
-#
-#@app.route('/repositories/<repo>')
-#def repo_show(repo):
-#    if "application/json" in request.headers['Accept']:
-#      return jsonify(repo=Gid().show(repo))
-#    else:
-#      return render_template('repository/show.html', repo=Gid().show(repo))
-
+@app.route('/users/<username>/repositories/<repository>/delete')
+@normal_permission.require(http_exception=403)
+def repoDeleteByUserAndRepository(username, repository):
+  pass

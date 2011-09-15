@@ -12,7 +12,7 @@ class Repository(db.Model):
     def __init__(self, name, user):
         self.name = name
         self.owner = user
-        GidRepository.create(name, user.username) 
+        GitRepository.create(name, user.username) 
 
     def __repr__(self):
         return '<Repository %r>' % self.name

@@ -22,7 +22,7 @@ def commitsByUserAndRepo(username, repository):
     else:
       return render_template('commit/list.html', \
                 repository = data['repository'], \
-                owner = data['owner'], \
+                owner = data['owner'],\
                 commits = data['commits'])
 
 @app.route('/users/<username>/repositories/<repository>/commits/<sha>')

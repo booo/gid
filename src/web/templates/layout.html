@@ -17,6 +17,8 @@
       <a href="{{ url_for('profile') }}">profile</a>
       -
       <a href="{{ url_for('logout') }}">logout</a>
+      -
+      <a href="{{ url_for('repoCreateByUser', username=session['identity.name']) }}">create repository</a>
     {% else %}
       <a href="{{ url_for('login') }}">login</a>
       -

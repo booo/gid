@@ -31,6 +31,11 @@ class GitRepository:
         os.makedirs(path)
         Repo.init(path)
 
+    @staticmethod
+    def delete(repoName, userName):
+        path = GitRepository._path(userName, repoName)
+        if os.path.isdir(path + os.path.sep + ".git"):
+          shutil.rmtree(path)
 
     @staticmethod
     def show(repoName, userName):

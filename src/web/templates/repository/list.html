@@ -19,10 +19,16 @@
       {% else %}
         No description available
       {% endif %}
+
+      {% if user['name'] == session['identity.name'] %}
+      <a href="{{url_for('repoDeleteByUserAndRepository',username=user['name'],repository=repo['name'])}}">
+        <img src="{{url_for('static', filename='images/remove.png')}}" class="delete " alt="delete" />
+      </a>
+      {% endif %}
     </li>
 {% else %}
-{% endfor %}
   <li>No repositories yet created</li>
+{% endfor %}
 </ul>
 
 {%endblock%}
