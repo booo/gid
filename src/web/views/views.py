@@ -1,6 +1,7 @@
 from web import app
-from user import User, db
-from forms.registration import RegistrationForm
+from web.models.user import User, db
+from web.forms.registration import RegistrationForm
+from web.forms.login import LoginForm
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
@@ -23,7 +24,7 @@ principals._init_app(app)
 # somewhere to login
 @app.route("/user/login", methods=["GET", "POST"])
 def login():
-    form = RegistrationForm(request.form)
+    form = LoginForm(request.form)
     if request.method == 'POST' and form.validate():
         username = request.form['username']
         password = request.form['password']        

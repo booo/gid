@@ -1,5 +1,5 @@
 from flask import Flask
-from user import User, db
+from web.models.user import User, db
 
 
 app = Flask(__name__)
@@ -19,4 +19,4 @@ app.config.update(
 
 
 # views
-import web.views
+from web.views.views import *
