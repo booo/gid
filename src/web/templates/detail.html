@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h1>{{repo.name}}</h1>
+  <p>
+    <a href="{{ url_for('list')}}">back</a>
+  </p>
+
+  <h3>Refs</h3>
+  <ul>
+    {% for branch in repo.refs%}
+      <li>{{branch}}</li>
+    {% endfor %}
+  </ul>
+
+  <h3>Commits</h3>
+  <ul class="tree">
+  {% for commit in repo.commits %}
+    <li>
+      <a href="{{ url_for('commit', repo_name = repo.name, commit_sha =
+      commit.sha)}}">{{commit.sha}}</a>
+      {{commit.message}}
+      <ul>
+      {% for change in commit.changes %}
+        <li>{{change.type}} - <i>{{change.path.old}} - {{change.path.new}}</i></li>
+      {% endfor %}
+      </ul>
+    </li>
+  {% else %}
+    <li>No commits</li>
+  {% endfor %}
+{%endblock%}

@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>Available Repositories</h1>
+
+<form action="{{url_for('create')}}" method="post">
+<p>
+  <input type="text" name="repo" />
+</p>
+<p>
+  <input type="submit" value="create repo" />
+</p>
+</form>
+
+
+<ul class="repos">
+{% for repo in repos %}
+    <li>
+      <ul class="row">
+        <li>
+          <a href="{{ url_for('view', repo=repo)}}">{{repo}}</a>
+        </li>
+        <li>
+          <a href="{{url_for('delete', repo=repo)}}">
+            <img src="{{url_for('static', filename='images/remove.png')}}"
+            class="delete" alt="delete" />
+          </a>
+        </li>
+      </ul>
+    </li>
+{% endfor %}
+</ul>
+
+{%endblock%}

@@ -1,0 +1,34 @@
+Getting Started
+===============
+
+Virtual environment
+-------------------
+
+First you need to configure a virtual python environment.
+
+Install virtualenv with your package manager of choice
+
+  pip install virtualenv
+or
+  sudo apt-get install python-virtualenv
+
+Then you need to create your environment 
+
+  virtualenv env
+
+After that you activate your environment in your shell with the following
+command
+
+  . env/bin/activate
+
+
+Install Dependencies
+--------------------
+
+pip install Flask Flask-Principal dulwich
+
+
+Start the server
+----------------
+
+bin/startWebServer

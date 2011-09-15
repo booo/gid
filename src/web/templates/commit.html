@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>Commit</h1>
+<p>
+  <a href="{{ url_for('view', repo = commit.repository)}}">back</a>
+</p>
+<h2>Message</h2>
+<p>
+  {{commit.message}}
+</p>
+<h2>Detail</h2>
+<ul>
+  <li>SHA: {{commit.sha}}</li>
+  <li>Author: {{commit.author}}</li>
+  <li>Comitter: {{commit.committer}}</li>
+  <li>Time: {{commit.commit_time}}</li>
+</ul>
+<h2>Tree</h2>
+<ul class="tree">
+{% for item in commit.tree recursive %}
+  <li>
+  {% if item is string %}
+    {{ item }}
+  {% else %}
+    {{ item[0] }}
+    <ul>
+    {{ loop(item[1]) }}
+    </ul>
+  {% endif %}
+  </li>
+{%endfor%}
+</ul>
+{%endblock%}

@@ -1,0 +1,61 @@
+body {
+  width: 600px;
+  margin: 0 auto;
+}
+
+
+ul, li {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+}
+
+ul.flashes {
+   text-align: center;
+}
+
+ul.flashes li{
+  text-align: center;
+  width: 300px;
+  margin: 0 auto;
+}
+
+li.success {
+  background-color: #58FA58;
+  border: 5px solid #0F0;
+}
+
+li.error {
+  background-color: #FA5858;
+  border: 5px solid #F00;
+}
+
+ul.flashes li, ul.repos li{
+  list-style-type: none;
+}
+
+ul.row, form{
+  clear: both;
+}
+
+ul.row li, form p{
+  float: left;
+  text-align: left;
+  width: 50%;
+}
+img.delete {
+  width: 15px;
+}
+
+em {
+  font-weight: bold;
+}
+
+ul.tree li {
+  margin-left: 20px;
+  list-style-type: square;
+}
+
+li.file {
+  list-style-type: none;
+}

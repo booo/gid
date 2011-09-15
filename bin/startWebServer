@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo -e "Starting Webfrontend\n"
+
+cd "$(dirname "$0")"
+
+source ../env/bin/activate
+python ../src/runserver.py
