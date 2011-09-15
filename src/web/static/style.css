@@ -25,6 +25,11 @@ li.success {
   border: 5px solid #0F0;
 }
 
+li.info {
+  background-color: #F4FA58;
+  border: 5px solid #FF0;
+}
+
 li.error {
   background-color: #FA5858;
   border: 5px solid #F00;

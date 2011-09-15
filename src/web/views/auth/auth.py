@@ -49,7 +49,7 @@ def logout():
         except:
             pass
 
-    flash("Logged out")
+    flash("Logged out", "success")
     return redirect(url_for('repo_list'))
 
 
@@ -63,7 +63,7 @@ def register():
                     form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Thanks for registering')
+        flash('Thanks for registering',"success")
         return redirect(url_for('repo_list'))
 
       else:
@@ -85,7 +85,7 @@ def profile():
         db.session.add(user)
         db.session.commit()
 
-        flash("Updated profile informations")
+        flash("Updated profile informations", "success")
 
     else:
       user = User.query.filter_by(username = session['identity.name']).first()
