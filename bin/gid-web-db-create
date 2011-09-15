@@ -4,4 +4,8 @@ import path
 
 from web.models.user import db
 
+print "Dropping database"
+db.drop_all()
+
+print "Creating new database"
 db.create_all()
