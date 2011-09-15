@@ -1,17 +1,23 @@
 import os
 import shutil
 import re
+import sys
+from os import path
 
 from dulwich.repo import Repo
 from dulwich.walk import Walker
 from dulwich.errors import NotGitRepository
+
+GIT_DIR = path.dirname(path.abspath(__file__)) + os.path.sep + ".." \
+                         + os.path.sep + ".." + os.path.sep + "data" \
+                         + os.path.sep + "git"
 
 class Gid:
     """Simple git daemon class"""
 
     prefix_dir = ""
 
-    def __init__(self, prefix = "/tmp/gid"):
+    def __init__(self, prefix = GIT_DIR):
       self.prefix_dir = prefix
 
 
@@ -24,6 +30,7 @@ class Gid:
 
       for dir_entry in os.listdir(self.prefix_dir):
         git_dir = self.prefix_dir + os.path.sep +  dir_entry
+        print git_dir
 
         try:
           t = Repo(git_dir)

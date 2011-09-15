@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+
+import path
+
 from web.models.user import db
 
 db.create_all()
