@@ -32,4 +32,5 @@ def commitByUserAndRepoAndSha(username, repository, sha):
     if "application/json" in request.headers['Accept']:
       return jsonify(commit=commit)
     else:
-      return render_template('commit/show.html', commit = commit)
+      return render_template('commit/show.html', repo=repository,\
+                                  user=username, commit = commit)

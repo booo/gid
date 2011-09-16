@@ -1,4 +1,3 @@
-
 from gid.gitrepository import GitRepository
 from dulwich.walk import Walker
 
@@ -45,9 +44,18 @@ class GitCommit:
           entries = []
           for item in items:
               if repo.get_object(item.sha).get_type() == 3:
-                  entries.append(item.path)
+                  entry = {\
+                    'path' : item.path,\
+                    'sha' : item.sha,\
+                    'childs': None\
+                  }
+                  entries.append(entry)
               else:
-                  entry = (item.path, traverse(repo.tree(item.sha).iteritems()))
+                  entry = {\
+                    'path' : item.path,\
+                    'sha' : item.sha,\
+                    'childs': traverse(repo.tree(item.sha).iteritems())\
+                  }
                   entries.append(entry)
           return entries
 

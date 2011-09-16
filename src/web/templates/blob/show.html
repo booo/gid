@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>Blob</h1>
+
+<ul>
+  <li>Sha: {{blob.sha}}</li>
+  <li>Length: {{blob.rawLength}}</li>
+  <li>Type: {{blob.type}}</li>
+</ul>
+
+<h2>Content</h2>
+<p>
+  {{blob['content']}}
+</p>
+{%endblock%}

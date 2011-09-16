@@ -11,5 +11,6 @@ app.config.update(yaml.load(stream))
 db = SQLAlchemy(app)
 
 # views
+import web.views.blob
 import web.views.commit
 import web.views.repository

@@ -16,13 +16,15 @@
 <ul class="tree">
 {% for item in commit['tree'] recursive %}
   <li>
-  {% if item is string %}
-    {{ item }}
-  {% else %}
-    {{ item[0] }}
+  {% if item['childs'] is sequence %}
+    {{ item['path'] }}
     <ul>
-    {{ loop(item[1]) }}
+    {{ loop(item['childs']) }}
     </ul>
+  {% else %}
+    <a href="{{url_for('BlobByUserAndRepoAndSha', username=user,repository=repo,sha=item['sha'])}}">
+      {{ item['path'] }}
+    </a>
   {% endif %}
   </li>
 {%endfor%}
