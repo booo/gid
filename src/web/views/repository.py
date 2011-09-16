@@ -121,8 +121,8 @@ app.add_url_rule('/users/<username>/repositories/',\
 
 
 @app.route('/repositories')
-def repoList():
-    repos = Repository.query.all()
+def repoListIfPublic():
+    repos = Repository.query.filter_by(public = True).all()
 
     data = []
     for repo in repos:
