@@ -4,4 +4,11 @@ import path
 
 from web import app
 
-app.run(debug=True)
+from werkzeug import SharedDataMiddleware
+import os
+
+app.wsgi_app = SharedDataMiddleware(app.wsgi_app, {
+  '/': os.path.join(os.path.dirname(__file__), '..', 'static')
+})
+
+app.run()
