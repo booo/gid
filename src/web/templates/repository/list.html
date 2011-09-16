@@ -11,6 +11,10 @@
           {{ repo['name'] }}
         </a>
       </em>
+      by
+     <a href="{{url_for('userShow', user=repo['owner']['name'])}}">
+       {{ repo['owner']['name'] }}
+     </a>
       -
       {% if repo['description'] %}
           {{ repo['description'] }}

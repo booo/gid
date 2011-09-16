@@ -19,34 +19,29 @@ class RepositoriesAPI(MethodView):
 
     def get(self, username):
         user = User.query.filter_by(username=username).first()
-        
-        repositories = []
-        for repo in user.repositories:
-            collaborators = []
-            for collaborator in repo.collaborators: 
-                if collaborator != repo.owner:
-                  collaborators.append(collaborator.username)
+        repos = Repository.query.filter_by(owner = user).all()
+            
+        data = []
+        for repo in repos:
 
-            repositories.append({
-                'name': repo.name,
-                'description': repo.description,
-                'owner': repo.owner.username,
-                'collaborators': collaborators
-              })
+            owner = {
+              'id'   : repo.owner.id,
+              'name' : repo.owner.username,
+              'email': repo.owner.email
+            }
 
-        data = {
-          'user' : {
-            'name': user.username,
-            'email': user.email
-          },
-          'repositories': repositories
-        }
+            data.append({
+                'id'          :   repo.id,
+                'name'        : repo.name,
+                'description' : repo.description,
+                'owner'       : owner,
+              }
+            )
 
         if "application/json" in request.headers['Accept']:
-            return jsonify(data)
+          return jsonify(repositories=data)
         else:
-            return render_template('repository/list.html', user=data['user'], \
-                                repositories=data['repositories'])
+          return render_template('repository/list.html', repositories = data)
 
     @normal_permission.require(http_exception=403)
     def post(self, username):
@@ -150,31 +145,6 @@ def repoListIfPublic():
       return render_template('repository/list.html', repositories = data)
 
 
-@app.route('/users/<username>/repositories')
-def repoListForUser():
-    repos = Repository.query.filter_by(username = username).all()
-
-    data = []
-    for repo in repos:
-
-        owner = {
-          'id'   : repo.owner.id,
-          'name' : repo.owner.username,
-          'email': repo.owner.email
-        }
-
-        data.append({
-            'id'          :   repo.id,
-            'name'        : repo.name,
-            'description' : repo.description,
-            'owner'       : owner,
-          }
-        )
-
-    if "application/json" in request.headers['Accept']:
-      return jsonify(repositories=data)
-    else:
-      return render_template('repository/list.html', repositories = data)
 
 
 @app.route('/users/<username>/repositories/new')
