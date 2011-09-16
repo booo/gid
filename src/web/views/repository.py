@@ -115,11 +115,11 @@ class RepositoriesAPI(MethodView):
     def delete(self, username):
         pass
 
-app.add_url_rule('/users/<username>/repositories/',\
+app.add_url_rule('/repos/<username>',\
                     view_func=RepositoriesAPI.as_view('repositories'))
 
 
-@app.route('/repositories')
+@app.route('/repos/public')
 def repoListIfPublic():
     repos = Repository.query.filter_by(public = True).all()
 
@@ -148,7 +148,7 @@ def repoListIfPublic():
 
 
 
-@app.route('/users/<username>/repositories/new')
+@app.route('/repos/<username>/new')
 def repoCreateByUser(username):
     form = RepositoryForm(request.form)
     action = url_for('repositories', username=username)
@@ -156,7 +156,7 @@ def repoCreateByUser(username):
                                 username=username, action=action,
                                 submit='Create Repository')
 
-@app.route('/users/<username>/repositories/<repository>/edit')
+@app.route('/repos/<username>/<repository>/edit')
 def repoEditByUserAndRepository(username, repository):
     user = User.query.filter_by(username=username).first()
     repo = Repository.query.filter_by(name = repository, owner = user).first()
@@ -179,7 +179,7 @@ def repoEditByUserAndRepository(username, repository):
                                 username=username, action=action,\
                                 submit='Edit Repository')
 
-@app.route('/users/<username>/repositories/<repository>')
+@app.route('/repos/<username>/<repository>')
 def repoShowByUserAndRepository(username, repository):
     user = User.query.filter_by(username=username).first()
     repo = Repository.query.filter_by(name = repository, owner = user).first()
@@ -209,7 +209,7 @@ def repoShowByUserAndRepository(username, repository):
                                 repository = repo.name)
 
 
-@app.route('/users/<username>/repositories/<repository>/delete')
+@app.route('/repos/<username>/<repository>/delete')
 @normal_permission.require(http_exception=403)
 def repoDeleteByUserAndRepository(username, repository):
   pass
