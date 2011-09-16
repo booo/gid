@@ -126,17 +126,21 @@ def repoListIfPublic():
 
     data = []
     for repo in repos:
-        collaborators = []
-        for c in repo.collaborators:
-          collaborators.append(c.username)
+
+        owner = {
+          'id'   : repo.owner.id,
+          'name' : repo.owner.username,
+          'email': repo.owner.email
+        }
 
         data.append({
-            'name': repo.name,
-            'owner': repo.owner.username,
-            'description': repo.description,
-            'collaborators': collaborators
+            'id'          :   repo.id,
+            'name'        : repo.name,
+            'description' : repo.description,
+            'owner'       : owner,
           }
         )
+
     if "application/json" in request.headers['Accept']:
       return jsonify(repositories=data)
     else:

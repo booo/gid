@@ -35,7 +35,3 @@ import web.views.auth.session
 import web.views.blob
 import web.views.commit
 import web.views.repository
-
-@app.route('/')
-def index():
-    return render_template('index.html')

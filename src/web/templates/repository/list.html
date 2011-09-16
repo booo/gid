@@ -7,7 +7,7 @@
 {% for repo in repositories %}
     <li>
       <em>
-        <a href="{{ url_for('repoShowByUserAndRepository', username=repo['owner'],repository=repo['name']) }}">
+        <a href="{{ url_for('repoShowByUserAndRepository',username=repo['owner']['name'],repository=repo['name']) }}">
           {{ repo['name'] }}
         </a>
       </em>
