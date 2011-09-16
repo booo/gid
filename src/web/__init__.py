@@ -1,6 +1,6 @@
 import yaml
 
-from flask import Flask
+from flask import Flask, render_template
 from flaskext.sqlalchemy import SQLAlchemy
 
 from werkzeug import url_decode
@@ -35,3 +35,7 @@ import web.views.auth.session
 import web.views.blob
 import web.views.commit
 import web.views.repository
+
+@app.route('/')
+def index():
+    return render_template('index.html')
