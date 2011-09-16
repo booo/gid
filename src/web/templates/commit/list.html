@@ -7,37 +7,6 @@
 </ul>
 
 <h3>Commits</h3>
-<ol>
-{% for commit in commits %}
-  <li>
-    <h4>
-      <a
-      href="{{url_for('commitByUserAndRepoAndSha',username=owner,repository=repository,sha=commit['id'])}}">
-        {{commit['id']}}
-      </a>
-      -
-      {{commit['message']}}
-    </h4>
-    <ul>
-    {% for change in commit['changes'] %}
-      <li>
-        <em>{{change['type']}}</em>
-        {% if change['path']['old'] %}
-          {{change['path']['old']}}
-        {% endif %}
-
-        {% if change['path']['new'] %}
-          {{change['path']['new']}}
-        {% endif %}
-      </li>
-    {% else %}
-      <li>No changes made</li>
-    {% endfor %}
-    </ul>
-  </li>
-{% else %}
-  <li>No commits so far</li>
-{% endfor %}
-</ol>
+{% include 'commit/_list.html' %}
 
 {% endblock%}

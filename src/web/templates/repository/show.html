@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-  <h2>{{repo['name']}}</h2>
+  <h2>{{repo['owner']['name']}} / {{repo['name']}}</h2>
   
   <p>
   {% if repo['description'] %}
@@ -11,11 +11,7 @@
   {% endif %}
   </p>
   
-  <ul>
-    <li>Owner: {{repo['owner']['name']}}</li>
-    <li>Email: {{repo['owner']['email']}}</li>
-  </ul>
-
+  {% if repo['collaborators'] %}
   <h3>Collaborators</h3>
   <ul>
     {% for c in repo['collaborators']%}
@@ -26,17 +22,16 @@
       </li>
     {% endfor %}
   </ul>
+  {% endif %}
 
-  <h3>Refs</h3>
+  <h3>refs</h3>
   <ul>
     {% for branch in repo['git']['refs']%}
       <li>{{branch}}</li>
     {% endfor %}
   </ul>
 
-  <p>
-    <a href="{{url_for('commitsByUserAndRepo',username=repo['owner']['name'],repository=repo['name'])}}">
-      commits
-    </a>
-  </P>
+  <h3>last commits</h3>
+  {% include 'commit/_list.html' %}
+
 {%endblock%}

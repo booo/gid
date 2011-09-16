@@ -1,6 +1,6 @@
 <ul class="repos">
 {% for repo in repositories %}
-    <li>
+    <li class="button repo white">
       <em>
         <a href="{{ url_for('repoShowByUserAndRepository',username=repo['owner']['name'],repository=repo['name']) }}">
           {{ repo['name'] }}

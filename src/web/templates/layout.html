@@ -13,10 +13,10 @@
   <body>
     <div class="container_12 site">
 
-     <div class="grid_8">
-        <h1><a href="{{url_for('index')}}">Gid - Maintain your own Git Repositories</a></h1>
+     <div class="grid_6">
+        <p><a href="{{url_for('index')}}">Home</a></p>
       </div>
-     <div class="grid_4">
+     <div class="grid_6">
         <ul class="account">
         {% if session["identity.name"] %}
           <li><a class="text_red" href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a></li>
@@ -35,7 +35,16 @@
       </div>
 
       <div class="clear"></div>
-      <div class="grid_10 main">
+      <div class="textRight grid_12">
+        <p>
+          <a class="button orange" href="{{url_for('repoCreateByUser',username=session['identity.name'])}}">
+            create repository
+          </a>
+        </p>
+      </div>
+
+      <div class="clear"></div>
+      <div class="grid_11 main">
       {% with messages = get_flashed_messages(with_categories = true) %}
         {% if messages %}
           <ul class="flashes">
@@ -49,12 +58,6 @@
       {% block body %}{% endblock %}
       </div>
 
-      <div class="grid_2">
-        <p>
-          <a class="button orange" href="{{url_for('repoCreateByUser',username=session['identity.name'])}}">
-            create repository
-          </a>
-        </p>
     </div>
   </body>
 </html>

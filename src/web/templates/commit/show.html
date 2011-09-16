@@ -1,18 +1,23 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>Commit</h1>
-<h2>Message</h2>
+<h1>
+  <a href="{{url_for('repoShowByUserAndRepository',username=user,repository=repo)}}">
+    {{repo}}
+  </a>
+  /
+  {{commit['sha']}}
+</h1>
 <p>
   {{commit['message']}}
 </p>
-<h2>Detail</h2>
+
 <ul>
-  <li>SHA: {{commit['sha']}}</li>
-  <li>Author: {{commit['author']}}</li>
-  <li>Comitter: {{commit['committer']}}</li>
-  <li>Time: {{commit['commit_time']}}</li>
+  <li><em>Author</em>: {{commit['author']}}</li>
+  <li><em>Comitter</em>: {{commit['committer']}}</li>
+  <li><em>Time</em>: {{commit['commit_time']}}</li>
 </ul>
-<h2>Tree</h2>
+
+<h4>Tree</h4>
 <ul class="tree">
 {% for item in commit['tree'] recursive %}
   <li>

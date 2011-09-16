@@ -13,6 +13,7 @@ from web.models.repository import Repository
 from web.models.dictobject import DictObject
 
 from gid.gitrepository import GitRepository
+from gid.gitcommit import GitCommit
 
 from flask.views import MethodView
 class RepositoriesAPI(MethodView):
@@ -202,7 +203,10 @@ def repoShowByUserAndRepository(username, repository):
     if "application/json" in request.headers['Accept']:
       return jsonify(data)
     else:
-      return render_template('repository/show.html', repo = data)
+      commits = GitCommit.list(repository, username)
+      return render_template('repository/show.html', repo = data, \
+                                commits = commits, owner = username,\
+                                repository = repo.name)
 
 
 @app.route('/users/<username>/repositories/<repository>/delete')

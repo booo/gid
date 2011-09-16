@@ -21,4 +21,5 @@ def BlobByUserAndRepoAndSha(username, repository, sha):
       formatter = HtmlFormatter(linenos=True, noclasses=True)
       blob["content"] = highlight(blob["content"], lexer, formatter)
 
-      return render_template('blob/show.html', blob=blob)
+      return render_template('blob/show.html', blob=blob, user=username,\
+                              repo = repository)

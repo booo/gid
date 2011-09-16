@@ -1,17 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>{{user['name']}}</h1>
+<h1>User</h1>
+<h2>
+  {{user['name']}}
+ <small>{{user['email']}}</small>
+</h2>
 
-<ol>
-  <li>Email: {{user['email']}}</h1>
-</ol>
-
-<h2>Repositories</h2>
-
-<h3>Own</h3>
-<ul>
+<h2>Own repositories</h2>
+<ul class="repos">
   {% for repo in user['repositories']['own']%}
-    <li>
+    <li class="button repo white">
       <a
       href="{{url_for('repoShowByUserAndRepository',username=user['name'],repository=repo)}}">
         {{repo}}
@@ -23,8 +21,9 @@
 </ul>
 
 <h3>Collaborating</h3>
+<ul>
   {% for repo in user['repositories']['collaborating']%}
-    <li>
+    <li> class="button repo white"
       <a
       href="{{url_for('repoShowByUserAndRepository',username=repo['owner'],repository=repo['name'])}}">
         {{repo['name']}}
@@ -33,6 +32,5 @@
   {% else %}
     <li>No Repositories</li>
   {% endfor %}
-<ul>
 </ul>
 {%endblock%}
