@@ -1,0 +1,11 @@
+#!/usr/bin/python
+
+import path
+
+from flup.server.fcgi import WSGIServer
+from web import app
+
+_sockPath = path.join(_srcPath, '..', 'data', 'fcgi.sock')
+
+if __name__ == '__main__':
+    WSGIServer(app, bindAddress=_sockPath).run()
