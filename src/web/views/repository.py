@@ -59,6 +59,7 @@ class RepositoriesAPI(MethodView):
             repo = Repository(repoName, user)
             repo.owner = user
             repo.description = form.description.data
+            repo.public = not form.private.data
 
             collaborators = []
             for collaborator in form.collaborators.data.split(','):
@@ -79,8 +80,9 @@ class RepositoriesAPI(MethodView):
                            ))
 
         flash(u'Could not create repository:' + repoName, 'error')
-        return render_template('repository/create.html', form=form,\
-                                username=username)
+        return render_template('repository/form.html', form=form,\
+                                username=username,
+                                submit='Create Repository')
 
 
     @normal_permission.require(http_exception=403)
@@ -92,6 +94,7 @@ class RepositoriesAPI(MethodView):
             repo = Repository.query.filter_by(name = repoName, owner = user).first()
             repo.name = repoName
             repo.description = form.description.data
+            repo.public = not form.private.data
 
             repo.collaborators = [user]
             for c in form.collaborators.data.split(','):
@@ -146,12 +149,13 @@ def repoListIfPublic():
     else:
       return render_template('repository/list.html', repositories = data)
 
-@app.route('/users/<username>/repositories/create')
+@app.route('/users/<username>/repositories/new')
 def repoCreateByUser(username):
     form = RepositoryForm(request.form)
     action = url_for('repositories', username=username)
-    return render_template('repository/create.html', form=form,\
-                                username=username, action=action)
+    return render_template('repository/form.html', form=form,
+                                username=username, action=action,
+                                submit='Create Repository')
 
 @app.route('/users/<username>/repositories/<repository>/edit')
 def repoEditByUserAndRepository(username, repository):
@@ -172,8 +176,9 @@ def repoEditByUserAndRepository(username, repository):
     form = RepositoryForm(obj = obj)
     action = url_for('repositories', username=username) +\
                         '?__METHOD_OVERRIDE__=PUT'
-    return render_template('repository/create.html', form=form,\
-                                username=username, action=action)
+    return render_template('repository/form.html', form=form,\
+                                username=username, action=action,\
+                                submit='Edit Repository')
 
 @app.route('/users/<username>/repositories/<repository>')
 def repoShowByUserAndRepository(username, repository):
