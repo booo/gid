@@ -27,7 +27,8 @@ Install Dependencies
 
 sudo apt-get install python-twisted-conch
 
-pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy pyyaml dulwich pyasn1
+pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy pyyaml dulwich \
+pyasn1 pygments
 
 
 Creating the database

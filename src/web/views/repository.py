@@ -41,7 +41,7 @@ class RepositoriesAPI(MethodView):
         if "application/json" in request.headers['Accept']:
           return jsonify(repositories=data)
         else:
-          return render_template('repository/list.html', repositories = data)
+          return render_template('repository/listForUser.html', repositories = data)
 
     @normal_permission.require(http_exception=403)
     def post(self, username):
@@ -142,7 +142,7 @@ def repoListIfPublic():
     if "application/json" in request.headers['Accept']:
       return jsonify(repositories=data)
     else:
-      return render_template('repository/list.html', repositories = data)
+      return render_template('repository/listAllRepositories.html', repositories = data)
 
 
 
