@@ -1,7 +1,12 @@
 from gid.gitrepository import GitRepository
 from dulwich.walk import Walker
+from datetime import datetime
 
 class GitCommit:
+
+    @staticmethod
+    def _toDate(timestamp):
+          return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
     def list(repoName, userName):
@@ -22,9 +27,18 @@ class GitCommit:
                  }
               })
 
+
           commit = {
-            "sha" : entry.commit.id,
+            "id" : entry.commit.id,
             "message" : entry.commit.message,
+            "committer" : {
+              "name": entry.commit.committer,
+              "date": GitCommit._toDate(entry.commit.commit_time)
+            },
+            "author" : {
+              "name": entry.commit.author,
+              "date": GitCommit._toDate(entry.commit.author_time)
+            },
             "changes" : changes
           }
 
