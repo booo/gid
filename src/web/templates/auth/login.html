@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 {% from "_formhelpers.html" import render_field %}
-<form method="post" action="{{ url_for('login')}}">
+<form method="post" action="{{ url_for('session')}}">
   {{ form.hidden_tag() }}
   <ul>
     <li>{{ render_field(form.username) }}</li>

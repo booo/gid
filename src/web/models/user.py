@@ -13,15 +13,14 @@ class _KeyBlobUpdater(db.MapperExtension):
           instance.keyBlob = SSHKey.fromString(data = instance.key).blob()
 
 class User(db.Model):
+    __tablename = 'user'
+
     id        = db.Column(db.Integer,     primary_key=True)
     username  = db.Column(db.String(80),  unique=True)
     email     = db.Column(db.String(120), unique=True)
     password  = db.Column(db.String(128))
     key       = db.Column(db.String(512))
     keyBlob   = db.Column(db.Binary(512))
-
-    repositories = db.relationship('Repository', backref='owner',
-                                lazy='dynamic')
 
     __mapper_args__ = {'extension': _KeyBlobUpdater()}
 

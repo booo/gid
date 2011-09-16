@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 {% from "_formhelpers.html" import render_field %}
-<form method="post" action="{{ url_for('profile')}}">
+<form method="post" action="{{ url_for('users')}}?__METHOD_OVERRIDE__=PUT">
   {{ form.hidden_tag() }}
   <ul>
     <li>{{ render_field(form.username) }}</li>

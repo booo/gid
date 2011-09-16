@@ -11,18 +11,14 @@
   <body>
 
     <p>
-      <a href="{{ url_for('userList') }}">Users List</a>
-      -
     {% if session["identity.name"] %}
-      <a href="{{ url_for('profile') }}">profile</a>
+      Logged in as {{session['identity.name']}}
       -
-      <a href="{{ url_for('logout') }}">logout</a>
-      -
-      <a href="{{ url_for('repoCreateByUser', username=session['identity.name']) }}">create repository</a>
+      <a href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a>
     {% else %}
-      <a href="{{ url_for('login') }}">login</a>
+      <a href="{{url_for('session')}}">login</a>
       -
-      <a href="{{ url_for('register') }}">register</a>
+      <a href="{{url_for('userNew')}}">register</a>
     {%endif%}
     </p>
 
