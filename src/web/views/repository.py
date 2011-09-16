@@ -120,6 +120,28 @@ app.add_url_rule('/users/<username>/repositories/',\
                     view_func=RepositoriesAPI.as_view('repositories'))
 
 
+@app.route('/repositories')
+def repoList():
+    repos = Repository.query.all()
+
+    data = []
+    for repo in repos:
+        collaborators = []
+        for c in repo.collaborators:
+          collaborators.append(c.username)
+
+        data.append({
+            'name': repo.name,
+            'owner': repo.owner.username,
+            'description': repo.description,
+            'collaborators': collaborators
+          }
+        )
+    if "application/json" in request.headers['Accept']:
+      return jsonify(repositories=data)
+    else:
+      return render_template('repository/list.html', repositories = data)
+
 @app.route('/users/<username>/repositories/create')
 def repoCreateByUser(username):
     form = RepositoryForm(request.form)

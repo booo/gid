@@ -1,13 +1,15 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h2>Repositories</h2>
+<h2>{{ user['name'] }}</h2>
+
+<h3>Repositories</h3>
 
 <ul class="repos">
 {% for repo in repositories %}
     <li>
       <em>
-        <a href="{{ url_for('repoShowByUserAndRepository', username=repo['owner'],repository=repo['name']) }}">
+        <a href="{{ url_for('repoShowByUserAndRepository', username=user['name'],repository=repo['name']) }}">
           {{ repo['name'] }}
         </a>
       </em>
@@ -16,6 +18,9 @@
           {{ repo['description'] }}
       {% else %}
         No description available
+      {% endif %}
+
+      {% if user['name'] == session['identity.name'] %}
       {% endif %}
     </li>
 {% else %}
