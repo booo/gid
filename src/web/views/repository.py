@@ -1,4 +1,3 @@
-from web import app
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
@@ -7,9 +6,11 @@ from flask import Flask, request, render_template, json, \
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
+from web import app
 from web.views.auth.session import *
 from web.forms.repository import RepositoryForm
 from web.models.repository import Repository
+from web.models.dictobject import DictObject
 
 from gid.gitrepository import GitRepository
 
@@ -59,6 +60,14 @@ class RepositoriesAPI(MethodView):
             repo.owner = user
             repo.description = form.description.data
 
+            collaborators = []
+            for collaborator in form.collaborator.data.split(','):
+                c = User.query.filter_by(username=collaborator.trim()).first()
+                collaborators.append(c)
+
+            collaborators.append(repo.owner)
+            repo.collaborators = collaborators
+
             db.session.add(repo) 
             db.session.commit()
 
@@ -76,7 +85,32 @@ class RepositoriesAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def put(self, username):
-        pass
+        form = RepositoryForm(request.form)
+        repoName = form.name.data
+        if form.validate():
+            user = User.query.filter_by(username=username).first()
+            repo = Repository.query.filter_by(name = repoName, owner = user).first()
+            repo.name = repoName
+            repo.description = form.description.data
+
+            repo.collaborators = [user]
+            for c in form.collaborators.data.split(','):
+                u = User.query.filter_by(username=c).first()
+                if u != None:
+                  repo.collaborators.append(u)
+
+            db.session.add(repo) 
+            db.session.commit()
+            
+            flash('Repository successfully edited', 'success')
+
+            return redirect(url_for('repoShowByUserAndRepository',\
+                                      username = user.username,\
+                                      repository = repo.name))
+
+        return Response("Error")
+
+
 
     @normal_permission.require(http_exception=403)
     def delete(self, username):
@@ -91,6 +125,28 @@ def repoCreateByUser(username):
     form = RepositoryForm(request.form)
     return render_template('repository/create.html', form=form,\
                                 username=username)
+
+@app.route('/users/<username>/repositories/<repository>/edit')
+def repoEditByUserAndRepository(username, repository):
+    user = User.query.filter_by(username=username).first()
+    repo = Repository.query.filter_by(name = repository, owner = user).first()
+
+    colls = []
+    for c in repo.collaborators:
+      if c != repo.owner:
+        colls.append(c.username)
+
+    obj = DictObject(\
+      name = repo.name,\
+      description = repo.description,\
+      collaborators = ",".join(colls)\
+    )
+
+    form = RepositoryForm(obj = obj)
+    action = url_for('repositories', username=username) +\
+                        '?__METHOD_OVERRIDE__=PUT'
+    return render_template('repository/create.html', form=form,\
+                                username=username, action=action)
 
 @app.route('/users/<username>/repositories/<repository>')
 def repoShowByUserAndRepository(username, repository):
