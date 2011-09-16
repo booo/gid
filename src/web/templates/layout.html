@@ -3,37 +3,58 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>GID - Deleting a repository</title>
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',
-    filename='style.css')}}" />
+    <title>GID - Easy way of mainting GIT Repositories</title>
+    <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/reset.css')}}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/text.css')}}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/960.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/style.css')}}" />
   </head>
 
   <body>
+    <div class="container_12 site">
 
-    <p>
-    {% if session["identity.name"] %}
-      Logged in as {{session['identity.name']}}
-      -
-      <a href="{{url_for('repoCreateByUser',username=session['identity.name'])}}">create repository</a>
-      -
-      <a href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a>
-    {% else %}
-      <a href="{{url_for('session')}}">login</a>
-      -
-      <a href="{{url_for('userNew')}}">register</a>
-    {%endif%}
-    </p>
-
-    {% with messages = get_flashed_messages(with_categories = true) %}
-      {% if messages %}
-        <ul class="flashes">
-        {% for category, message in messages %}
-          <li class="{{category}}">{{ message }}</li>
-        {% endfor %}
+     <div class="grid_8">
+        <h1>Gid - Maintain your own Git Repositories</h1>
+      </div>
+     <div class="grid_4">
+        <ul class="account">
+        {% if session["identity.name"] %}
+          <li><a class="text_red" href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a></li>
+          <li>-</li>
+          <li><a class="text_red" href="{{url_for('session')}}">Account</a></li>
+          <li>-</li>
+          <li>
+            Logged in as 
+            <a class="text_red" href="{{url_for('userShow',user=session['identity.name'])}}">{{session['identity.name']}}</a>
+          </li>
+        {% else %}
+          <li><a href="{{url_for('userNew')}}">register</a></li>
+          <li><a href="{{url_for('session')}}">login</a></li>
+        {%endif%}
         </ul>
-      {% endif %}
-    {% endwith %}
+      </div>
 
-    {% block body %}{% endblock %}
+      <div class="clear"></div>
+      <div class="grid_10 main">
+      {% with messages = get_flashed_messages(with_categories = true) %}
+        {% if messages %}
+          <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="{{category}}">{{ message }}</li>
+          {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+
+      {% block body %}{% endblock %}
+      </div>
+
+      <div class="grid_2">
+        <p>
+          <a class="button orange" href="{{url_for('repoCreateByUser',username=session['identity.name'])}}">
+            create repository
+          </a>
+        </p>
+    </div>
   </body>
 </html>

@@ -149,6 +149,34 @@ def repoListIfPublic():
     else:
       return render_template('repository/list.html', repositories = data)
 
+
+@app.route('/users/<username>/repositories')
+def repoListForUser():
+    repos = Repository.query.filter_by(username = username).all()
+
+    data = []
+    for repo in repos:
+
+        owner = {
+          'id'   : repo.owner.id,
+          'name' : repo.owner.username,
+          'email': repo.owner.email
+        }
+
+        data.append({
+            'id'          :   repo.id,
+            'name'        : repo.name,
+            'description' : repo.description,
+            'owner'       : owner,
+          }
+        )
+
+    if "application/json" in request.headers['Accept']:
+      return jsonify(repositories=data)
+    else:
+      return render_template('repository/list.html', repositories = data)
+
+
 @app.route('/users/<username>/repositories/new')
 def repoCreateByUser(username):
     form = RepositoryForm(request.form)

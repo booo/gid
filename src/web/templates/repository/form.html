@@ -1,5 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
+
+<h2>Repository</h2>
+
 {% from "_formhelpers.html" import render_field %}
 <form method="post" action="{{action}}">
   {{ form.hidden_tag() }}
@@ -9,6 +12,6 @@
     <li>{{ render_field(form.collaborators) }}</li>
     <li>{{ render_field(form.private) }}</li>
   </ul>
-  <p><input type="submit" value="{{submit}}" />
+  <p><input class="button gray" type="submit" value="{{submit}}" />
 </form>
 {%endblock%}

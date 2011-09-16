@@ -13,13 +13,14 @@ class GitCommit:
         for entry in walker:
           changes = []
           for change in entry.changes():
-            changes.append({
-              "type" : change.type,
-              "path" : {
-                "old" : change.old.path,
-                "new" : change.new.path
-               }
-            })
+            if hasattr(change, 'type'):
+              changes.append({
+                "type" : change.type,
+                "path" : {
+                  "old" : change.old.path,
+                  "new" : change.new.path
+                 }
+              })
 
           commit = {
             "sha" : entry.commit.id,
