@@ -8,7 +8,9 @@
     -
     {{ user['email']}}
     -
-    <a href="{{ url_for('repositories', username = user['name']) }}">Profile</a>
+    <a href="{{ url_for('userShow', user= user['name']) }}">Profile</a>
+    -
+    <a href="{{ url_for('repositories', username = user['name']) }}">Repositories</a>
   </li>
 {% else %}
   <li>No user registered</li>

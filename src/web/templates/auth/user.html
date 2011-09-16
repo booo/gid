@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block body %}
+<h1>{{user['name']}}</h1>
+
+<ol>
+  <li>Email: {{user['email']}}</h1>
+</ol>
+
+<h2>Repositories</h2>
+
+<h3>Own</h3>
+<ul>
+  {% for repo in user['repositories']['own']%}
+    <li>
+      <a
+      href="{{url_for('repoShowByUserAndRepository',username=user['name'],repository=repo)}}">
+        {{repo}}
+      </a>
+    </li>
+  {% else %}
+    <li>No Repositories</li>
+  {% endfor %}
+</ul>
+
+<h3>Collaborating</h3>
+  {% for repo in user['repositories']['collaborating']%}
+    <li>
+      <a
+      href="{{url_for('repoShowByUserAndRepository',username=repo['owner'],repository=repo['name'])}}">
+        {{repo['name']}}
+      </a>
+    </li>
+  {% else %}
+    <li>No Repositories</li>
+  {% endfor %}
+<ul>
+</ul>
+{%endblock%}

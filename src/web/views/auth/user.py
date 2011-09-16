@@ -80,5 +80,34 @@ def userNew():
 
 
 @app.route('/users/<user>')
-def userShow():
-  pass
+def userShow(user):
+    user = User.query.filter_by(username = user).first()
+
+
+    repoOwn = []
+    repoCollaborating = []
+    for repo in user.repositories:
+        if repo.owner == user:
+          repoOwn.append(repo.name)
+        else:
+          repoCollaborating.append({
+              'name' : repo.name,
+              'owner': repo.owner.username
+            }
+          )
+
+    obj = {
+      'name' : user.username,
+      'email' : user.email,
+      'repositories': {
+        'own': repoOwn,
+        'collaborating': repoCollaborating
+      }
+    }
+    
+    if "application/json" in request.headers['Accept']:
+      return jsonify(user=obj)
+    else:
+      return render_template('auth/user.html', user=obj)
+
+

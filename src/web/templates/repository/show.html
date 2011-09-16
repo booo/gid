@@ -16,6 +16,17 @@
     <li>Email: {{repo['owner']['email']}}</li>
   </ul>
 
+  <h3>Collaborators</h3>
+  <ul>
+    {% for c in repo['collaborators']%}
+      <li>
+        <a href="{{url_for('userShow',user=c )}}">
+          {{c}}
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+
   <h3>Refs</h3>
   <ul>
     {% for branch in repo['git']['refs']%}

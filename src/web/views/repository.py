@@ -61,8 +61,8 @@ class RepositoriesAPI(MethodView):
             repo.description = form.description.data
 
             collaborators = []
-            for collaborator in form.collaborator.data.split(','):
-                c = User.query.filter_by(username=collaborator.trim()).first()
+            for collaborator in form.collaborators.data.split(','):
+                c = User.query.filter_by(username=collaborator).first()
                 collaborators.append(c)
 
             collaborators.append(repo.owner)
@@ -123,8 +123,9 @@ app.add_url_rule('/users/<username>/repositories/',\
 @app.route('/users/<username>/repositories/create')
 def repoCreateByUser(username):
     form = RepositoryForm(request.form)
+    action = url_for('repositories', username=username)
     return render_template('repository/create.html', form=form,\
-                                username=username)
+                                username=username, action=action)
 
 @app.route('/users/<username>/repositories/<repository>/edit')
 def repoEditByUserAndRepository(username, repository):
@@ -153,6 +154,11 @@ def repoShowByUserAndRepository(username, repository):
     user = User.query.filter_by(username=username).first()
     repo = Repository.query.filter_by(name = repository, owner = user).first()
    
+    collaborators = []
+    for collaborator in repo.collaborators:
+      if collaborator != user:
+        collaborators.append(collaborator.username)
+
     data = {
       'name' : repo.name,
       'description' : repo.description,
@@ -160,6 +166,7 @@ def repoShowByUserAndRepository(username, repository):
         'name' : user.username,
         'email' : user.email,
       },
+      'collaborators': collaborators,
       'git' : GitRepository.show(repo.name, user.username) 
     }
 

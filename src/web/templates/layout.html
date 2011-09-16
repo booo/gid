@@ -14,6 +14,8 @@
     {% if session["identity.name"] %}
       Logged in as {{session['identity.name']}}
       -
+      <a href="{{url_for('repoCreateByUser',username=session['identity.name'])}}">create repository</a>
+      -
       <a href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a>
     {% else %}
       <a href="{{url_for('session')}}">login</a>
