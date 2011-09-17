@@ -16,6 +16,8 @@ for name in names:
   for j in range(0,3):
     repoName = ''.join([choice(string.letters) for k in xrange(8)])
     repo = Repository(repoName, user)
+    repo.private = choice([True, False])
+
     db.session.add(repo) 
     user.repositories.append(repo)
     
