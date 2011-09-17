@@ -13,7 +13,10 @@
     </a>
     {% endif %}
   </h2>
-  
+  <p>
+    <input type="text" value="ssh://user@localhost:5000/{{repo['owner']['name']}}/{{repo['name']}}" />
+  </p>
+
   <p>
   {% if repo['description'] %}
       {{ repo['description'] }}
