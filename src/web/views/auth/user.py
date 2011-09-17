@@ -6,8 +6,10 @@ from flask import Flask, request, render_template, json, \
 from flask.views import MethodView
 
 
+
 from web import app
 from web.models.user import User, db
+from web.views.auth.session import normal_permission
 from web.forms.registration import RegistrationForm
 from web.forms.login import LoginForm
 from web.forms.profile import ProfileForm
