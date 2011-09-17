@@ -87,7 +87,7 @@ class RepositoriesAPI(MethodView):
             repo = Repository(reponame, user)
             repo.owner = user
             repo.description = form.description.data
-            repo.public = not form.private.data
+            repo.private = form.private.data
 
             collaborators = []
             for collaborator in form.collaborators.data.split(','):
@@ -123,8 +123,8 @@ class RepositoriesAPI(MethodView):
             repo = Repository.query.filter_by(name = reponame, owner = user).first()
             repo.name = reponame
             repo.description = form.description.data
-            repo.public = not form.private.data
-
+            repo.private = form.private.data
+            
             repo.collaborators = [user]
             for c in form.collaborators.data.split(','):
                 u = User.query.filter_by(username=c).first()
@@ -171,7 +171,7 @@ app.add_url_rule('/repos/<username>/<reponame>',\
 
 @app.route('/repos/public')
 def repoListPublic():
-    repos = Repository.query.filter_by(public = True).all()
+    repos = Repository.query.filter_by(private = False).all()
 
     data = []
     for repo in repos:

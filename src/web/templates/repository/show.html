@@ -7,6 +7,11 @@
     </a>
     /
     {{repo['name']}}
+    {% if repo['owner']['name'] == session['identity.name'] %}
+    <a class="button green" href="{{url_for('repoEditForm',username=session['identity.name'],repository=repo['name'])}}">
+      Edit
+    </a>
+    {% endif %}
   </h2>
   
   <p>

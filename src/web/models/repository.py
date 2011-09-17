@@ -11,7 +11,7 @@ class Repository(db.Model):
 
     id            = db.Column(db.Integer, primary_key=True)
     name          = db.Column(db.String(80))
-    public        = db.Column(db.Boolean(), default=True)
+    private       = db.Column(db.Boolean(), default=True)
     path          = db.Column(db.String(128))
     description   = db.Column(db.String(512))
     owner_id      = db.Column(db.Integer, db.ForeignKey('user.id'))
