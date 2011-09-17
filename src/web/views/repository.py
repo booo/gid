@@ -16,7 +16,9 @@ from gid.gitrepository import GitRepository
 from gid.gitcommit import GitCommit
 
 from flask.views import MethodView
+
 class RepositoriesAPI(MethodView):
+
     def get(self, username, reponame = None):
         if reponame == None:
 
@@ -25,7 +27,6 @@ class RepositoriesAPI(MethodView):
                 
             data = []
             for repo in repos:
-
                 owner = {
                   'id'   : repo.owner.id,
                   'name' : repo.owner.username,

@@ -1,5 +1,6 @@
 {% extends "layout.html" %}
 {% block body %}
+<h2>Account registration</h2>
 {% from "_formhelpers.html" import render_field %}
 <form method="post" action="{{ url_for('users')}}">
   {{ form.hidden_tag() }}

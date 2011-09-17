@@ -15,19 +15,50 @@ from web.forms.profile import ProfileForm
 
 class UserAPI(MethodView):
 
-    def get(self):
-        users = []
-        for user in User.query.all():
-            data = {
-              'name' : user.username,
-              'email' : user.email
-            }
-            users.append(data)
-        
-        if "application/json" in request.headers['Accept']:
-            return jsonify(users = users)
+    def get(self, username=None):
+        if username == None:
+            users = []
+            for user in User.query.all():
+                data = {
+                  'name' : user.username,
+                  'email' : user.email
+                }
+                users.append(data)
+            
+            if "application/json" in request.headers['Accept']:
+                return jsonify(users = users)
+            else:
+                return render_template('auth/users.html', users=users)
+
+
         else:
-            return render_template('auth/users.html', users=users)
+            user = User.query.filter_by(username = username).first()
+
+            repoOwn = []
+            repoCollaborating = []
+            for repo in user.repositories:
+                if repo.owner == user:
+                  repoOwn.append(repo.name)
+                else:
+                  repoCollaborating.append({
+                      'name' : repo.name,
+                      'owner': repo.owner.username
+                    }
+                  )
+
+            obj = {
+              'name' : user.username,
+              'email' : user.email,
+              'repositories': {
+                'own': repoOwn,
+                'collaborating': repoCollaborating
+              }
+            }
+            
+            if "application/json" in request.headers['Accept']:
+              return jsonify(user=obj)
+            else:
+              return render_template('auth/user.html', user=obj)
 
 
     def put(self):
@@ -70,44 +101,15 @@ class UserAPI(MethodView):
     def delete(self):
         raise NotYetImplemented()
 
-app.add_url_rule('/users/', view_func=UserAPI.as_view('users'))
+app.add_url_rule('/users/',\
+                    view_func=UserAPI.as_view('users'),
+                    methods=['GET','PUT','POST'])
+app.add_url_rule('/users/<username>',\
+                    view_func=UserAPI.as_view('users'),
+                    methods=['GET', 'DELETE'])
 
 
 @app.route('/users/new')
-def userNew():
+def userNewForm():
     form = RegistrationForm(request.form)
     return render_template('auth/register.html', form=form)
-
-
-@app.route('/users/<user>')
-def userShow(user):
-    user = User.query.filter_by(username = user).first()
-
-
-    repoOwn = []
-    repoCollaborating = []
-    for repo in user.repositories:
-        if repo.owner == user:
-          repoOwn.append(repo.name)
-        else:
-          repoCollaborating.append({
-              'name' : repo.name,
-              'owner': repo.owner.username
-            }
-          )
-
-    obj = {
-      'name' : user.username,
-      'email' : user.email,
-      'repositories': {
-        'own': repoOwn,
-        'collaborating': repoCollaborating
-      }
-    }
-    
-    if "application/json" in request.headers['Accept']:
-      return jsonify(user=obj)
-    else:
-      return render_template('auth/user.html', user=obj)
-
-

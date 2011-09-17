@@ -28,11 +28,11 @@ em {
 }
 
 a {
-  color: #000;
+  color: #424242;
   font-weight: bold;
 }
 a:hover {
-  color: #da7c0c;
+  color: #000;
 }
 a, a:hover, a:visited, a:active {
   text-decoration: none;

@@ -2,7 +2,7 @@
 {% block body %}
 
   <h2>
-    <a href="{{url_for('userShow', user=repo['owner']['name'])}}">
+    <a href="{{url_for('users', username=repo['owner']['name'])}}">
       {{repo['owner']['name']}}
     </a>
     /
@@ -22,7 +22,7 @@
   <ul>
     {% for c in repo['collaborators']%}
       <li>
-        <a href="{{url_for('userShow',user=c )}}">
+        <a href="{{url_for('users',username=c )}}">
           {{c}}
         </a>
       </li>

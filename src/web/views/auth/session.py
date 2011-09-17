@@ -40,7 +40,7 @@ class SessionAPI(MethodView):
                 identity = Identity(username)
                 identity_changed.send(app, identity=identity)
                 flash("Successfully logged in", "success")
-                return redirect(url_for('repoListForUser',username=username))
+                return redirect(url_for('repos',username=username))
 
       flash("log in failed", "error")
       return redirect(url_for('login'))
