@@ -23,7 +23,7 @@
 <h3>Collaborating</h3>
 <ul>
   {% for repo in user['repositories']['collaborating']%}
-    <li> class="button repo white"
+    <li class="button repo white">
       <a
       href="{{url_for('repos',username=repo['owner'],reponame=repo['name'])}}">
         {{repo['name']}}
