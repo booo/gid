@@ -38,4 +38,4 @@ import web.views.repository
 
 @app.route('/')
 def index():
-  return redirect(url_for('repoListIfPublic'))
+  return redirect(url_for('repoListPublic'))

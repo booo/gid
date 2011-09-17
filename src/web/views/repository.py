@@ -17,42 +17,73 @@ from gid.gitcommit import GitCommit
 
 from flask.views import MethodView
 class RepositoriesAPI(MethodView):
+    def get(self, username, reponame = None):
+        if reponame == None:
 
-    def get(self, username):
-        user = User.query.filter_by(username=username).first()
-        repos = Repository.query.filter_by(owner = user).all()
-            
-        data = []
-        for repo in repos:
+            user = User.query.filter_by(username=username).first()
+            repos = Repository.query.filter_by(owner = user).all()
+                
+            data = []
+            for repo in repos:
 
-            owner = {
-              'id'   : repo.owner.id,
-              'name' : repo.owner.username,
-              'email': repo.owner.email
-            }
+                owner = {
+                  'id'   : repo.owner.id,
+                  'name' : repo.owner.username,
+                  'email': repo.owner.email
+                }
 
-            data.append({
-                'id'          :   repo.id,
-                'name'        : repo.name,
-                'description' : repo.description,
-                'owner'       : owner,
-              }
-            )
+                data.append({
+                    'id'          :   repo.id,
+                    'name'        : repo.name,
+                    'description' : repo.description,
+                    'owner'       : owner,
+                  }
+                )
 
-        if "application/json" in request.headers['Accept']:
-          return jsonify(repositories=data)
+            if "application/json" in request.headers['Accept']:
+              return jsonify(repositories=data)
+            else:
+              return render_template('repository/listForUser.html', repositories = data)
+
         else:
-          return render_template('repository/listForUser.html', repositories = data)
+
+          user = User.query.filter_by(username=username).first()
+          repo = Repository.query.filter_by(name = reponame, owner = user).first()
+         
+          collaborators = []
+          for collaborator in repo.collaborators:
+            if collaborator != user:
+              collaborators.append(collaborator.username)
+
+          data = {
+            'name' : repo.name,
+            'description' : repo.description,
+            'owner' : {
+              'name' : user.username,
+              'email' : user.email,
+            },
+            'collaborators': collaborators,
+            'git' : GitRepository.show(repo.name, user.username) 
+          }
+
+          if "application/json" in request.headers['Accept']:
+            return jsonify(data)
+          else:
+            commits = GitCommit.list(reponame, username)
+            return render_template('repository/show.html', repo = data, \
+                                      commits = commits, owner = username,\
+                                      repository = repo.name)
+
 
     @normal_permission.require(http_exception=403)
     def post(self, username):
         form = RepositoryForm(request.form)
-        repoName = form.name.data
+        reponame = form.name.data
 
         if form.validate():
           user = User.query.filter_by(username=session['identity.name']).first()
           if user.username == username:
-            repo = Repository(repoName, user)
+            repo = Repository(reponame, user)
             repo.owner = user
             repo.description = form.description.data
             repo.public = not form.private.data
@@ -68,14 +99,14 @@ class RepositoriesAPI(MethodView):
             db.session.add(repo) 
             db.session.commit()
 
-            flash(u'Successfully created repository: ' + repoName, 'success')
+            flash(u'Successfully created repository: ' + reponame, 'success')
             
-            return redirect(url_for('repoShowByUserAndRepository',\
+            return redirect(url_for('repos',\
                               username = user.username,\
-                              repository = repoName\
+                              reponame = reponame\
                            ))
 
-        flash(u'Could not create repository:' + repoName, 'error')
+        flash(u'Could not create repository:' + reponame, 'error')
         return render_template('repository/form.html', form=form,\
                                 username=username,
                                 submit='Create Repository')
@@ -84,11 +115,12 @@ class RepositoriesAPI(MethodView):
     @normal_permission.require(http_exception=403)
     def put(self, username):
         form = RepositoryForm(request.form)
-        repoName = form.name.data
+        reponame = form.name.data
+
         if form.validate():
             user = User.query.filter_by(username=username).first()
-            repo = Repository.query.filter_by(name = repoName, owner = user).first()
-            repo.name = repoName
+            repo = Repository.query.filter_by(name = reponame, owner = user).first()
+            repo.name = reponame
             repo.description = form.description.data
             repo.public = not form.private.data
 
@@ -103,24 +135,41 @@ class RepositoriesAPI(MethodView):
             
             flash('Repository successfully edited', 'success')
 
-            return redirect(url_for('repoShowByUserAndRepository',\
+            return redirect(url_for('repos',\
                                       username = user.username,\
-                                      repository = repo.name))
+                                      reponame = repo.name))
 
         return Response("Error")
 
 
 
     @normal_permission.require(http_exception=403)
-    def delete(self, username):
-        pass
+    def delete(self, username, reponame):
+        repo = Repository.query.filter_by(name = reponame).first()
+        if repo.owner.username == session['identity.name']:
+          db.session.delete(repo)
+          db.session.commit()
+          GitRepository.delete(reponame, username)
+
+          flash("Successfully deleted: " + reponame)
+
+        else:
+          flash("Unauthorized", "error")
+
+        return redirect(url_for('repos', username = username))
+
+      
 
 app.add_url_rule('/repos/<username>',\
-                    view_func=RepositoriesAPI.as_view('repositories'))
+                    view_func=RepositoriesAPI.as_view('repos'),
+                    methods=['GET','PUT','POST'])
+app.add_url_rule('/repos/<username>/<reponame>',\
+                    view_func=RepositoriesAPI.as_view('repos'),
+                    methods=['GET', 'DELETE'])
 
 
 @app.route('/repos/public')
-def repoListIfPublic():
+def repoListPublic():
     repos = Repository.query.filter_by(public = True).all()
 
     data = []
@@ -149,15 +198,15 @@ def repoListIfPublic():
 
 
 @app.route('/repos/<username>/new')
-def repoCreateByUser(username):
+def repoNewForm(username):
     form = RepositoryForm(request.form)
-    action = url_for('repositories', username=username)
+    action = url_for('repos', username=username)
     return render_template('repository/form.html', form=form,
                                 username=username, action=action,
                                 submit='Create Repository')
 
 @app.route('/repos/<username>/<repository>/edit')
-def repoEditByUserAndRepository(username, repository):
+def repoEditForm(username, repository):
     user = User.query.filter_by(username=username).first()
     repo = Repository.query.filter_by(name = repository, owner = user).first()
 
@@ -173,43 +222,8 @@ def repoEditByUserAndRepository(username, repository):
     )
 
     form = RepositoryForm(obj = obj)
-    action = url_for('repositories', username=username) +\
+    action = url_for('repos', username=username) +\
                         '?__METHOD_OVERRIDE__=PUT'
     return render_template('repository/form.html', form=form,\
                                 username=username, action=action,\
                                 submit='Edit Repository')
-
-@app.route('/repos/<username>/<repository>')
-def repoShowByUserAndRepository(username, repository):
-    user = User.query.filter_by(username=username).first()
-    repo = Repository.query.filter_by(name = repository, owner = user).first()
-   
-    collaborators = []
-    for collaborator in repo.collaborators:
-      if collaborator != user:
-        collaborators.append(collaborator.username)
-
-    data = {
-      'name' : repo.name,
-      'description' : repo.description,
-      'owner' : {
-        'name' : user.username,
-        'email' : user.email,
-      },
-      'collaborators': collaborators,
-      'git' : GitRepository.show(repo.name, user.username) 
-    }
-
-    if "application/json" in request.headers['Accept']:
-      return jsonify(data)
-    else:
-      commits = GitCommit.list(repository, username)
-      return render_template('repository/show.html', repo = data, \
-                                commits = commits, owner = username,\
-                                repository = repo.name)
-
-
-@app.route('/repos/<username>/<repository>/delete')
-@normal_permission.require(http_exception=403)
-def repoDeleteByUserAndRepository(username, repository):
-  pass

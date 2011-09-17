@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 <h1>
-  <a href="{{url_for('repoShowByUserAndRepository',username=user,repository=repo)}}">
+  <a href="{{url_for('repos',username=user,reponame=repo)}}">
     {{repo}}
   </a>
   /

@@ -2,7 +2,7 @@
 {% for repo in repositories %}
     <li class="button repo white">
       <em>
-        <a href="{{ url_for('repoShowByUserAndRepository',username=repo['owner']['name'],repository=repo['name']) }}">
+        <a href="{{ url_for('repos',username=repo['owner']['name'],reponame=repo['name']) }}">
           {{ repo['name'] }}
         </a>
       </em>
@@ -15,6 +15,12 @@
           {{ repo['description'] }}
       {% else %}
         No description available
+      {% endif %}
+      {% if repo['owner']['name'] == session['identity.name'] %}
+      -
+      <a href="{{url_for('repos',username=repo['owner']['name'],reponame=repo['name'])}}?__METHOD_OVERRIDE__=DELETE">
+        delete
+      </a>
       {% endif %}
     </li>
 {% else %}

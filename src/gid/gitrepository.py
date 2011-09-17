@@ -1,4 +1,5 @@
 import os
+import shutil
 import re
 
 from dulwich.repo import Repo 
@@ -34,8 +35,8 @@ class GitRepository:
     @staticmethod
     def delete(repoName, userName):
         path = GitRepository._path(userName, repoName)
-        if os.path.isdir(path + os.path.sep + ".git"):
-          shutil.rmtree(path)
+        Repo.init(path)
+        shutil.rmtree(path)
 
     @staticmethod
     def show(repoName, userName):
