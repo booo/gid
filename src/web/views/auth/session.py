@@ -64,7 +64,10 @@ app.add_url_rule('/session/', view_func=SessionAPI.as_view('session'))
 @app.route("/session/new")
 def login():
     form = LoginForm(request.form)
-    return render_template('auth/login.html', form=form)
+    if "application/json" in request.headers['Accept']:
+      return jsonify(csrf=form.csrf.data)
+    else:
+      return render_template('auth/login.html', form=form)
 
 @app.route("/session/destroy")
 def destroy():
