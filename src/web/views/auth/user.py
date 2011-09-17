@@ -61,6 +61,7 @@ class UserAPI(MethodView):
               return render_template('auth/user.html', user=obj)
 
 
+    @normal_permission.require(http_exception=403)
     def put(self):
         form = ProfileForm(request.form)
         if form.validate():
@@ -98,6 +99,7 @@ class UserAPI(MethodView):
         return render_template('auth/register.html', form=form)
 
 
+    @normal_permission.require(http_exception=403)
     def delete(self):
         raise NotYetImplemented()
 
