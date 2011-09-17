@@ -7,14 +7,11 @@ from flask import Flask, request, render_template, json, \
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
-from web import app
-from web.views.auth.session import *
-from web.forms.repository import RepositoryForm
-from web.models.repository import Repository
-from web.models.dictobject import DictObject
-
-from gid.gitrepository import GitRepository
-from gid.gitcommit import GitCommit
+from rest_server import app
+from rest_server.views.auth.session import *
+from rest_server.forms.repository import RepositoryForm
+from rest_server.models.repository import Repository
+from rest_server.models.dictobject import DictObject
 
 from flask.views import MethodView
 

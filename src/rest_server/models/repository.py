@@ -2,7 +2,7 @@ import os
 import shutil
 from datetime import datetime
 
-from web import app, db
+from rest_server import app, db
 
 from sqlalchemy.ext.hybrid import hybrid_property
 

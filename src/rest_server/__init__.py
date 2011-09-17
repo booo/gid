@@ -30,12 +30,12 @@ class MethodRewriteMiddleware(object):
 app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
 
 # views
-import web.views.auth.user
-import web.views.auth.session
-import web.views.blob
-import web.views.tree
-import web.views.commit
-import web.views.repository
+import rest_server.views.auth.user
+import rest_server.views.auth.session
+import rest_server.views.blob
+import rest_server.views.tree
+import rest_server.views.commit
+import rest_server.views.repository
 
 @app.route('/')
 def index():

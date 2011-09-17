@@ -7,12 +7,12 @@ from flask.views import MethodView
 
 
 
-from web import app
-from web.models.user import User, db
-from web.views.auth.session import normal_permission
-from web.forms.registration import RegistrationForm
-from web.forms.login import LoginForm
-from web.forms.profile import ProfileForm
+from rest_server import app
+from rest_server.models.user import User, db
+from rest_server.views.auth.session import normal_permission
+from rest_server.forms.registration import RegistrationForm
+from rest_server.forms.login import LoginForm
+from rest_server.forms.profile import ProfileForm
 
 
 class UserAPI(MethodView):

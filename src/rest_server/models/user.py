@@ -1,5 +1,5 @@
-from web import app, db
-from web.models.repository import Repository
+from rest_server import app, db
+from rest_server.models.repository import Repository
 from twisted.conch.ssh.keys import Key as SSHKey
 
 

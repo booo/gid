@@ -1,11 +1,10 @@
-from web import app
-
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
-from web.models.repository import Repository
-from web.models.user import User
+from rest_server import app
+from rest_server.models.repository import Repository
+from rest_server.models.user import User
 
 @app.route('/api/repos/<username>/<repository>/trees/<sha>')
 def TreeByUserAndRepoAndSha(username, repository, sha):

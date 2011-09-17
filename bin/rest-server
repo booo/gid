@@ -2,7 +2,7 @@
 
 import path
 
-from web import app
+from rest_server import app
 
 from werkzeug import SharedDataMiddleware
 import os

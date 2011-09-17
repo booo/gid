@@ -7,10 +7,10 @@ from flask.views import MethodView
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
-from web import app
-from web.models.user import User, db
-from web.forms.profile import ProfileForm
-from web.forms.login import LoginForm
+from rest_server import app
+from rest_server.models.user import User, db
+from rest_server.forms.profile import ProfileForm
+from rest_server.forms.login import LoginForm
 
 # flask-principal
 principals = Principal()
