@@ -4,33 +4,21 @@ from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
-from gid.gitcommit import GitCommit
+from web.models.repository import Repository
+from web.models.user import User
 
-@app.route('/users/<username>/repositories/<repository>/commits')
+@app.route('/api/repos/<username>/<repository>/commits')
 def commitsByUserAndRepo(username, repository):
+    user = User.query.filter_by(username = username).first()
+    repo = Repository.query.filter_by(owner = user, name = repository).first()
+    commits = [c for c in repo.git.getCommits()] 
 
-    commits = GitCommit.list(repository, username)
+    return jsonify(commits=commits)
 
-    data = {
-      "repository" : repository,
-      "owner" : username,
-      "commits": commits
-    }
 
-    if "application/json" in request.headers['Accept']:
-      return jsonify(data)
-    else:
-      return render_template('commit/list.html', \
-                repository = data['repository'], \
-                owner = data['owner'],\
-                commits = data['commits'])
-
-@app.route('/users/<username>/repositories/<repository>/commits/<sha>')
+@app.route('/api/repos/<username>/<repository>/commits/<sha>')
 def commitByUserAndRepoAndSha(username, repository, sha):
-    commit = GitCommit.show(repository, username, sha)
+    user = User.query.filter_by(username = username).first()
+    repo = Repository.query.filter_by(owner = user, name = repository).first()
 
-    if "application/json" in request.headers['Accept']:
-      return jsonify(commit=commit)
-    else:
-      return render_template('commit/show.html', repo=repository,\
-                                  user=username, commit = commit)
+    return jsonify(commit=repo.git.getCommit(sha))

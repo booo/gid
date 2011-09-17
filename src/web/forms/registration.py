@@ -8,3 +8,14 @@ class RegistrationForm(Form):
         validators.EqualTo('confirm', message='Passwords must match')
     ])
     confirm = PasswordField('Repeat Password')
+
+
+    def toDict(self):
+        return {
+            'username'  : self.username.data,
+            'email'     : self.email.data,
+            'password'  : self.password.data,
+            'confirm'   : self.confirm.data,
+            'csrf'      : self.csrf.data
+
+          }

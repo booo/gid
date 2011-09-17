@@ -32,3 +32,15 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+    def toDict(self, short = True):
+        user = {
+            'username' : self.username,
+            'email'    : self.email
+          }
+
+        if not short:
+          user['repos'] = [r.toDict() for r in self.repos]
+
+        return user

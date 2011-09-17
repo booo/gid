@@ -19,7 +19,7 @@ for name in names:
     repo.private = choice([True, False])
 
     db.session.add(repo) 
-    user.repositories.append(repo)
+    user.repos.append(repo)
     
   db.session.commit()
 

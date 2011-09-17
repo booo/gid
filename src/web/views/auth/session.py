@@ -22,54 +22,48 @@ class SessionAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def get(self):
-      user = User.query.filter_by(username = session['identity.name']).first()
-      form = ProfileForm(obj = user)
+        user = User.query.filter_by(username = session['identity.name']).first()
+        form = ProfileForm(obj = user)
 
-      return render_template('auth/profile.html', form=form)
+        return jsonify(form.toDict())
 
     def post(self):
-      form = LoginForm(request.form)
-      if form.validate():
-          username = request.form['username']
-          password = request.form['password']        
-          
-          user = User.query.filter_by(username=username).first()
+        form = LoginForm(request.form)
+        if form.validate():
+            username = request.form['username']
+            password = request.form['password']        
+            
+            user = User.query.filter_by(username=username).first()
 
-          if user:
-            if user.password == password:
-                identity = Identity(username)
-                identity_changed.send(app, identity=identity)
-                flash("Successfully logged in", "success")
-                return redirect(url_for('repos',username=username))
+            if user:
+              if user.password == password:
+                  identity = Identity(username)
+                  identity_changed.send(app, identity=identity)
+                  return jsonify(form.toDict())
 
-      flash("log in failed", "error")
-      return redirect(url_for('login'))
+        return jsonifiy({ 'status':'invalid data'})
 
 
     @normal_permission.require(http_exception=403)
     def delete(self):
-        for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
-            try:
+        try:
+            for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
                 del session[key]
-            except:
-                pass
+            return jsonifiy({ 'status':'ok'})
 
-        flash("Logged out", "success")
+        except KeyError:
+            return jsonifiy({ 'status':'invalid data'})
 
-        return redirect(url_for('users'))
-
-app.add_url_rule('/session/', view_func=SessionAPI.as_view('session'))
+app.add_url_rule('/api/session/', view_func=SessionAPI.as_view('session'))
 
 
-@app.route("/session/new")
+@app.route("/api/session/new")
 def login():
     form = LoginForm(request.form)
-    if "application/json" in request.headers['Accept']:
-      return jsonify(csrf=form.csrf.data)
-    else:
-      return render_template('auth/login.html', form=form)
+    return jsonify(form=form.toDict())
 
-@app.route("/session/destroy")
+
+@app.route("/api/session/destroy")
 def destroy():
     return redirect(url_for('session') + '?__METHOD_OVERRIDE__=DELETE')
         

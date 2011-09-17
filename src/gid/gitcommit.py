@@ -9,9 +9,7 @@ class GitCommit:
           return datetime.fromtimestamp(int(timestamp)).strftime('%Y-%m-%d %H:%M:%S')
 
     @staticmethod
-    def list(repoName, userName):
-      repo = GitRepository._get(repoName, userName) 
-
+    def all(repo):
       commits = []
       try:
         walker = Walker(repo.object_store, [repo.head()])

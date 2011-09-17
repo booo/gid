@@ -5,3 +5,13 @@ class RepositoryForm(Form):
     description = TextAreaField('Description')
     collaborators = TextField('Collaborators')
     private = BooleanField('Private Repository')
+
+
+    def toDict(self):
+        return {
+            'name'          : self.name.data,
+            'description'   : self.description.data,
+            'collaborators' : self.collaborators.data,
+            'private'       : self.private.data,
+            'csrf'          : self.csrf.data
+          }
