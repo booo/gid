@@ -3,30 +3,70 @@ import urllib
 
 class RestResource(Resource):
 
-    def postForm(self, form, headers = None):
+    def getWithCookies(self, path, reqCookies = None):
+        reqHeaders = {}
+        if reqCookies:
+          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
+
+        response = self.get(path, headers = reqHeaders)
+
+        return response.body_string(), self._getCookiesFromHeader(response.headers)
+
+
+    def deleteWithCookie(self, path, cookies = None):
+        reqHeaders = {}
+        if reqCookies:
+          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
+
+        response = self.delete(path, headers = reqHeaders)
+
+        return response.body_string(), self._getCookiesFromHeader(response.headers)
+
+
+    def postForm(self, path, data, reqCookies = None):
         reqPayload = '&'.join(
-            [ '='.join( [k, urllib.quote(v)] ) for k,v in form.items() ]
+            [ '='.join( [k, urllib.quote(v)] ) for k,v in data.items() ]
           )
 
         reqHeaders = {
             'Content-Type' : 'application/x-www-form-urlencoded',
           }
 
-        if headers:
-          for k,v in headers.items():
-            reqHeaders[k] = v
+        if reqCookies:
+          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
+
+        
 
         response = self.post(
-              '/',
+              path,
               headers=reqHeaders,
               payload=reqPayload
             )
+        
 
-        cookies = dict(
-                map(
-                  lambda x : tuple(x.split('=', 1)),
-                  response.headers['Set-Cookie'].split('&')[:-1]
+        return response.body_string(), self._getCookiesFromHeader(response.headers)
+
+    
+    @staticmethod
+    def _cookiesToStr(cookies):
+        return ';'.join(
+                  ['='.join([k,'"%s"'%v]) for k,v in cookies.items() ]
                 )
-              )
 
-        return response, cookies
+
+    @staticmethod
+    def _getCookiesFromHeader(headers):
+        if 'Set-Cookie' not in headers:
+          return {}
+
+        cookies = headers['Set-Cookie'][:headers['Set-Cookie'].rindex('; Path')]
+
+        f = lambda x : tuple([s.strip('"') for s in x.split('=', 1)])
+
+        if '&' not in cookies:
+            data = [f(cookies)]
+
+        else:
+            data = map(f, cookies.split('&'))
+
+        return dict(data)

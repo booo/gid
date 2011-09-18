@@ -24,8 +24,7 @@ principals._init_app(app)
 
 class SessionAPI(MethodView):
 
-    def __init__(self):
-        self.rest = RestResource('http://127.0.0.1:5000/api/session')
+    rest = RestResource('http://127.0.0.1:5000/api/session')
 
 
     @normal_permission.require(http_exception=403)
@@ -35,6 +34,8 @@ class SessionAPI(MethodView):
     def post(self):
         form = LoginForm(request.form)
         
+        print "POST - proxy: " + str(session['proxy'])
+
         if form.validate():
           data =  {
               'username' : form.username.data,
@@ -42,9 +43,13 @@ class SessionAPI(MethodView):
               'csrf'     : form.csrf.data
             }
 
-          response, session['proxy'] = self.rest.postForm(data,session.get('proxy', None)) 
+          response, session['proxy'] = self.rest.postForm(
+                '/',
+                data,
+                {app.session_cookie_name : session.serialize()}
+            ) 
 
-          return jsonify(json.loads(response.body_string()))
+          return jsonify(json.loads(response))
 
         return render_template('auth/login.html', form=form)
 
@@ -52,14 +57,34 @@ class SessionAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def delete(self):
-        pass
+        response, session['proxy'] = self.rest.deleteWithCookie('/',session.get('proxy', None)) 
+
+        return redirect(url_for('login'))
+
 
 app.add_url_rule('/session/', view_func=SessionAPI.as_view('session'))
 
 
 @app.route("/session/new")
 def login():
+    if 'identity.name' in session:
+        redirect(url_for('session'))
+
+    response, proxy = SessionAPI.rest.getWithCookies(
+          '/new',
+          {app.session_cookie_name : session.serialize()}
+      ) 
+
+
+    data = json.loads(response)
+
+    request.form.csrf = data['form']['csrf']
+    
     form = LoginForm(request.form)
+
+    print "GET - session: " + session.serialize().split("?",1)[0]
+    print "GET - csrf: " + form.csrf.data 
+
     return render_template('auth/login.html', form=form)
 
 @app.route("/session/destroy")

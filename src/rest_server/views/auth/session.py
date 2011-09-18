@@ -34,7 +34,6 @@ class SessionAPI(MethodView):
         print form.toDict()
 
         if form.validate():
-            print "valid form"
 
             username = form.username.data
             password = form.password.data
@@ -66,6 +65,10 @@ app.add_url_rule('/api/session/', view_func=SessionAPI.as_view('session'))
 @app.route("/api/session/new")
 def login():
     form = LoginForm(request.form)
+
+    print "GET - session: " + session.serialize().split("?",1)[0]
+    print "GET - csrf: " + form.csrf.data 
+
     return jsonify(form=form.toDict())
 
 
