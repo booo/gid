@@ -4,6 +4,10 @@ body {
   font-family: Arial;
 }
 
+.right {
+  text-align: right;
+}
+
 .site {
   background-color: #EEE;
   margin: 25px auto;
@@ -51,7 +55,6 @@ a, a:hover, a:visited, a:active {
 }
 
 .repo {
-  width: 100%;
   margin: 5px;
 }
 ul, li {
@@ -92,8 +95,18 @@ li.error {
   border: 5px solid #F00;
 }
 
-ul.flashes li, ul.repos li{
+ul.repos {
+  margin: 0px;
+  padding: 0px;
+  text-align: center;
+}
+ul.flashes li, ul.repos li {
   list-style-type: none;
+  display: block;
+  margin: 10px 0px;
+}
+ul.repos li a {
+  display: block;
 }
 
 /* Colors */

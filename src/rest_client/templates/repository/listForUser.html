@@ -1,5 +1,21 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h2>Your Repositories</h2>
+
+  <div class="grid_9 alpha">
+    <h2>Your Repositories</h2>
+  </div>
+  <div class="grid_3 omega right">
+   {% if session["identity.name"] %}
+    <p>
+      <a class="button orange" href="{{url_for('repoNewForm',username=session['identity.name'])}}">
+        create repository
+      </a>
+    </p>
+  {%endif%}
+  </div>
+
+  <div class="clear"></div>
+  <div class="grid_12 alpha omega">
   {% include 'repository/_list.html' %}
+  </div>
 {% endblock %}
