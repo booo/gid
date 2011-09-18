@@ -4,23 +4,23 @@ import path
 import string
 
 from random import choice
-from web.models.user import User, db
-from web.models.repository import Repository
+from rest_server.models.user import User, db
+from rest_server.models.repository import Repository
 
 names = ["john", "alice", "bob"]
 for name in names:
   user = User(name, name + "@bla.de", name)
 
-  db.session.add(user) 
+  db.session.add(user)
 
   for j in range(0,3):
     repoName = ''.join([choice(string.letters) for k in xrange(8)])
     repo = Repository(repoName, user)
     repo.private = choice([True, False])
 
-    db.session.add(repo) 
+    db.session.add(repo)
     user.repos.append(repo)
-    
+
   db.session.commit()
 
   print "added user '"+name+"' with pass '"+name+"'"
