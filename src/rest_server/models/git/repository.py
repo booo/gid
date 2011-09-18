@@ -54,17 +54,20 @@ class GitRepository:
 
 
     def getCommits(self, branch = None):
+        commits = []
+
         try:
             sha = [ branch if branch else self._repo.head() ]
             walker = Walker(self._repo.object_store, sha)
 
-            return [
-                GitCommit(entry.commit).toDict(True) for entry in walker
-              ]
+            if walker is not None:
+              commits = [GitCommit(entry.commit).toDict(True) for entry in walker]
+
 
         except KeyError:
           pass
 
+        return commits
 
     def getBlob(self, sha):
         return GitBlob(self._repo.get_blob(sha)).toDict()
