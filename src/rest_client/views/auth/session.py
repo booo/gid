@@ -9,9 +9,9 @@ from flask.views import MethodView
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
-from restclient import Resource
 
 from rest_client import app
+from rest_client.models.rest import RestResource
 
 from rest_server.forms.login import LoginForm
 
@@ -21,9 +21,12 @@ normal_role = RoleNeed('normal')
 normal_permission = Permission(normal_role)
 principals._init_app(app)
 
-res  = Resource('http://127.0.0.1:5000/api/session')
 
 class SessionAPI(MethodView):
+
+    def __init__(self):
+        self.rest = RestResource('http://127.0.0.1:5000/api/session')
+
 
     @normal_permission.require(http_exception=403)
     def get(self):
@@ -33,23 +36,15 @@ class SessionAPI(MethodView):
         form = LoginForm(request.form)
         
         if form.validate():
-          import urllib
-          payload = 'username=%s&password=%s&csrf=%s' % (\
-                       urllib.quote(form.username.data),
-                       urllib.quote(form.password.data),
-                       urllib.quote(form.csrf.data)
-                     )
+          data =  {
+              'username' : form.username.data,
+              'password' : form.password.data,
+              'csrf'     : form.csrf.data
+            }
 
-          print payload
+          response, session['proxy'] = self.rest.postForm(data,session.get('proxy', None)) 
 
-          data = json.loads(res.post(
-                '/',
-                headers={'Content-Type':'application/x-www-form-urlencoded'},
-                payload=payload
-              )
-            )
-
-          return jsonify(data)
+          return jsonify(json.loads(response.body_string()))
 
         return render_template('auth/login.html', form=form)
 

@@ -1,5 +1,5 @@
     DEBUG : True
     SECRET_KEY : 'algjsgASKSAGs72385hbq1bnaskghJSGSGASGjkjk898909'
     SQLALCHEMY_DATABASE_URI : 'sqlite:///../../data/db/sqlite.db'
-    CSRF_ENABLED: False
+    CSRF_ENABLED: True
     dataDir : 'data/git/' 
