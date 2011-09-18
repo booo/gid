@@ -14,6 +14,8 @@ from rest_client import app
 from rest_client.models.rest import RestResource
 
 from rest_server.forms.login import LoginForm
+from rest_server.models.dictobject import DictObject
+from rest_server.forms.profile import ProfileForm
 
 # flask-principal
 principals = Principal()
@@ -29,27 +31,47 @@ class SessionAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def get(self):
-        pass
+        response = SessionAPI.rest.getWithCookies(
+              '/',
+              {app.session_cookie_name : session.serialize()}
+          ) 
+        
+        form = ProfileForm(obj = DictObject(**json.loads(response)))
+
+        return render_template('auth/profile.html', form=form)
+
 
     def post(self):
         form = LoginForm(request.form)
-        
-        print "POST - proxy: " + str(session['proxy'])
 
+
+        print "Session:" + session.serialize()
         if form.validate():
-          data =  {
-              'username' : form.username.data,
-              'password' : form.password.data,
-              'csrf'     : form.csrf.data
-            }
+            formData =  {
+                'username' : form.username.data,
+                'password' : form.password.data,
+                'csrf'     : form.csrf.data
+              }
 
-          response, session['proxy'] = self.rest.postForm(
-                '/',
-                data,
-                {app.session_cookie_name : session.serialize()}
-            ) 
+            response = self.rest.postForm(
+                  '/',
+                  formData,
+                  {app.session_cookie_name : session.serialize()}
+              ) 
 
-          return jsonify(json.loads(response))
+            data = json.loads(response)
+
+            print "data : " + str(data)
+
+            if 'username' in data and data['username'] != None:
+                identity = Identity(data['username'])
+                identity_changed.send(app, identity=identity)
+
+                return redirect(url_for('session'))
+
+            else:
+                flash("Invalid credentials!", 'error')
+
 
         return render_template('auth/login.html', form=form)
 
@@ -57,12 +79,22 @@ class SessionAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def delete(self):
-        response, session['proxy'] = self.rest.deleteWithCookie('/',session.get('proxy', None)) 
+        response = self.rest.deleteWithCookie(
+                        '/',
+                        {app.session_cookie_name : session.serialize()}
+                      )
+
+        try:
+            for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
+                del session[key]
+
+        except KeyError:
+            pass
 
         return redirect(url_for('login'))
 
 
-app.add_url_rule('/session/', view_func=SessionAPI.as_view('session'))
+app.add_url_rule('/session', view_func=SessionAPI.as_view('session'))
 
 
 @app.route("/session/new")
@@ -70,7 +102,7 @@ def login():
     if 'identity.name' in session:
         redirect(url_for('session'))
 
-    response, proxy = SessionAPI.rest.getWithCookies(
+    response = SessionAPI.rest.getWithCookies(
           '/new',
           {app.session_cookie_name : session.serialize()}
       ) 
@@ -78,12 +110,10 @@ def login():
 
     data = json.loads(response)
 
+    session['_csrf_token'] = data['form']['csrf']
     request.form.csrf = data['form']['csrf']
     
     form = LoginForm(request.form)
-
-    print "GET - session: " + session.serialize().split("?",1)[0]
-    print "GET - csrf: " + form.csrf.data 
 
     return render_template('auth/login.html', form=form)
 

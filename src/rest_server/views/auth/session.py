@@ -31,7 +31,9 @@ class SessionAPI(MethodView):
 
         form = LoginForm(obj = request.form)
 
-        print form.toDict()
+        print "form" + str(request.form)
+        print "csrf:"+session['_csrf_token']
+        print "Session:" + session.serialize()
 
         if form.validate():
 
@@ -44,7 +46,11 @@ class SessionAPI(MethodView):
               if user.password == password:
                   identity = Identity(username)
                   identity_changed.send(app, identity=identity)
+
                   return jsonify(form.toDict())
+
+              else:
+                  return jsonify({'errors' : 'invalid credentials' })
 
         return jsonify( form.errors )
 
@@ -65,9 +71,6 @@ app.add_url_rule('/api/session/', view_func=SessionAPI.as_view('session'))
 @app.route("/api/session/new")
 def login():
     form = LoginForm(request.form)
-
-    print "GET - session: " + session.serialize().split("?",1)[0]
-    print "GET - csrf: " + form.csrf.data 
 
     return jsonify(form=form.toDict())
 

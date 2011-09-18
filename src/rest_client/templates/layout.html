@@ -13,6 +13,30 @@
   <body>
     <div class="container_12 site">
 
+      <div class="grid_6">
+        <p><a href="{{url_for('index')}}">Home</a></p>
+     </div>
+
+     <div class="grid_6">
+        <ul class="account">
+        {% if session["identity.name"] %}
+          <li><a class="text_red" href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a></li>
+          <li>-</li>
+          <li><a class="text_red" href="{{url_for('session')}}">Account</a></li>
+          <li>-</li>
+          <li><a class="text_red" href="{{url_for('repos',username=session['identity.name'])}}">Repositories</a></li>
+          <li>-</li>
+          <li>
+            Logged in as 
+            <a class="text_red" href="{{url_for('users',username=session['identity.name'])}}">{{session['identity.name']}}</a>
+          </li>
+        {% else %}
+          <li><a href="{{url_for('userNewForm')}}">register</a></li>
+          <li><a href="{{url_for('session')}}">login</a></li>
+        {%endif%}
+        </ul>
+      </div>
+
 
       <div class="clear"></div>
       <div class="grid_11 main">

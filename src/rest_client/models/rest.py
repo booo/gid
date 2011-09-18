@@ -10,17 +10,17 @@ class RestResource(Resource):
 
         response = self.get(path, headers = reqHeaders)
 
-        return response.body_string(), self._getCookiesFromHeader(response.headers)
+        return response.body_string()
 
 
-    def deleteWithCookie(self, path, cookies = None):
+    def deleteWithCookie(self, path, reqCookies = None):
         reqHeaders = {}
         if reqCookies:
           reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
 
         response = self.delete(path, headers = reqHeaders)
 
-        return response.body_string(), self._getCookiesFromHeader(response.headers)
+        return response.body_string()
 
 
     def postForm(self, path, data, reqCookies = None):
@@ -44,7 +44,7 @@ class RestResource(Resource):
             )
         
 
-        return response.body_string(), self._getCookiesFromHeader(response.headers)
+        return response.body_string()
 
     
     @staticmethod
