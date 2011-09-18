@@ -29,6 +29,12 @@ class MethodRewriteMiddleware(object):
 
 app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
 
+
+import rest_client.views.repository
+import rest_client.views.auth.user
+import rest_client.views.auth.session
+
+
 @app.route('/')
 def index():
-  return Response("Test")
+  return redirect(url_for('repoListPublic'))
