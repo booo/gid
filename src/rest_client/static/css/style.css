@@ -109,6 +109,14 @@ ul.repos li a {
   display: block;
 }
 
+.center {
+  text-align: center;
+}
+
+.textWhite {
+  color: #fff;
+}
+
 /* Colors */
 .orange {
     color: #fef4e9;
