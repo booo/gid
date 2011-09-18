@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, json, \
-                                flash, session, redirect, url_for, Response, \
+                               flash, session, redirect, url_for, Response, \
                                 jsonify
 
 from flask.views import MethodView
@@ -28,10 +28,15 @@ class SessionAPI(MethodView):
         return jsonify(form.toDict())
 
     def post(self):
-        form = LoginForm(request.form)
+        form = LoginForm(csrf_enabled = False, obj = request.form)
+
+        print form.toDict()
+
         if form.validate():
-            username = request.form['username']
-            password = request.form['password']        
+            print "valid form"
+
+            username = form.username.data
+            password = form.password.data
             
             user = User.query.filter_by(username=username).first()
 
@@ -41,7 +46,7 @@ class SessionAPI(MethodView):
                   identity_changed.send(app, identity=identity)
                   return jsonify(form.toDict())
 
-        return jsonifiy({ 'status':'invalid data'})
+        return jsonify( form.errors )
 
 
     @normal_permission.require(http_exception=403)

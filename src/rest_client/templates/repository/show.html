@@ -2,12 +2,12 @@
 {% block body %}
 
   <h2>
-    <a href="{{url_for('users', username=repo['owner']['name'])}}">
-      {{repo['owner']['name']}}
+    <a href="{{url_for('users', username=repo['owner']['username'])}}">
+      {{repo['owner']['username']}}
     </a>
     /
     {{repo['name']}}
-    {% if repo['owner']['name'] == session['identity.name'] %}
+    {% if repo['owner']['username'] == session['identity.name'] %}
     <a class="button green" href="{{url_for('repoEditForm',username=session['identity.name'],repository=repo['name'])}}">
       Edit
     </a>
