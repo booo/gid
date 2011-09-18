@@ -28,7 +28,8 @@ class SessionAPI(MethodView):
         return jsonify(form.toDict())
 
     def post(self):
-        form = LoginForm(csrf_enabled = False, obj = request.form)
+
+        form = LoginForm(obj = request.form)
 
         print form.toDict()
 
