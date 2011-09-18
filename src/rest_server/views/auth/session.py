@@ -55,10 +55,10 @@ class SessionAPI(MethodView):
         try:
             for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
                 del session[key]
-            return jsonifiy({ 'status':'ok'})
+            return jsonify({ 'status':'ok'})
 
         except KeyError:
-            return jsonifiy({ 'status':'invalid data'})
+            return jsonify({ 'status':'invalid data'})
 
 app.add_url_rule('/api/session/', view_func=SessionAPI.as_view('session'))
 
