@@ -48,16 +48,11 @@ class SessionAPI(MethodView):
 
 
         if form.validate():
-            formData =  {
-                'username' : form.username.data,
-                'password' : form.password.data,
-                'csrf'     : form.csrf.data
-              }
 
             try:
                 response = self.rest.postForm(
                       '/',
-                      formData,
+                      form.toDict(),
                       {app.session_cookie_name : session.serialize()}
                   ) 
 

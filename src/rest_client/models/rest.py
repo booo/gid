@@ -68,7 +68,7 @@ class RestResource(Resource):
     @staticmethod
     def _payloadToStr(data):
         return '&'.join(
-            [ '='.join( [k, urllib.quote(v)] ) for k,v in data.items() ]
+            [ '='.join( [k, urllib.quote(str(v))] ) for k,v in data.items() ]
           )
 
 

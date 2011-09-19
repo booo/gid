@@ -8,15 +8,15 @@ from flask import Flask, request, render_template, json, \
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
-from restkit.errors import Unauthorized
+from flask.views import MethodView
 
+from restclient import Resource
+from restkit.errors import Unauthorized
 from rest_client import app
 from rest_client.models.rest import RestResource
 from rest_client.views.auth.session import normal_permission
+from rest_server.forms.repository import RepositoryForm
 
-from restclient import Resource
-
-from flask.views import MethodView
 
 class RepositoriesAPI(MethodView):
 
@@ -61,15 +61,36 @@ class RepositoriesAPI(MethodView):
                    )
 
 
-
-
-
-
-    #@normal_permission.require(http_exception=403)
+    @normal_permission.require(http_exception=403)
     def post(self, username):
-        pass
+        form = RepositoryForm(request.form)
 
-    #@normal_permission.require(http_exception=403)
+        if form.validate():
+            response = self.rest.postForm(
+                  '/%s' % username,
+                  form.toDict(),
+                  {app.session_cookie_name : session.serialize()}
+              ) 
+
+            data = json.loads(response)
+
+            flash("Repository created!", "success")
+
+            return redirect(url_for('repos', 
+                        username=username,
+                        reponame=form.name.data
+                      )
+                    )
+
+        action = url_for('repos', username=username)
+        return render_template('repository/form.html', form=form,
+                                    username=username, action=action,
+                                    submit='Create Repository')
+
+
+
+
+    @normal_permission.require(http_exception=403)
     def put(self, username, reponame):
         pass
 
@@ -114,11 +135,15 @@ def repoListPublic():
                       repos = repos)
 
 
-@app.route('/api/repos/<username>/new')
+@app.route('/repos/<username>/new')
 def repoNewForm(username):
-    pass
+    form = RepositoryForm(request.form)
+    action = url_for('repos', username=username)
+    return render_template('repository/form.html', form=form,
+                                username=username, action=action,
+                                submit='Create Repository')
 
 
-@app.route('/api/repos/<username>/<repository>/edit')
+@app.route('/repos/<username>/<repository>/edit')
 def repoEditForm(username, repository):
     pass

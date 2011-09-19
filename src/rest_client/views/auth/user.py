@@ -26,16 +26,9 @@ class UserAPI(MethodView):
         form = ProfileForm(request.form)
 
         if form.validate():
-            formData =  {
-                'username'  : form.username.data,
-                'email'     : form.email.data,
-                'key'       : form.key.data,
-                'csrf'      : form.csrf.data
-              }
-
             response = self.rest.putForm(
                   '/',
-                  formData,
+                  form.toDict(),
                   {app.session_cookie_name : session.serialize()}
               ) 
 
@@ -53,17 +46,10 @@ class UserAPI(MethodView):
         form = RegistrationForm(request.form)
 
         if form.validate():
-            formData =  {
-                'username'  : form.username.data,
-                'password'  : form.password.data,
-                'confirm'   : form.confirm.data,
-                'email'     : form.email.data,
-                'csrf'      : form.csrf.data
-              }
 
             response = self.rest.postForm(
                   '/',
-                  formData,
+                  form.toDict(),
                   {app.session_cookie_name : session.serialize()}
               ) 
 
