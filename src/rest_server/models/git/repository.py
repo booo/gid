@@ -53,15 +53,19 @@ class GitRepository:
         return GitCommit(self._repo.commit(sha)).toDict()
 
 
-    def getCommits(self, branch = None):
+    def getCommits(self, amount = None, branch = None):
         commits = []
 
         try:
             sha = [ branch if branch else self._repo.head() ]
-            walker = Walker(self._repo.object_store, sha)
+            walker = Walker(self._repo.object_store, sha, max_entries = amount)
 
             if walker is not None:
-              commits = [GitCommit(entry.commit).toDict(True) for entry in walker]
+              commits = [
+                          GitCommit(entry.commit).toDict(True)
+                          for entry in walker
+                        ]
+
 
 
         except KeyError:

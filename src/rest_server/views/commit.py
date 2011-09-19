@@ -10,7 +10,8 @@ from rest_server.models.user import User
 def commitsByUserAndRepo(username, repository):
     user = User.query.filter_by(username = username).first()
     repo = Repository.query.filter_by(owner = user, name = repository).first()
-    commits = [c for c in repo.git.getCommits()] 
+    amount = int(request.args.get('amount', 0)) or None
+    commits = [c for c in repo.git.getCommits(amount)] 
 
     return jsonify(commits=commits)
 

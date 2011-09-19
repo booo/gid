@@ -65,6 +65,7 @@ class RepositoriesAPI(MethodView):
             urlCommits = '%s/commits' % urlRepo
             responseCommits = RepositoriesAPI.rest.get(
                   urlCommits,
+                  amount = 3,
                   headers = {'Accept': 'application/json'}
                 ).body_string()
             commits = json.loads(responseCommits)['commits']
