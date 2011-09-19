@@ -6,12 +6,12 @@
  <small>{{user['email']}}</small>
 </h1>
 
-<h2>Own repositories</h2>
+<h2>Public repositories</h2>
 <ul class="repos">
   {% for repo in user['repos']%}
     <li class="button repo white">
       <a
-      href="{{url_for('repos',username=user['username'],reponame=repo['name'])}}">
+      href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
         {{repo['name']}}
       </a>
     </li>

@@ -19,16 +19,21 @@ class UserAPI(MethodView):
 
     def get(self, username):
         url = '/%s' % username
-        response = UserAPI.rest.get(
-              url,
-              headers = {'Accept': 'application/json'}
-            ).body_string()
+        try: 
+          response = UserAPI.rest.get(
+                url,
+                headers = {'Accept': 'application/json'}
+              ).body_string()
 
-        user = json.loads(response)['user']
+          user = json.loads(response)['user']
 
-        return render_template('auth/user.html',
-                      user=user
-               )
+          return render_template('auth/user.html',
+                        user=user
+                 )
+        except ResourceNotFound:
+          pass
+
+        return Response(""), 404
 
 
     @normal_permission.require(http_exception=403)

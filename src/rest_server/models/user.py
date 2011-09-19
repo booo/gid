@@ -34,13 +34,18 @@ class User(db.Model):
         return '<User %r>' % self.username
 
 
-    def toDict(self, short = True):
+    def toDict(self, short = True, filterPublic = False):
         user = {
             'username' : self.username,
             'email'    : self.email
           }
 
         if not short:
-          user['repos'] = [r.toDict() for r in self.repos]
+          if filterPublic:
+            repos = filter(lambda x: x.private == False, self.repos)
+          else:
+            repos = self.repos
+
+          user['repos'] = [r.toDict() for r in repos]
 
         return user
