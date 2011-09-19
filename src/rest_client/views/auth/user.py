@@ -17,8 +17,18 @@ class UserAPI(MethodView):
 
     rest = RestResource('http://127.0.0.1:5000/api/users')
 
-    def get(self, username=None):
-        pass
+    def get(self, username):
+        url = '/%s' % username
+        response = UserAPI.rest.get(
+              url,
+              headers = {'Accept': 'application/json'}
+            ).body_string()
+
+        user = json.loads(response)['user']
+
+        return render_template('auth/user.html',
+                      user=user
+               )
 
 
     @normal_permission.require(http_exception=403)
@@ -63,9 +73,12 @@ class UserAPI(MethodView):
         raise NotYetImplemented()
 
 
-app.add_url_rule('/users/',\
+app.add_url_rule('/<username>',
                     view_func=UserAPI.as_view('users'),
-                    methods=['GET','PUT','POST'])
+                    methods=['GET'])
+app.add_url_rule('/users',\
+                    view_func=UserAPI.as_view('users'),
+                    methods=['PUT','POST'])
 app.add_url_rule('/users/<username>',\
                     view_func=UserAPI.as_view('users'),
                     methods=['DELETE'])
