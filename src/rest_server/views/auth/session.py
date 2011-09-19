@@ -61,7 +61,7 @@ class SessionAPI(MethodView):
         except KeyError:
             return jsonify({ 'status':'invalid data'})
 
-app.add_url_rule('/api/session/', view_func=SessionAPI.as_view('session'))
+app.add_url_rule('/api/session', view_func=SessionAPI.as_view('session'))
 
 
 @app.route("/api/session/new")
@@ -70,15 +70,9 @@ def login():
 
     return jsonify(form=form.toDict())
 
-
-@app.route("/api/session/destroy")
-def destroy():
-    return redirect(url_for('session') + '?__METHOD_OVERRIDE__=DELETE')
-        
 @app.errorhandler(403)
 def page_not_found(e):
-    session['redirected_from'] = request.url
-    return redirect(url_for('login'))
+    return Response(""), 401
 
     
 @identity_loaded.connect_via(app)

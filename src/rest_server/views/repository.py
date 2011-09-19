@@ -17,8 +17,18 @@ from flask.views import MethodView
 
 class RepositoriesAPI(MethodView):
 
-    def get(self, username, reponame = None):
-        if reponame == None:
+    def get(self, username = None, reponame = None):
+        # /repos => all public repositories
+        if username == None:
+            repos = [ 
+              repo.toDict() 
+              for repo in Repository.query.filter_by(private = False).all()
+            ]
+
+            return jsonify(repos=repos)
+
+      # /repos/<username> => all repositories for user
+        elif reponame == None:
             user = User.query.filter_by(username=username).first()
             repos = [ 
                 repo.toDict() 
@@ -27,6 +37,7 @@ class RepositoriesAPI(MethodView):
 
             return jsonify(repos=repos)
 
+      # /repos/<username>/<repository> => repository
         else:
           user = User.query.filter_by(username=username).first()
           repo = Repository.query.filter_by(name = reponame, owner = user).first()
@@ -103,22 +114,16 @@ class RepositoriesAPI(MethodView):
 
       
 
+app.add_url_rule('/api/repos',\
+                    view_func=RepositoriesAPI.as_view('repos'),
+                    methods=['GET'])
+
 app.add_url_rule('/api/repos/<username>',\
                     view_func=RepositoriesAPI.as_view('repos'),
                     methods=['GET','POST'])
 app.add_url_rule('/api/repos/<username>/<reponame>',\
                     view_func=RepositoriesAPI.as_view('repos'),
                     methods=['GET','PUT','DELETE'])
-
-
-@app.route('/api/repos/')
-def repoListPublic():
-    repos = [ 
-        repo.toDict() 
-        for repo in Repository.query.filter_by(private = False).all()
-      ]
-
-    return jsonify(repos=repos)
 
 
 @app.route('/api/repos/<username>/new')
