@@ -8,6 +8,10 @@ body {
   text-align: right;
 }
 
+.cloneUrl {
+  width: 400px;
+}
+
 .site {
   background-color: #EEE;
   margin: 25px auto;

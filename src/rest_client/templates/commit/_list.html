@@ -3,7 +3,7 @@
   <li>
     <h4>
       <a
-      href="{{url_for('commitByUserAndRepoAndSha',username=owner,repository=repository,sha=commit['sha'])}}">
+      href="{{url_for('commitByUserAndRepoAndSha',username=repo['owner']['username'],repository=repo['name'],sha=commit['sha'])}}">
         {{commit['sha']}}
       </a>
     </h4>

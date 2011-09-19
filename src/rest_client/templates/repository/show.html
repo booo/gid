@@ -14,7 +14,7 @@
     {% endif %}
   </h2>
   <p>
-    <input type="text" value="ssh://user@localhost:5000/{{repo['owner']['name']}}/{{repo['name']}}" />
+    <input type="text" class="cloneUrl" value="ssh://user@localhost:5000/{{repo['owner']['name']}}/{{repo['name']}}" />
   </p>
 
   <p>
@@ -25,13 +25,13 @@
   {% endif %}
   </p>
   
-  {% if repo['collaborators'] %}
-  <h3>Collaborators</h3>
+  {% if repo['contributers'] %}
+  <h3>Contributers</h3>
   <ul>
-    {% for c in repo['collaborators']%}
+    {% for c in repo['contributers']%}
       <li>
-        <a href="{{url_for('users',username=c )}}">
-          {{c}}
+        <a href="{{url_for('users',username=c['username'] )}}">
+          {{c['username']}}
         </a>
       </li>
     {% endfor %}
