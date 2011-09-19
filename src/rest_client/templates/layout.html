@@ -5,41 +5,41 @@
   <head>
     <title>GID - Easy way of mainting GIT Repositories</title>
     <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/reset.css')}}" />
-    <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/text.css')}}" />
     <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/960.css')}}" />
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/style.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/main.css')}}" />
+    <link href='http://fonts.googleapis.com/css?family=Andika' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
   </head>
 
   <body>
-    <div class="container_12 site">
+    <div id="header">
 
-      <div class="grid_6">
-        <p><a href="{{url_for('index')}}">Home</a></p>
-     </div>
+      <div class="container">
 
-     <div class="grid_6">
-        <ul class="account">
-        {% if session["identity.name"] %}
-          <li><a class="text_red" href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">logout</a></li>
-          <li>-</li>
-          <li><a class="text_red" href="{{url_for('session')}}">Account</a></li>
-          <li>-</li>
-          <li><a class="text_red" href="{{url_for('repos',username=session['identity.name'])}}">Repositories</a></li>
-          <li>-</li>
-          <li>
-            Logged in as 
-            <a class="text_red" href="{{url_for('users',username=session['identity.name'])}}">{{session['identity.name']}}</a>
-          </li>
-        {% else %}
-          <li><a href="{{url_for('userNewForm')}}">register</a></li>
-          <li><a href="{{url_for('session')}}">login</a></li>
-        {%endif%}
-        </ul>
+        <div id="title">
+          <h1><a href="{{url_for('index')}}">Gid</a></h1>
+        </div>
+
+        <div id="nav">
+           <ul>
+             {% if session["identity.name"] %}
+               <li>
+                 Logged in as
+                 <a href="{{url_for('users',username=session['identity.name'])}}">{{session['identity.name']}}</a>
+               </li>
+               <li><a href="{{url_for('repos',username=session['identity.name'])}}">Repositories</a></li>
+               <li><a href="{{url_for('session')}}">Account</a></li>
+               <li><a href="{{url_for('session')}}?__METHOD_OVERRIDE__=DELETE">Logout</a></li>
+             {% else %}
+               <li><a href="{{url_for('userNewForm')}}">register</a></li>
+               <li><a href="{{url_for('session')}}">login</a></li>
+             {%endif%}
+           </ul>
+         </div>
       </div>
+    </div>
 
-
-      <div class="clear"></div>
-      <div class="grid_12 main">
+    <div id="content">
       {% with messages = get_flashed_messages(with_categories = true) %}
         {% if messages %}
           <ul class="flashes">
@@ -51,11 +51,10 @@
       {% endwith %}
 
       {% block body %}{% endblock %}
-      </div>
-
     </div>
-      <p class="center textWhite">
-        Gid is open source.
-      </p>
+
+    <div id="footer">
+      Gid is open source.
+    </div>
   </body>
 </html>

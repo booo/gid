@@ -1,0 +1,325 @@
+@mixin clearfix {
+ zoom:1;
+ &:before {
+   content: "\0020";
+   display: block;
+   height: 0;
+   overflow: hidden;
+ }
+ &:after {
+   content: "\0020";
+   display: block;
+   height: 0;
+   overflow: hidden;
+   clear: both;
+ }
+}
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+
+/*-----------------------------------------------------
+  960 Grid System ~ Core CSS.
+  Learn more ~ http://960.gs/
+
+  Licensed under GPL and MIT.
+-------------------------------------------------------*/
+
+$columns: 16;
+$col_width: 40px;
+$gutter: 20px;
+
+$cell_width: $col_width + $gutter;
+
+body {
+  min-width: 960px;
+}
+
+@mixin grid_container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+}
+
+@mixin alpha {
+  margin-left: 0;
+}
+
+@mixin omega {
+  margin-right: 0;
+}
+
+@mixin grid($i) {
+  display: inline;
+  float: left;
+  margin-left: $gutter / 2;
+  margin-right: $gutter / 2;
+  width: $col_width * $i + $gutter * ($i - 1);
+}
+
+@mixin prefix($i) {
+  padding-left: $cell_width * $i
+}
+
+@mixin suffix($i) {
+  padding-right: $cell_width * $i;
+}
+
+@mixin push($i) {
+  position: relative;
+  left: $cell_width * $i;
+}
+
+@mixin pull($i) {
+  position: relative;
+  left: 0 - ($cell_width * $i);
+}
+
+/*
+ * Custom CSS
+ */
+
+$light:  #F7F9FE;
+$gray:   #ECF1F2;
+$padding: 20px;
+
+html, body {
+  background: #fff;
+  padding: 0; margin: 0;
+  font-family: "Open Sans", sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Andika', sans-serif;
+  margin-bottom: $padding;
+}
+
+h2 {
+  font-size: 120%;
+}
+
+a {
+  text-decoration: none;
+}
+
+#header {
+  @include clearfix;
+  background: #F7F9FE;
+  padding: $padding 0;
+}
+
+.container {
+  @include grid_container;
+}
+
+#title {
+  @include grid(6);
+  font-weight: bold;
+  font-size: 170%;
+  height: 40px;
+  line-height: 40px;
+}
+
+#title h1 {
+  font-size: 140%;
+  margin: 0; padding: 0;
+  vertical-align: middle;
+}
+
+#nav {
+  @include grid(10);
+  height: 40px;
+  font-size: 90%;
+}
+
+#nav ul {
+  display: block;
+  margin: 0; padding: 0;
+  text-align: right;
+  line-height: 40px;
+}
+
+#nav ul li {
+  display: inline-block;
+  height: 40px;
+  margin: 0 0 0 20px;
+  padding: 0;
+  vertical-align: middle;
+}
+
+
+#content {
+  @include grid_container;
+  margin-bottom: $padding;
+}
+
+#footer {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 90%;
+}
+
+#repos-index {
+  @include grid(16);
+}
+
+.repos {
+  text-align: center;
+}
+
+.repo, .commit {
+  padding: 0; margin: 0;
+}
+
+.repo {
+  display: inline-block;
+  width: 210px;
+  padding: 0;
+  margin: 5px;
+}
+
+.repo .meta {
+  position: relative;
+  right: 0;
+}
+
+.repo .icon {
+  width: 70px;
+}
+
+.repo:hover {
+  background: $light;
+}
+
+.repo .name {
+  display: block;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+#repos-show {
+  @include grid(16);
+}
+
+#repos-show .header {
+  @include clearfix;
+}
+
+#repos-show h2 {
+  @include grid(10);
+  @include alpha;
+  margin-bottom: 10px;
+}
+
+#repos-show .actions {
+  @include grid(6);
+  @include omega;
+  text-align: right;
+}
+
+#repos-show .description {
+  margin-bottom: 10px;
+  @include grid(16);
+  @include alpha;
+  @include omega;
+}
+
+#repos-show .clone {
+  margin-bottom: $padding;
+}
+
+#repos-show .clone input {
+  border: 1px solid $gray;
+  font-size: 100%;
+  padding: 5px;
+  margin-left: 10px;
+  width: 400px;
+}
+
+.tree {
+  margin-bottom: $padding;
+}
+
+.highlight, .highlighttable {
+  font-family: monospace;
+  padding: $padding;
+}
+
+.highlighttable .highlight {
+  padding: 0;
+}
+
+.tree li {
+  vertical-align: middle;
+  height: 20px;
+  line-height: 20px;
+  padding: $padding / 2;
+}
+
+.tree li:nth-child(2n+1) {
+  background: $light;
+}
+
+img.directory {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 5px;
+}
+
+#repo-nav .branches {
+  @include grid(4);
+  @include omega;
+  text-align: right;
+}
+
+button {
+  float: right;
+}

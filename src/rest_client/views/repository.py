@@ -35,8 +35,8 @@ class RepositoriesAPI(MethodView):
               ).body_string()
 
             repos = json.loads(response)['repos']
-            
-            return render_template('repository/listAllRepositories.html', 
+
+            return render_template('repository/listAllRepositories.html',
                       repos = repos)
 
         elif reponame == None:
@@ -75,7 +75,7 @@ class RepositoriesAPI(MethodView):
               urlTree = '/%s/trees/%s' % (urlRepo, repo['git']['head']['tree'])
               response = RepositoriesAPI.rest.get(
                   urlTree,
-                  recursive=1,
+                  recursive=0,
                   headers = {'Accept': 'application/json'}
                 ).body_string()
               tree = json.loads(response)['tree']
@@ -115,13 +115,13 @@ class RepositoriesAPI(MethodView):
                   form.toDict(),
                   '/%s' % username,
                   {app.session_cookie_name : session.serialize()}
-              ) 
+              )
 
             data = json.loads(response)
 
             flash("Repository created!", "success")
 
-            return redirect(url_for('repos', 
+            return redirect(url_for('repos',
                         username=username,
                         reponame=form.name.data
                       )
@@ -147,7 +147,7 @@ class RepositoriesAPI(MethodView):
                   form.toDict(),
                   '/%s/%s' % (username, reponame),
                   {app.session_cookie_name : session.serialize()}
-              ) 
+              )
 
             repo = json.loads(response)['repo']
 

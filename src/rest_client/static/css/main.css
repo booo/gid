@@ -1,0 +1,277 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
+
+body {
+  line-height: 1; }
+
+ol, ul {
+  list-style: none; }
+
+blockquote, q {
+  quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/*-----------------------------------------------------
+  960 Grid System ~ Core CSS.
+  Learn more ~ http://960.gs/
+
+  Licensed under GPL and MIT.
+-------------------------------------------------------*/
+body {
+  min-width: 960px; }
+
+/*
+ * Custom CSS
+ */
+html, body {
+  background: #fff;
+  padding: 0;
+  margin: 0;
+  font-family: "Open Sans", sans-serif; }
+
+h1, h2, h3 {
+  font-family: 'Andika', sans-serif;
+  margin-bottom: 20px; }
+
+h2 {
+  font-size: 120%; }
+
+a {
+  text-decoration: none; }
+
+#header {
+  zoom: 1;
+  background: #F7F9FE;
+  padding: 20px 0; }
+  #header:before {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden; }
+  #header:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+    clear: both; }
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px; }
+
+#title {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 340px;
+  font-weight: bold;
+  font-size: 170%;
+  height: 40px;
+  line-height: 40px; }
+
+#title h1 {
+  font-size: 140%;
+  margin: 0;
+  padding: 0;
+  vertical-align: middle; }
+
+#nav {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 580px;
+  height: 40px;
+  font-size: 90%; }
+
+#nav ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  line-height: 40px; }
+
+#nav ul li {
+  display: inline-block;
+  height: 40px;
+  margin: 0 0 0 20px;
+  padding: 0;
+  vertical-align: middle; }
+
+#content {
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+  margin-bottom: 20px; }
+
+#footer {
+  margin-top: 50px;
+  text-align: center;
+  font-size: 90%; }
+
+#repos-index {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 940px; }
+
+.repos {
+  text-align: center; }
+
+.repo, .commit {
+  padding: 0;
+  margin: 0; }
+
+.repo {
+  display: inline-block;
+  width: 210px;
+  padding: 0;
+  margin: 5px; }
+
+.repo .meta {
+  position: relative;
+  right: 0; }
+
+.repo .icon {
+  width: 70px; }
+
+.repo:hover {
+  background: #f7f9fe; }
+
+.repo .name {
+  display: block;
+  letter-spacing: 1px;
+  margin-bottom: 8px; }
+
+#repos-show {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 940px; }
+
+#repos-show .header {
+  zoom: 1; }
+  #repos-show .header:before {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden; }
+  #repos-show .header:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+    clear: both; }
+
+#repos-show h2 {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 580px;
+  margin-left: 0;
+  margin-bottom: 10px; }
+
+#repos-show .actions {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 340px;
+  margin-right: 0;
+  text-align: right; }
+
+#repos-show .description {
+  margin-bottom: 10px;
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 940px;
+  margin-left: 0;
+  margin-right: 0; }
+
+#repos-show .clone {
+  margin-bottom: 20px; }
+
+#repos-show .clone input {
+  border: 1px solid #ecf1f2;
+  font-size: 100%;
+  padding: 5px;
+  margin-left: 10px;
+  width: 400px; }
+
+.tree {
+  margin-bottom: 20px; }
+
+.highlight, .highlighttable {
+  font-family: monospace;
+  padding: 20px; }
+
+.highlighttable .highlight {
+  padding: 0; }
+
+.tree li {
+  vertical-align: middle;
+  height: 20px;
+  line-height: 20px;
+  padding: 10px; }
+
+.tree li:nth-child(2n+1) {
+  background: #f7f9fe; }
+
+img.directory {
+  width: 16px;
+  height: 16px;
+  vertical-align: middle;
+  margin-right: 5px; }
+
+#repo-nav .branches {
+  display: inline;
+  float: left;
+  margin-left: 10px;
+  margin-right: 10px;
+  width: 220px;
+  margin-right: 0;
+  text-align: right; }
+
+button {
+  float: right; }
