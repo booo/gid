@@ -14,7 +14,6 @@ from pygments import highlight
 from pygments.lexers import guess_lexer
 from pygments.formatters import HtmlFormatter
 
-from restclient import Resource
 from restkit.errors import Unauthorized
 from rest_client import app
 from rest_client.models.rest import RestResource
