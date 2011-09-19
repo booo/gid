@@ -31,8 +31,6 @@ class SessionAPI(MethodView):
 
         form = LoginForm(obj = request.form)
 
-        print form.toDict()
-
         if form.validate():
 
             username = form.username.data
