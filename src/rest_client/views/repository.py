@@ -9,35 +9,54 @@ from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
 from rest_client import app
+from rest_client.models.rest import RestResource
 
 from restclient import Resource
-
-res  = Resource('http://127.0.0.1:5000/api')
 
 from flask.views import MethodView
 
 class RepositoriesAPI(MethodView):
 
+    rest = RestResource('http://127.0.0.1:5000/api/repos')
+
     def get(self, username, reponame = None):
         if reponame == None:
-          url = '/repos/%s' % username
-          data = json.loads(res.get(url,headers={'Accept': 'application/json'}))
+            url = '/%s' % username
+            response = RepositoriesAPI.rest.get(
+                  url,
+                  headers = {'Accept': 'application/json'}
+                ).body_string()
 
-          return render_template('repository/listForUser.html',
-                        username=username,
-                        reponame = reponame,
-                        repos=data['repos']
-                 )
+            repos = json.loads(response)['repos']
+
+            return render_template('repository/listForUser.html',
+                          username=username,
+                          reponame = reponame,
+                          repos=repos
+                   )
 
         else:
-          url = '/repos/%s/%s' % (username, reponame)
-          data = json.loads(res.get(url,headers={'Accept': 'application/json'}))
+            urlRepo = '/%s/%s' % (username, reponame)
+            responseRepo = RepositoriesAPI.rest.get(
+                  urlRepo,
+                  headers = {'Accept': 'application/json'}
+                ).body_string()
+            repo = json.loads(responseRepo)['repo']
 
-          return render_template('repository/show.html',
-                        username=username,
-                        reponame = reponame,
-                        repo=data['repo']
-                 )
+            urlCommits = '%s/commits' % urlRepo
+            responseCommits = RepositoriesAPI.rest.get(
+                  urlCommits,
+                  headers = {'Accept': 'application/json'}
+                ).body_string()
+            commits = json.loads(responseCommits)['commits']
+
+            return render_template('repository/show.html',
+                          username=username,
+                          reponame = reponame,
+                          repo=repo,
+                          commits=commits
+                   )
+
 
 
 
@@ -67,10 +86,15 @@ app.add_url_rule('/repos/<username>/<reponame>',\
 
 @app.route('/repos/')
 def repoListPublic():
-    data = json.loads(res.get('/repos/',headers={'Accept': 'application/json'}))
+    response = RepositoriesAPI.rest.get(
+        '/',
+        headers = {'Accept': 'application/json'}
+      ).body_string()
+
+    repos = json.loads(response)['repos']
     
     return render_template('repository/listAllRepositories.html', 
-                      repos = data['repos'])
+                      repos = repos)
 
 
 @app.route('/api/repos/<username>/new')

@@ -3,29 +3,13 @@
   <li>
     <h4>
       <a
-      href="{{url_for('commitByUserAndRepoAndSha',username=owner,repository=repository,sha=commit['id'])}}">
-        {{commit['id']}}
+      href="{{url_for('commitByUserAndRepoAndSha',username=owner,repository=repository,sha=commit['sha'])}}">
+        {{commit['sha']}}
       </a>
     </h4>
     <p>
       {{commit['message']}}
     </p>
-    <ul>
-    {% for change in commit['changes'] %}
-      <li>
-        <em>{{change['type']}}</em>
-        {% if change['path']['old'] %}
-          {{change['path']['old']}}
-        {% endif %}
-
-        {% if change['path']['new'] %}
-          {{change['path']['new']}}
-        {% endif %}
-      </li>
-    {% else %}
-      <li>No changes made</li>
-    {% endfor %}
-    </ul>
   </li>
 {% else %}
   <li>No commits so far</li>
