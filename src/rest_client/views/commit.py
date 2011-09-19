@@ -4,18 +4,35 @@ from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
-@app.route('/users/<username>/repositories/<repository>/commits')
-def commitsByUserAndRepo(username, repository):
-    
-    #data = json.loads(res.get('/repos/',headers={'Accept': 'application/json'}))
+from rest_client.views.repository import  RepositoriesAPI
 
-    return render_template('commit/list.html', \
-              repository = data['repository'], \
-              owner = data['owner'],\
-              commits = data['commits'])
-
-@app.route('/users/<username>/repositories/<repository>/commits/<sha>')
+@app.route('/repos/<username>/<repository>/commits/<sha>')
 def commitByUserAndRepoAndSha(username, repository, sha):
-    return render_template('commit/show.html', repo=repository,\
-                                  user=username, commit = commit)
+    urlRepo = '/%s/%s' % (username, repository)
+    responseRepo = RepositoriesAPI.rest.get(
+          urlRepo,
+          headers = {'Accept': 'application/json'}
+        ).body_string()
+    repo = json.loads(responseRepo)['repo']
+
+    urlCommit = '/%s/commits/%s' % (urlRepo, sha)
+    response = RepositoriesAPI.rest.get(
+        urlCommit,
+        headers = {'Accept': 'application/json'}
+      ).body_string()
+    commit = json.loads(response)['commit']
+
+    urlTree = '/%s/trees/%s' % (urlRepo, commit['tree'])
+    response = RepositoriesAPI.rest.get(
+        urlTree,
+        recursive=1,
+        headers = {'Accept': 'application/json'}
+      ).body_string()
+    tree = json.loads(response)['tree']
+    
+    return render_template('commit/show.html', 
+              repo =repo, 
+              commit = commit,
+              tree = tree)
+
 

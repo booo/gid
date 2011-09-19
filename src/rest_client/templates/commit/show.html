@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block body %}
 <h1>
-  <a href="{{url_for('repos',username=user,reponame=repo)}}">
-    {{repo}}
+  <a href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
+    {{repo['name']}}
   </a>
   /
   {{commit['sha']}}
@@ -12,22 +12,23 @@
 </p>
 
 <ul>
-  <li><em>Author</em>: {{commit['author']}}</li>
-  <li><em>Comitter</em>: {{commit['committer']}}</li>
-  <li><em>Time</em>: {{commit['commit_time']}}</li>
+  <li><em>Author</em>: {{commit['author']['name']}}</li>
+  <li><em>Committer</em>: {{commit['committer']['name']}}</li>
+  <li><em>Time</em>: {{commit['committer']['date']}}</li>
 </ul>
 
 <h4>Tree</h4>
 <ul class="tree">
-{% for item in commit['tree'] recursive %}
+{% for item in tree recursive %}
   <li>
-  {% if item['childs'] is sequence %}
+  {% if 'childs' in item %}
+    <img src="{{url_for('static', filename='images/folder.png')}}" alt="folder"  class="folder" />
     {{ item['path'] }}
     <ul>
     {{ loop(item['childs']) }}
     </ul>
   {% else %}
-    <a href="{{url_for('BlobByUserAndRepoAndSha', username=user,repository=repo,sha=item['sha'])}}">
+    <a href="{{url_for('blobByUserandRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
       {{ item['path'] }}
     </a>
   {% endif %}

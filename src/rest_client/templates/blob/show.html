@@ -1,16 +1,20 @@
 {% extends "layout.html" %}
 {% block body %}
 <h1>
-  <a href="{{url_for('repos',username=user,reponame=repo)}}">
-    {{repo}}
+  <a href="{{url_for('users',username=repo['owner']['username'])}}">
+    {{repo['owner']['username']}}
+  </a>
+  /
+  <a href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
+    {{repo['name']}}
   </a>
   /
   {{blob['sha']}}
 </h1>
 
 <ul>
-  <li>Length: {{blob.rawLength}}</li>
-  <li>Type: {{blob.type}}</li>
+  <li>Length: {{blob['ength']}}</li>
+  <li>Type: {{blob['type']}}</li>
 </ul>
 
 <h2>Content</h2>

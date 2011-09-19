@@ -32,6 +32,7 @@ app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
 
 import rest_client.views.repository
 import rest_client.views.commit
+import rest_client.views.blob
 import rest_client.views.auth.user
 import rest_client.views.auth.session
 

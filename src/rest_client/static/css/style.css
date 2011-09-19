@@ -8,6 +8,10 @@ body {
   text-align: right;
 }
 
+.folder {
+  height: 15px;
+}
+
 .cloneUrl {
   width: 400px;
 }
