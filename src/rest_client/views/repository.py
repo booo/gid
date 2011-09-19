@@ -8,8 +8,11 @@ from flask import Flask, request, render_template, json, \
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
+from restkit.errors import Unauthorized
+
 from rest_client import app
 from rest_client.models.rest import RestResource
+from rest_client.views.auth.session import normal_permission
 
 from restclient import Resource
 
@@ -71,9 +74,23 @@ class RepositoriesAPI(MethodView):
         pass
 
 
-    #@normal_permission.require(http_exception=403)
+    @normal_permission.require(http_exception=403)
     def delete(self, username, reponame):
-        pass
+        if username == session['identity.name']:
+            try:
+                response = RepositoriesAPI.rest.deleteWithCookie(
+                    '/%s/%s' % (username, reponame),
+                    {app.session_cookie_name : session.serialize()}
+                  )
+
+                flash("Successfully deleted: " + reponame)
+
+                return redirect(url_for('repos', username = username))
+
+            except Unauthorized:
+                flash("Unauthorized", "error"), 401
+
+        return redirect(url_for('repos', username = username,reponame=reponame))
 
 
 app.add_url_rule('/repos/<username>',\

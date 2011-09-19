@@ -1,7 +1,13 @@
 <ul class="repos">
 {% for repo in repos %}
     <li>
-      <a class="button repo white" href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
+      <a 
+        class="button repo white" 
+        {% if session['identity.name'] == repo['owner']['username'] %}
+        style="display: inline-block; width: 80%"
+        {% endif %}
+        href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}"
+      >
         <em>
             {{ repo['name'] }}
         </em>
@@ -14,6 +20,11 @@
           No description available
         {% endif %}
       </a>
+      {% if session['identity.name'] == repo['owner']['username'] %}
+      <a class="button red" style="float: right; display: inline-block" href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}?__METHOD_OVERRIDE__=DELETE">
+        delete
+      </a>
+      {% endif %}
     </li>
 {% else %}
   <li>No repositories yet created</li>

@@ -87,9 +87,10 @@ class RepositoriesAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def delete(self, username, reponame):
-        repo = Repository.query.filter_by(name = reponame).first()
+        user = User.query.filter_by(username = username).first()
+        repo = Repository.query.filter_by(name = reponame, owner = user).first()
 
-        if repo.owner.username == session['identity.name']:
+        if repo != None and repo.owner.username == session['identity.name']:
 
             shutil.rmtree(repo.path)
             db.session.delete(repo)
