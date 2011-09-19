@@ -5,7 +5,7 @@ from flask import Flask, request, render_template, json, \
 
 from flask.views import MethodView
 
-
+from restkit import ResourceNotFound
 
 from rest_server import app
 from rest_server.models.user import User, db
@@ -23,7 +23,9 @@ class UserAPI(MethodView):
 
         else:
             user = User.query.filter_by(username = username).first()
-            return jsonify(user=user.toDict(False))
+            if user !=  None:
+              return jsonify(user=user.toDict(False, True))
+            return Response(""), 404
 
 
     @normal_permission.require(http_exception=403)

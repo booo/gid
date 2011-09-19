@@ -1,31 +1,17 @@
 {% extends "layout.html" %}
 {% block body %}
 <h1>
-  {{user['name']}}
+  {{user['username']}}
  -
  <small>{{user['email']}}</small>
 </h1>
 
-<h2>Own repositories</h2>
+<h2>Public repositories</h2>
 <ul class="repos">
-  {% for repo in user['repositories']['own']%}
+  {% for repo in user['repos']%}
     <li class="button repo white">
       <a
-      href="{{url_for('repos',username=user['name'],reponame=repo)}}">
-        {{repo}}
-      </a>
-    </li>
-  {% else %}
-    <li>No Repositories</li>
-  {% endfor %}
-</ul>
-
-<h3>Collaborating</h3>
-<ul>
-  {% for repo in user['repositories']['collaborating']%}
-    <li class="button repo white">
-      <a
-      href="{{url_for('repos',username=repo['owner'],reponame=repo['name'])}}">
+      href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
         {{repo['name']}}
       </a>
     </li>

@@ -1,6 +1,6 @@
 import yaml
 
-from flask import Flask, redirect, url_for
+from flask import Flask, redirect, url_for, Response
 from flaskext.sqlalchemy import SQLAlchemy
 
 from werkzeug import url_decode
@@ -36,7 +36,16 @@ import rest_client.views.blob
 import rest_client.views.auth.user
 import rest_client.views.auth.session
 
+@app.route('/static/css/<name>.sass')
+def css(name):
+   import os
+   from scss import parser
+   
+   path = os.path.join(__name__, 'static', 'css', name) + '.sass'
+   if os.path.exists(path):
+      return Response(parser.load(path)) 
 
+   return Response(""), 404
 
 @app.route('/')
 def index():

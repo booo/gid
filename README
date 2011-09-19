@@ -28,19 +28,23 @@ Install Dependencies
 sudo apt-get install python-twisted-conch
 
 pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy pyyaml dulwich \
-pyasn1 pygments
+pyasn1 pygments restkit scss
 
 
 Creating the database
 ---------------------
 
-bin/gid-web-db-create
+bin/rest-server-db-create
 
 if you want some samples for testing
-  bin/gid-web-db-samples
+  bin/rest-server-db-samples
 
 
 Start the server
 ----------------
 
-bin/gid-web
+for the rest api
+  bin/rest-server
+
+for the actual frontend
+  bin/rest-client
