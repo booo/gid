@@ -1,0 +1,19 @@
+{% if tree is sequence %}
+<ul class="tree">
+  {% for item in tree recursive %}
+    <li>
+    {% if 'childs' in item %}
+      <img src="{{url_for('static', filename='images/folder.png')}}" alt="folder"  class="folder" />
+      {{ item['path'] }}
+      <ul>
+      {{ loop(item['childs']) }}
+      </ul>
+    {% else %}
+      <a href="{{url_for('blobByUserandRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
+        {{ item['path'] }}
+      </a>
+    {% endif %}
+    </li>
+  {%endfor%}
+</ul>
+{% endif %}

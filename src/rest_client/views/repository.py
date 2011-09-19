@@ -10,6 +10,10 @@ from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
 
 from flask.views import MethodView
 
+from pygments import highlight
+from pygments.lexers import guess_lexer
+from pygments.formatters import HtmlFormatter
+
 from restclient import Resource
 from restkit.errors import Unauthorized
 from rest_client import app
@@ -65,11 +69,39 @@ class RepositoriesAPI(MethodView):
                 ).body_string()
             commits = json.loads(responseCommits)['commits']
 
+            tree = readme = None
+            if repo['git']['head'] != None:
+              urlTree = '/%s/trees/%s' % (urlRepo, repo['git']['head']['tree'])
+              response = RepositoriesAPI.rest.get(
+                  urlTree,
+                  recursive=1,
+                  headers = {'Accept': 'application/json'}
+                ).body_string()
+              tree = json.loads(response)['tree']
+
+              readmeFile = filter((lambda x: 'README' in x['path']), tree)
+              if len(readmeFile) > 0:
+                  urlBlob = '/%s/blobs/%s' % (urlRepo, readmeFile[0]['sha'])
+                  response = RepositoriesAPI.rest.get(
+                      urlBlob,
+                      headers = {'Accept': 'application/json'}
+                    ).body_string()
+                  blob = json.loads(response)['blob']
+
+                  blob['content'] = "".join(blob['content'])
+
+                  lexer = guess_lexer(blob['content'])
+                  formatter = HtmlFormatter(noclasses=True)
+                  readme = highlight(blob['content'], lexer, formatter)
+
+
             return render_template('repository/show.html',
                           username=username,
                           reponame = reponame,
                           repo=repo,
-                          commits=commits
+                          commits=commits,
+                          tree = tree,
+                          readme = readme
                    )
 
 

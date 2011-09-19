@@ -48,4 +48,12 @@
   <h3>last commits</h3>
   {% include 'commit/_list.html' %}
 
+  <h3>Tree</h3>
+  {% include 'tree/_show.html' %}
+
+  {% if readme %}
+  <h3>Readme</h3>
+    {{ readme|safe }}
+  {% endif %}
+
 {%endblock%}
