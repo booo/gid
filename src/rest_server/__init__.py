@@ -39,4 +39,4 @@ import rest_server.views.repository
 
 @app.route('/')
 def index():
-  return redirect(url_for('repoListPublic'))
+  return redirect(url_for('repos'))

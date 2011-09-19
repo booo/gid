@@ -75,17 +75,27 @@ class RepositoriesAPI(MethodView):
     def put(self, username, reponame):
         form = RepositoryForm(request.form)
 
+        if not 'private' in request.form or request.form['private'] == "False":
+          form.private.data = False
+
         if form.validate():
             user                  = User.query.filter_by(username=username).first()
             repo                  = Repository.query.filter_by(name = reponame, owner = user).first()
             repo.name             = form.name.data
             repo.description      = form.description.data
-            repo.private          = form.private.data
-            repo.contributers    = [
-                User.query.filter_by(username=c).first()
-                for c in form.contributers.data.split(',')
-                if u != None
-              ]
+            repo.private          = bool(form.private.data)
+
+
+            def userForName(username):
+                u = User.query.filter_by(username=username).first()
+                if u != None:
+                  return u
+                return None
+
+            repo.contributers     = map(
+                    userForName,
+                    [c for c in form.contributers.data.split(',')]
+                )
 
             db.session.add(repo) 
             db.session.commit()
