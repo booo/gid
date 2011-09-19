@@ -50,9 +50,9 @@ class SessionAPI(MethodView):
                   return jsonify(form.toDict())
 
               else:
-                  return jsonify({'errors' : 'invalid credentials' })
+                  return jsonify({'errors' : 'invalid credentials' }), 401
 
-        return jsonify( form.errors )
+        return jsonify( form.errors ), 401
 
 
     @normal_permission.require(http_exception=403)
