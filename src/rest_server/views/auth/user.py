@@ -39,9 +39,9 @@ class UserAPI(MethodView):
             db.session.add(user)
             db.session.commit()
 
-            return jsonify(user=user.toDict())
+            return jsonfy(user=user.toDict())
 
-        return jsonifiy({ 'status':'invalid data'})
+        return jsonify({ 'status':'invalid data'})
 
 
     def post(self):
@@ -56,7 +56,7 @@ class UserAPI(MethodView):
 
                 return jsonify(user=user.toDict())
 
-        return jsonifiy({ 'status':'invalid data'})
+        return jsonify({ 'status':'invalid data'})
 
 
     @normal_permission.require(http_exception=403)

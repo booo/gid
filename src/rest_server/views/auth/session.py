@@ -31,10 +31,6 @@ class SessionAPI(MethodView):
 
         form = LoginForm(obj = request.form)
 
-        print "form" + str(request.form)
-        print "csrf:"+session['_csrf_token']
-        print "Session:" + session.serialize()
-
         if form.validate():
 
             username = form.username.data

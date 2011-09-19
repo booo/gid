@@ -24,9 +24,7 @@ class RestResource(Resource):
 
 
     def postForm(self, path, data, reqCookies = None):
-        reqPayload = '&'.join(
-            [ '='.join( [k, urllib.quote(v)] ) for k,v in data.items() ]
-          )
+        reqPayload = RestResource._payloadToStr(data)
 
         reqHeaders = {
             'Content-Type' : 'application/x-www-form-urlencoded',
@@ -35,7 +33,6 @@ class RestResource(Resource):
         if reqCookies:
           reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
 
-        
 
         response = self.post(
               path,
@@ -46,7 +43,35 @@ class RestResource(Resource):
 
         return response.body_string()
 
+
+    def putForm(self, path, data, reqCookies = None):
+        reqPayload = RestResource._payloadToStr(data)
+
+        reqHeaders = {
+            'Content-Type' : 'application/x-www-form-urlencoded',
+          }
+
+        if reqCookies:
+          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
+
+
+        response = self.put(
+              path,
+              headers=reqHeaders,
+              payload=reqPayload
+            )
+        
+
+        return response.body_string()
+
     
+    @staticmethod
+    def _payloadToStr(data):
+        return '&'.join(
+            [ '='.join( [k, urllib.quote(v)] ) for k,v in data.items() ]
+          )
+
+
     @staticmethod
     def _cookiesToStr(cookies):
         return ';'.join(

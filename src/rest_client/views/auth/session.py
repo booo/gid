@@ -9,6 +9,7 @@ from flask.views import MethodView
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
+from restkit.errors import Unauthorized
 
 from rest_client import app
 from rest_client.models.rest import RestResource
@@ -16,6 +17,7 @@ from rest_client.models.rest import RestResource
 from rest_server.forms.login import LoginForm
 from rest_server.models.dictobject import DictObject
 from rest_server.forms.profile import ProfileForm
+
 
 # flask-principal
 principals = Principal()
@@ -45,7 +47,6 @@ class SessionAPI(MethodView):
         form = LoginForm(request.form)
 
 
-        print "Session:" + session.serialize()
         if form.validate():
             formData =  {
                 'username' : form.username.data,
@@ -53,23 +54,22 @@ class SessionAPI(MethodView):
                 'csrf'     : form.csrf.data
               }
 
-            response = self.rest.postForm(
-                  '/',
-                  formData,
-                  {app.session_cookie_name : session.serialize()}
-              ) 
+            try:
+                response = self.rest.postForm(
+                      '/',
+                      formData,
+                      {app.session_cookie_name : session.serialize()}
+                  ) 
 
-            data = json.loads(response)
+                data = json.loads(response)
 
-            print "data : " + str(data)
+                if 'username' in data and data['username'] != None:
+                    identity = Identity(data['username'])
+                    identity_changed.send(app, identity=identity)
 
-            if 'username' in data and data['username'] != None:
-                identity = Identity(data['username'])
-                identity_changed.send(app, identity=identity)
+                    return redirect(url_for('session'))
 
-                return redirect(url_for('session'))
-
-            else:
+            except Unauthorized:
                 flash("Invalid credentials!", 'error')
 
 
