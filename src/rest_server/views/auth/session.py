@@ -31,6 +31,8 @@ class SessionAPI(MethodView):
 
         form = LoginForm(obj = request.form)
 
+        print form.toDict()
+
         if form.validate():
 
             username = form.username.data
@@ -61,7 +63,9 @@ class SessionAPI(MethodView):
         except KeyError:
             return jsonify({ 'status':'invalid data'})
 
-app.add_url_rule('/api/session', view_func=SessionAPI.as_view('session'))
+app.add_url_rule('/api/session',
+                 view_func=SessionAPI.as_view('session'),
+                 methods=['GET','POST','DELETE'])
 
 
 @app.route("/api/session/new")

@@ -79,8 +79,8 @@ class RepositoriesAPI(MethodView):
 
         if form.validate():
             response = self.rest.postForm(
-                  '/%s' % username,
                   form.toDict(),
+                  '/%s' % username,
                   {app.session_cookie_name : session.serialize()}
               ) 
 
@@ -111,8 +111,8 @@ class RepositoriesAPI(MethodView):
 
         if form.validate():
             response = self.rest.putForm(
-                  '/%s/%s' % (username, reponame),
                   form.toDict(),
+                  '/%s/%s' % (username, reponame),
                   {app.session_cookie_name : session.serialize()}
               ) 
 
@@ -137,8 +137,8 @@ class RepositoriesAPI(MethodView):
         if username == session['identity.name']:
             try:
                 response = RepositoriesAPI.rest.deleteWithCookie(
-                    '/%s/%s' % (username, reponame),
-                    {app.session_cookie_name : session.serialize()}
+                    {app.session_cookie_name : session.serialize()},
+                    '/%s/%s' % (username, reponame)
                   )
 
                 flash("Successfully deleted: " + reponame)

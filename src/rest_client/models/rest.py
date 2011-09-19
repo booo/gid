@@ -3,27 +3,33 @@ import urllib
 
 class RestResource(Resource):
 
-    def getWithCookies(self, path, reqCookies = None):
+    def getWithCookies(self, reqCookies = None, path = None):
         reqHeaders = {}
         if reqCookies:
           reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
 
-        response = self.get(path, headers = reqHeaders)
+        if path == None:
+            response = self.get(headers = reqHeaders)
+        else:
+            response = self.get(path, headers = reqHeaders)
 
         return response.body_string()
 
 
-    def deleteWithCookie(self, path, reqCookies = None):
+    def deleteWithCookie(self, reqCookies = None, path = None ):
         reqHeaders = {}
         if reqCookies:
           reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
 
-        response = self.delete(path, headers = reqHeaders)
+        if path == None:
+            response = self.delete(headers = reqHeaders)
+        else:
+            response = self.delete(path, headers = reqHeaders)
 
         return response.body_string()
 
 
-    def postForm(self, path, data, reqCookies = None):
+    def postForm(self, data, path=None, reqCookies = None):
         reqPayload = RestResource._payloadToStr(data)
 
         reqHeaders = {
@@ -44,7 +50,7 @@ class RestResource(Resource):
         return response.body_string()
 
 
-    def putForm(self, path, data, reqCookies = None):
+    def putForm(self, data, path = None, reqCookies = None):
         reqPayload = RestResource._payloadToStr(data)
 
         reqHeaders = {

@@ -33,30 +33,33 @@ class SessionAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def get(self):
-        response = SessionAPI.rest.getWithCookies(
-              '/',
-              {app.session_cookie_name : session.serialize()}
-          ) 
-        
-        form = ProfileForm(obj = DictObject(**json.loads(response)))
+        try :
+            response = SessionAPI.rest.getWithCookies(
+                  {app.session_cookie_name : session.serialize()}
+              ) 
+            
+            form = ProfileForm(obj = DictObject(**json.loads(response)))
 
-        return render_template('auth/profile.html', form=form)
+            return render_template('auth/profile.html', form=form)
+
+        except Unauthorized:
+            return redirect(url_for('login'))
 
 
     def post(self):
         form = LoginForm(request.form)
 
-
         if form.validate():
 
             try:
                 response = self.rest.postForm(
-                      '/',
-                      form.toDict(),
-                      {app.session_cookie_name : session.serialize()}
+                      data = form.toDict(),
+                      reqCookies = {app.session_cookie_name : session.serialize()}
                   ) 
 
                 data = json.loads(response)
+
+                print data
 
                 if 'username' in data and data['username'] != None:
                     identity = Identity(data['username'])
@@ -75,7 +78,6 @@ class SessionAPI(MethodView):
     @normal_permission.require(http_exception=403)
     def delete(self):
         response = self.rest.deleteWithCookie(
-                        '/',
                         {app.session_cookie_name : session.serialize()}
                       )
 
@@ -89,7 +91,9 @@ class SessionAPI(MethodView):
         return redirect(url_for('login'))
 
 
-app.add_url_rule('/session', view_func=SessionAPI.as_view('session'))
+app.add_url_rule('/session',
+                 view_func=SessionAPI.as_view('session'),
+                 methods=['GET','POST','DELETE'])
 
 
 @app.route("/session/new")
@@ -98,8 +102,8 @@ def login():
         redirect(url_for('session'))
 
     response = SessionAPI.rest.getWithCookies(
-          '/new',
-          {app.session_cookie_name : session.serialize()}
+          {app.session_cookie_name : session.serialize()},
+          '/new'
       ) 
 
 

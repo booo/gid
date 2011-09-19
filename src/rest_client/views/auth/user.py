@@ -27,7 +27,6 @@ class UserAPI(MethodView):
 
         if form.validate():
             response = self.rest.putForm(
-                  '/',
                   form.toDict(),
                   {app.session_cookie_name : session.serialize()}
               ) 
@@ -48,7 +47,6 @@ class UserAPI(MethodView):
         if form.validate():
 
             response = self.rest.postForm(
-                  '/',
                   form.toDict(),
                   {app.session_cookie_name : session.serialize()}
               ) 
