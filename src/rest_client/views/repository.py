@@ -16,14 +16,26 @@ from rest_client import app
 from rest_client.models.rest import RestResource
 from rest_client.views.auth.session import normal_permission
 from rest_server.forms.repository import RepositoryForm
+from rest_server.models.dictobject import DictObject
 
 
 class RepositoriesAPI(MethodView):
 
     rest = RestResource('http://127.0.0.1:5000/api/repos')
 
-    def get(self, username, reponame = None):
-        if reponame == None:
+    def get(self, username = None, reponame = None):
+        if username == None:
+
+            response = RepositoriesAPI.rest.get(
+                headers = {'Accept': 'application/json'}
+              ).body_string()
+
+            repos = json.loads(response)['repos']
+            
+            return render_template('repository/listAllRepositories.html', 
+                      repos = repos)
+
+        elif reponame == None:
             url = '/%s' % username
             response = RepositoriesAPI.rest.get(
                   url,
@@ -92,7 +104,32 @@ class RepositoriesAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def put(self, username, reponame):
-        pass
+        form = RepositoryForm(request.form)
+
+        print request.form
+        print form.toDict()['private']
+
+        if form.validate():
+            response = self.rest.putForm(
+                  '/%s/%s' % (username, reponame),
+                  form.toDict(),
+                  {app.session_cookie_name : session.serialize()}
+              ) 
+
+            repo = json.loads(response)['repo']
+
+            flash('Repository successfully edited', 'success')
+
+            return redirect(url_for('repos',
+                                      username = repo['owner']['username'],
+                                      reponame = repo['name']))
+
+
+        action = url_for('repos', username=username, reponame = reponame) +\
+                            '?__METHOD_OVERRIDE__=PUT'
+        return render_template('repository/form.html', form=form,
+                                    username=username, action=action,
+                                    submit='Edit Repository')
 
 
     @normal_permission.require(http_exception=403)
@@ -114,25 +151,15 @@ class RepositoriesAPI(MethodView):
         return redirect(url_for('repos', username = username,reponame=reponame))
 
 
+app.add_url_rule('/repos',\
+                    view_func=RepositoriesAPI.as_view('repos'),
+                    methods=['GET'])
 app.add_url_rule('/repos/<username>',\
                     view_func=RepositoriesAPI.as_view('repos'),
                     methods=['GET','POST'])
 app.add_url_rule('/repos/<username>/<reponame>',\
                     view_func=RepositoriesAPI.as_view('repos'),
                     methods=['GET','PUT','DELETE'])
-
-
-@app.route('/repos/')
-def repoListPublic():
-    response = RepositoriesAPI.rest.get(
-        '/',
-        headers = {'Accept': 'application/json'}
-      ).body_string()
-
-    repos = json.loads(response)['repos']
-    
-    return render_template('repository/listAllRepositories.html', 
-                      repos = repos)
 
 
 @app.route('/repos/<username>/new')
@@ -144,6 +171,22 @@ def repoNewForm(username):
                                 submit='Create Repository')
 
 
-@app.route('/repos/<username>/<repository>/edit')
-def repoEditForm(username, repository):
-    pass
+@app.route('/repos/<username>/<reponame>/edit')
+def repoEditForm(username, reponame):
+    urlRepo = '/%s/%s' % (username, reponame)
+    responseRepo = RepositoriesAPI.rest.get(
+          urlRepo,
+          headers = {'Accept': 'application/json'}
+        ).body_string()
+
+    repo = json.loads(responseRepo)['repo']
+
+    obj = DictObject(**repo)
+    obj.contributers = ",".join(c['username'] for c in repo['contributers'])
+
+    form = RepositoryForm(obj = obj)
+    action = url_for('repos', username=username, reponame = repo['name']) +\
+                        '?__METHOD_OVERRIDE__=PUT'
+    return render_template('repository/form.html', form=form,\
+                                username=username, action=action,\
+                                submit='Edit Repository')

@@ -37,6 +37,7 @@ import rest_client.views.auth.user
 import rest_client.views.auth.session
 
 
+
 @app.route('/')
 def index():
-  return redirect(url_for('repoListPublic'))
+  return redirect(url_for('repos'))
