@@ -153,6 +153,7 @@ a {
   @include clearfix;
   background: #F7F9FE;
   padding: $padding 0;
+  margin-bottom: $padding * 2;
 }
 
 .container {
@@ -197,6 +198,7 @@ a {
 
 #content {
   @include grid_container;
+  @include clearfix;
   margin-bottom: $padding;
 }
 
@@ -206,7 +208,7 @@ a {
   font-size: 90%;
 }
 
-#repos-index {
+#repos-index, #repos-edit {
   @include grid(16);
 }
 
@@ -283,10 +285,6 @@ a {
   width: 400px;
 }
 
-.tree {
-  margin-bottom: $padding;
-}
-
 .highlight, .highlighttable {
   font-family: monospace;
   padding: $padding;
@@ -294,6 +292,10 @@ a {
 
 .highlighttable .highlight {
   padding: 0;
+}
+
+.tree {
+  margin-bottom: $padding;
 }
 
 .tree li {
@@ -307,7 +309,7 @@ a {
   background: $light;
 }
 
-img.directory {
+.tree img.directory {
   width: 16px;
   height: 16px;
   vertical-align: middle;

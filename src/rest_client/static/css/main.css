@@ -76,7 +76,8 @@ a {
 #header {
   zoom: 1;
   background: #F7F9FE;
-  padding: 20px 0; }
+  padding: 20px 0;
+  margin-bottom: 40px; }
   #header:before {
     content: "\0020";
     display: block;
@@ -138,14 +139,26 @@ a {
   margin-left: auto;
   margin-right: auto;
   width: 960px;
+  zoom: 1;
   margin-bottom: 20px; }
+  #content:before {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden; }
+  #content:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+    clear: both; }
 
 #footer {
   margin-top: 50px;
   text-align: center;
   font-size: 90%; }
 
-#repos-index {
+#repos-index, #repos-edit {
   display: inline;
   float: left;
   margin-left: 10px;
@@ -239,15 +252,15 @@ a {
   margin-left: 10px;
   width: 400px; }
 
-.tree {
-  margin-bottom: 20px; }
-
 .highlight, .highlighttable {
   font-family: monospace;
   padding: 20px; }
 
 .highlighttable .highlight {
   padding: 0; }
+
+.tree {
+  margin-bottom: 20px; }
 
 .tree li {
   vertical-align: middle;
@@ -258,7 +271,7 @@ a {
 .tree li:nth-child(2n+1) {
   background: #f7f9fe; }
 
-img.directory {
+.tree img.directory {
   width: 16px;
   height: 16px;
   vertical-align: middle;
