@@ -8,7 +8,7 @@
         {{repo['name']}}
       </h2>
 
-      <div class="actions">
+      <div class="right">
         {% if repo['owner']['username'] == session['identity.name'] %}
           <a href="{{url_for('repoEditForm',username=session['identity.name'],reponame=repo['name'])}}">Edit</a>
         {% endif %}

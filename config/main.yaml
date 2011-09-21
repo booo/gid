@@ -5,7 +5,7 @@ DEBUG                   : True
 SECRET_KEY              : 'algjsgASKSAGs72385hbq1bnaskghJSGSGASGjkjk898909'
 SQLALCHEMY_DATABASE_URI : 'sqlite:///../../data/db/sqlite.db'
 GIT_DATA_DIR            : 'data/git/' 
-SERVER_NAME_GIT         : 'localhost:5001'
+SERVER_NAME_GIT         : 'localhost:5022'
 
 
 
