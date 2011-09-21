@@ -2,6 +2,8 @@ from rest_server import app, db
 from rest_server.models.repository import Repository
 from twisted.conch.ssh.keys import Key as SSHKey
 
+from sqlalchemy.ext.hybrid import hybrid_property
+
 
 class _KeyBlobUpdater(db.MapperExtension):
     def before_create(self, mapper, connection, instance):
@@ -15,12 +17,12 @@ class _KeyBlobUpdater(db.MapperExtension):
 class User(db.Model):
     __tablename = 'user'
 
-    id        = db.Column(db.Integer,     primary_key=True)
-    username  = db.Column(db.String(80),  unique=True)
-    email     = db.Column(db.String(120), unique=True)
-    password  = db.Column(db.String(128))
-    key       = db.Column(db.String(512))
-    keyBlob   = db.Column(db.Binary(512))
+    id            = db.Column(db.Integer,     primary_key=True)
+    username      = db.Column(db.String(80),  unique=True)
+    email         = db.Column(db.String(120), unique=True)
+    passwordHash  = db.Column(db.String(128))
+    key           = db.Column(db.String(512))
+    keyBlob       = db.Column(db.Binary(512))
 
     __mapper_args__ = {'extension': _KeyBlobUpdater()}
 
@@ -32,6 +34,17 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.username
+
+
+    @hybrid_property
+    def password(self):
+        return self.passwordHash
+
+
+    @password.setter
+    def password(self, value):
+        import hashlib
+        self.passwordHash = hashlib.sha1(value).hexdigest()
 
 
     def toDict(self, short = True, filterPublic = False):

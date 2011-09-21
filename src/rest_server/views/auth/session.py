@@ -9,6 +9,7 @@ from rest_server.models.user import User, db
 from rest_server.forms.profile import ProfileForm
 from rest_server.forms.login import LoginForm
 
+
 from functools import wraps
 from flask import request, Response
 
@@ -22,7 +23,9 @@ def check_auth(username, password):
                       username = username 
                     ).first()
 
-    return user != None and user.password == password
+    import hashlib
+    return user != None and user.password == hashlib.sha1(password).hexdigest()
+
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
