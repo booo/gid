@@ -15,7 +15,7 @@
 {% endmacro %}
 
 {% macro render_reverse_field(field) %}
-  <p class="inputLabel">
+  <p class="inputReverseLabel">
     {{ field(**kwargs)|safe }}
     <label>{{ field.label }}</label>
   </p>

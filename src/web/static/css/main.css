@@ -288,3 +288,26 @@ a {
 
 button {
   float: right; }
+
+#title a {
+  color: #000; }
+
+a, a:active, a:visited {
+  color: #00F; }
+
+a:hover {
+  color: #AAF; }
+
+form .inputLabel {
+  width: 200px; }
+
+form .input, form textarea {
+  padding: 20px;
+  width: 400px; }
+
+.input input, textarea {
+  border: 1px solid #cccccc;
+  padding: 4px; }
+
+form textarea {
+  height: 200px; }
