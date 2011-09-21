@@ -113,7 +113,8 @@ class RepositoriesAPI(MethodView):
             response = self.rest.postForm(
                   form.toDict(),
                   '/%s' % username,
-                  {app.session_cookie_name : session.serialize()}
+                  username = session['user.username'],
+                  password = session['user.password']
               )
 
             data = json.loads(response)
@@ -138,14 +139,12 @@ class RepositoriesAPI(MethodView):
     def put(self, username, reponame):
         form = RepositoryForm(request.form)
 
-        print request.form
-        print form.toDict()['private']
-
         if form.validate():
             response = self.rest.putForm(
                   form.toDict(),
                   '/%s/%s' % (username, reponame),
-                  {app.session_cookie_name : session.serialize()}
+                    username = session['user.username'],
+                    password = session['user.password']
               )
 
             repo = json.loads(response)['repo']
@@ -168,9 +167,10 @@ class RepositoriesAPI(MethodView):
     def delete(self, username, reponame):
         if username == session['identity.name']:
             try:
-                response = RepositoriesAPI.rest.deleteWithCookie(
-                    {app.session_cookie_name : session.serialize()},
-                    '/%s/%s' % (username, reponame)
+                response = RepositoriesAPI.rest.deleteWithAuth(
+                    '/%s/%s' % (username, reponame),
+                    username = session['user.username'],
+                    password = session['user.password']
                   )
 
                 flash("Successfully deleted: " + reponame)

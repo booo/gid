@@ -6,7 +6,7 @@ from flask import Flask, request, render_template, json, \
 from flask.views import MethodView
 
 from rest_client import app
-from rest_client.models.rest import RestResource
+from rest_client.models.rest import RestResource, ResourceNotFound
 from rest_client.views.auth.session import normal_permission
 
 from rest_server.forms.profile import ProfileForm
@@ -41,17 +41,17 @@ class UserAPI(MethodView):
         form = ProfileForm(request.form)
 
         if form.validate():
+
             response = self.rest.putForm(
                   form.toDict(),
-                  {app.session_cookie_name : session.serialize()}
+                  username = session['user.username'],
+                  password = session['user.password']
               ) 
 
             data = json.loads(response)
 
             flash("Successfully updated your profile!", "success")
 
-
-        #form = ProfileForm(obj = DictObject(**json.loads(response)))
 
         return render_template('auth/profile.html', form=form)
 
@@ -62,8 +62,7 @@ class UserAPI(MethodView):
         if form.validate():
 
             response = self.rest.postForm(
-                  form.toDict(),
-                  {app.session_cookie_name : session.serialize()}
+                  form.toDict()
               ) 
 
             data = json.loads(response)
@@ -73,7 +72,6 @@ class UserAPI(MethodView):
         return redirect(url_for('login'))
 
 
-    @normal_permission.require(http_exception=403)
     def delete(self):
         raise NotYetImplemented()
 
@@ -81,10 +79,10 @@ class UserAPI(MethodView):
 app.add_url_rule('/<username>',
                     view_func=UserAPI.as_view('users'),
                     methods=['GET'])
-app.add_url_rule('/users',\
+app.add_url_rule('/users',
                     view_func=UserAPI.as_view('users'),
                     methods=['PUT','POST'])
-app.add_url_rule('/users/<username>',\
+app.add_url_rule('/users/<username>',
                     view_func=UserAPI.as_view('users'),
                     methods=['DELETE'])
 

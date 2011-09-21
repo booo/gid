@@ -15,7 +15,6 @@ class RegistrationForm(Form):
             'username'  : self.username.data,
             'email'     : self.email.data,
             'password'  : self.password.data,
-            'confirm'   : self.confirm.data,
-            'csrf'      : self.csrf.data
+            'confirm'   : self.confirm.data
 
           }

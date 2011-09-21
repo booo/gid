@@ -7,6 +7,5 @@ class LoginForm(Form):
     def toDict(self):
       return {
           'username' : self.username.data,
-          'password' : self.password.data,
-          'csrf'     : self.csrf.data
+          'password' : self.password.data
         }

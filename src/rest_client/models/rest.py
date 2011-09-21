@@ -1,12 +1,17 @@
-from restkit import Resource
+from restkit import Resource, BasicAuth, ResourceNotFound
+
 import urllib
 
 class RestResource(Resource):
 
-    def getWithCookies(self, reqCookies = None, path = None):
+    def basicAuth(username, password):
+        return BasicAuth(username, password)
+        
+    def getWithAuth(self, username, password, path = None):
         reqHeaders = {}
-        if reqCookies:
-          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
+
+        self.client.filters.append(BasicAuth(username, password))
+        self.client.load_filters()
 
         if path == None:
             response = self.get(headers = reqHeaders)
@@ -16,10 +21,11 @@ class RestResource(Resource):
         return response.body_string()
 
 
-    def deleteWithCookie(self, reqCookies = None, path = None ):
+    def deleteWithAuth(self, username, password, path = None):
         reqHeaders = {}
-        if reqCookies:
-          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
+
+        self.client.filters.append(BasicAuth(username, password))
+        self.client.load_filters()
 
         if path == None:
             response = self.delete(headers = reqHeaders)
@@ -29,16 +35,16 @@ class RestResource(Resource):
         return response.body_string()
 
 
-    def postForm(self, data, path=None, reqCookies = None):
+    def postForm(self, data, path=None, username = None, password = None):
         reqPayload = RestResource._payloadToStr(data)
 
         reqHeaders = {
             'Content-Type' : 'application/x-www-form-urlencoded',
           }
 
-        if reqCookies:
-          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
-
+        if username != None and password != None:
+            self.client.filters.append(BasicAuth(username, password))
+            self.client.load_filters()
 
         response = self.post(
               path,
@@ -50,16 +56,16 @@ class RestResource(Resource):
         return response.body_string()
 
 
-    def putForm(self, data, path = None, reqCookies = None):
+    def putForm(self, data, path = None, username = None, password = None):
         reqPayload = RestResource._payloadToStr(data)
 
         reqHeaders = {
             'Content-Type' : 'application/x-www-form-urlencoded',
           }
 
-        if reqCookies:
-          reqHeaders['Cookie'] = RestResource._cookiesToStr(reqCookies)
-
+        if username != None and password != None:
+            self.client.filters.append(BasicAuth(username, password))
+            self.client.load_filters()
 
         response = self.put(
               path,
@@ -76,28 +82,3 @@ class RestResource(Resource):
         return '&'.join(
             [ '='.join( [k, urllib.quote(str(v))] ) for k,v in data.items() ]
           )
-
-
-    @staticmethod
-    def _cookiesToStr(cookies):
-        return ';'.join(
-                  ['='.join([k,'"%s"'%v]) for k,v in cookies.items() ]
-                )
-
-
-    @staticmethod
-    def _getCookiesFromHeader(headers):
-        if 'Set-Cookie' not in headers:
-          return {}
-
-        cookies = headers['Set-Cookie'][:headers['Set-Cookie'].rindex('; Path')]
-
-        f = lambda x : tuple([s.strip('"') for s in x.split('=', 1)])
-
-        if '&' not in cookies:
-            data = [f(cookies)]
-
-        else:
-            data = map(f, cookies.split('&'))
-
-        return dict(data)

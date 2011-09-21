@@ -45,9 +45,9 @@ class RepositoriesAPI(MethodView):
           return jsonify(repo=repo.toDict())
 
 
-    @normal_permission.require(http_exception=403)
+    @requires_auth
     def post(self, username):
-        form = RepositoryForm(request.form)
+        form = RepositoryForm(request.form, csrf_enabled = False)
         reponame = form.name.data
 
         if form.validate():
@@ -68,12 +68,12 @@ class RepositoriesAPI(MethodView):
 
                 return jsonify(repo=repo.toDict())
           
-        return jsonifiy({ 'status':'invalid data'})
+        return jsonify({ 'error': form.errors})
 
 
-    @normal_permission.require(http_exception=403)
+    @requires_auth
     def put(self, username, reponame):
-        form = RepositoryForm(request.form)
+        form = RepositoryForm(request.form, csrf_enabled = False)
 
         if not 'private' in request.form or request.form['private'] == "False":
           form.private.data = False
@@ -106,7 +106,7 @@ class RepositoriesAPI(MethodView):
 
 
 
-    @normal_permission.require(http_exception=403)
+    @requires_auth
     def delete(self, username, reponame):
         user = User.query.filter_by(username = username).first()
         repo = Repository.query.filter_by(name = reponame, owner = user).first()
@@ -134,16 +134,3 @@ app.add_url_rule('/api/repos/<username>',\
 app.add_url_rule('/api/repos/<username>/<reponame>',\
                     view_func=RepositoriesAPI.as_view('repos'),
                     methods=['GET','PUT','DELETE'])
-
-
-@app.route('/api/repos/<username>/new')
-def repoNewForm(username):
-    form = RepositoryForm(request.form)
-    return jsonify(form = form.toDict())
-
-
-@app.route('/api/repos/<username>/<repository>/edit')
-def repoEditForm(username, repository):
-    user = User.query.filter_by(username=username).first()
-    repo = Repository.query.filter_by(name = repository, owner = user).first()
-    return jsonify(form = form.toDict())

@@ -5,6 +5,7 @@ from datetime import datetime
 from rest_server import app, db
 
 from sqlalchemy.ext.hybrid import hybrid_property
+from flask import current_app
 
 
 from git.repository import GitRepository
@@ -32,7 +33,11 @@ class Repository(db.Model):
 
     @hybrid_property
     def cloneUrl(self):
-        return "ssh:...."
+        return 'git@%s/%s/%s' % (\
+                    str(current_app.config['SERVER_NAME_GIT']),
+                    self.owner.username,
+                    self.name
+                  )
 
 
     @hybrid_property
@@ -47,7 +52,7 @@ class Repository(db.Model):
         self.name  = reponame
         self.owner = owner
         self.path  = os.path.join(
-                        app.config['dataDir'],
+                        app.config['GIT_DATA_DIR'],
                         owner.username,
                         reponame
                      )
@@ -67,6 +72,7 @@ class Repository(db.Model):
             'createdAt'     : self.createdAt.strftime('%Y-%m-%d %H:%M:%S'),
             'private'       : self.private,
             'path'          : self.path,
+            'cloneUrl'      : self.cloneUrl,
             'description'   : self.description,
             'owner'         : self.owner.toDict(True),
             'contributers'  : [c.toDict(True) for c in self.contributers],

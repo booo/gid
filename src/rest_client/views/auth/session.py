@@ -34,8 +34,9 @@ class SessionAPI(MethodView):
     @normal_permission.require(http_exception=403)
     def get(self):
         try :
-            response = SessionAPI.rest.getWithCookies(
-                  {app.session_cookie_name : session.serialize()}
+            response = SessionAPI.rest.getWithAuth(
+                  username = session['user.username'],
+                  password = session['user.password']
               ) 
             
             form = ProfileForm(obj = DictObject(**json.loads(response)))
@@ -52,20 +53,21 @@ class SessionAPI(MethodView):
         if form.validate():
 
             try:
-                response = self.rest.postForm(
-                      data = form.toDict(),
-                      reqCookies = {app.session_cookie_name : session.serialize()}
+                response = self.rest.getWithAuth(
+                      form.username.data,
+                      form.password.data
                   ) 
 
                 data = json.loads(response)
 
-                print data
+                identity = Identity(data['username'])
+                identity_changed.send(app, identity=identity)
 
-                if 'username' in data and data['username'] != None:
-                    identity = Identity(data['username'])
-                    identity_changed.send(app, identity=identity)
+                session['user.username'] = data['username']
+                session['user.password'] = form.password.data
+                session['user.email'] = data['email']
 
-                    return redirect(url_for('session'))
+                return redirect(url_for('session'))
 
             except Unauthorized:
                 flash("Invalid credentials!", 'error')
@@ -77,12 +79,11 @@ class SessionAPI(MethodView):
 
     @normal_permission.require(http_exception=403)
     def delete(self):
-        response = self.rest.deleteWithCookie(
-                        {app.session_cookie_name : session.serialize()}
-                      )
-
         try:
             for key in ['identity.name', 'identity.auth_type', 'redirected_from']:
+                del session[key]
+
+            for key in ['user.username', 'user.password', 'user.email']:
                 del session[key]
 
         except KeyError:
@@ -101,17 +102,6 @@ def login():
     if 'identity.name' in session:
         redirect(url_for('session'))
 
-    response = SessionAPI.rest.getWithCookies(
-          {app.session_cookie_name : session.serialize()},
-          '/new'
-      ) 
-
-
-    data = json.loads(response)
-
-    session['_csrf_token'] = data['form']['csrf']
-    request.form.csrf = data['form']['csrf']
-    
     form = LoginForm(request.form)
 
     return render_template('auth/login.html', form=form)

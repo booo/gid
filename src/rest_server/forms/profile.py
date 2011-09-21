@@ -10,6 +10,5 @@ class ProfileForm(Form):
         return {
             'username'  : self.username.data,
             'email'     : self.email.data,
-            'key'       : self.key.data,
-            'csrf'     : self.csrf.data
+            'key'       : self.key.data
           }

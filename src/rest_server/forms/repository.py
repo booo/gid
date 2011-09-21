@@ -12,6 +12,5 @@ class RepositoryForm(Form):
             'name'          : self.name.data,
             'description'   : self.description.data,
             'contributers'  : self.contributers.data,
-            'private'       : self.private.data,
-            'csrf'          : self.csrf.data
+            'private'       : self.private.data
           }
