@@ -1,3 +1,7 @@
+What is Gid?
+============
+It's a simple git server with web a frontend.
+
 Getting Started
 ===============
 
@@ -40,11 +44,14 @@ if you want some samples for testing
   bin/rest-server-db-samples
 
 
-Start the server
+Start everything
 ----------------
 
 for the rest api
-  bin/rest-server
+  bin/api
 
 for the actual frontend
-  bin/rest-client
+  bin/web
+
+for the ssh daemon
+  bin/ssh

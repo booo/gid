@@ -11,13 +11,6 @@
           No description available
         {% endif %}
       </div>
-      <!--
-      {% if session['identity.name'] == repo['owner']['username'] %}
-      <a class="button red" style="float: right; display: inline-block" href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}?__METHOD_OVERRIDE__=DELETE">
-        delete
-      </a>
-      {% endif %}
-      -->
     </li>
   {% else %}
     <li>No repositories yet created</li>

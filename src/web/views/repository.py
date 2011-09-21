@@ -15,11 +15,11 @@ from pygments.lexers import guess_lexer
 from pygments.formatters import HtmlFormatter
 
 from restkit.errors import Unauthorized
-from rest_client import app
-from rest_client.models.rest import RestResource
-from rest_client.views.auth.session import normal_permission
-from rest_server.forms.repository import RepositoryForm
-from rest_server.models.dictobject import DictObject
+from web import app
+from web.models.rest import RestResource
+from web.views.auth.session import normal_permission
+from api.forms.repository import RepositoryForm
+from api.models.dictobject import DictObject
 
 
 class RepositoriesAPI(MethodView):
@@ -221,4 +221,4 @@ def repoEditForm(username, reponame):
                         '?__METHOD_OVERRIDE__=PUT'
     return render_template('repository/form.html', form=form,\
                                 username=username, action=action,\
-                                header='Edit Repository')
+                                header='Edit Repository', repo=repo)

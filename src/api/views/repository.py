@@ -7,11 +7,11 @@ from flask import Flask, request, render_template, json, \
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
 
-from rest_server import app
-from rest_server.views.auth.session import *
-from rest_server.forms.repository import RepositoryForm
-from rest_server.models.repository import Repository
-from rest_server.models.dictobject import DictObject
+from api import app
+from api.views.auth.session import *
+from api.forms.repository import RepositoryForm
+from api.models.repository import Repository
+from api.models.dictobject import DictObject
 
 from flask.views import MethodView
 

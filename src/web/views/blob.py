@@ -2,13 +2,13 @@ from pygments import highlight
 from pygments.lexers import guess_lexer
 from pygments.formatters import HtmlFormatter
 
-from rest_client import app
+from web import app
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
-from rest_client.views.repository import  RepositoriesAPI
+from web.views.repository import  RepositoriesAPI
 
 
 @app.route('/repos/<username>/<repository>/blobs/<sha>')

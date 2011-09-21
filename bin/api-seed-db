@@ -4,8 +4,8 @@ import path
 import string
 
 from random import choice
-from rest_server.models.user import User, db
-from rest_server.models.repository import Repository
+from api.models.user import User, db
+from api.models.repository import Repository
 
 names = ["john", "alice", "bob"]
 for name in names:

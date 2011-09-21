@@ -1,10 +1,10 @@
-from rest_client import app
+from web import app
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
-from rest_client.views.repository import  RepositoriesAPI
+from web.views.repository import  RepositoriesAPI
 
 @app.route('/repos/<username>/<repository>/commits/<sha>')
 def commitByUserAndRepoAndSha(username, repository, sha):

@@ -4,10 +4,10 @@ from flask import Flask, request, render_template, json, \
 
 from flask.views import MethodView
 
-from rest_server import app
-from rest_server.models.user import User, db
-from rest_server.forms.profile import ProfileForm
-from rest_server.forms.login import LoginForm
+from api import app
+from api.models.user import User, db
+from api.forms.profile import ProfileForm
+from api.forms.login import LoginForm
 
 
 from functools import wraps

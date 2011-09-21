@@ -6,6 +6,15 @@
     <h2>{{ header }}</h2>
   </div>
 
+  <div>
+    
+      {% if repo and session['identity.name'] == repo['owner']['username'] %}
+      <a href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}?__METHOD_OVERRIDE__=DELETE">
+        Delete this Repository
+      </a>
+      {% endif %}
+  </div>
+
   {% from "_formhelpers.html" import render_field, render_reverse_field %}
   <form method="post" action="{{action}}">
     {{ form.hidden_tag() }}

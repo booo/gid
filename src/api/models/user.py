@@ -1,5 +1,5 @@
-from rest_server import app, db
-from rest_server.models.repository import Repository
+from api import app, db
+from api.models.repository import Repository
 from twisted.conch.ssh.keys import Key as SSHKey
 
 from sqlalchemy.ext.hybrid import hybrid_property

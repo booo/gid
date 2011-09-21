@@ -30,11 +30,11 @@ class MethodRewriteMiddleware(object):
 app.wsgi_app = MethodRewriteMiddleware(app.wsgi_app)
 
 
-import rest_client.views.repository
-import rest_client.views.commit
-import rest_client.views.blob
-import rest_client.views.auth.user
-import rest_client.views.auth.session
+import web.views.repository
+import web.views.commit
+import web.views.blob
+import web.views.auth.user
+import web.views.auth.session
 
 @app.route('/static/css/<name>.sass')
 def css(name):

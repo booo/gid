@@ -8,12 +8,12 @@ from flask.views import MethodView
 from restkit import ResourceNotFound
 
 from sqlalchemy.exc import IntegrityError
-from rest_server import app
-from rest_server.models.user import User, db
-from rest_server.views.auth.session import requires_auth
-from rest_server.forms.registration import RegistrationForm
-from rest_server.forms.login import LoginForm
-from rest_server.forms.profile import ProfileForm
+from api import app
+from api.models.user import User, db
+from api.views.auth.session import requires_auth
+from api.forms.registration import RegistrationForm
+from api.forms.login import LoginForm
+from api.forms.profile import ProfileForm
 
 
 class UserAPI(MethodView):

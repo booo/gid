@@ -5,13 +5,13 @@ from flask import Flask, request, render_template, json, \
 
 from flask.views import MethodView
 
-from rest_client import app
-from rest_client.models.rest import RestResource, ResourceNotFound
-from rest_client.views.auth.session import normal_permission
+from web import app
+from web.models.rest import RestResource, ResourceNotFound
+from web.views.auth.session import normal_permission
 
-from rest_server.forms.profile import ProfileForm
-from rest_server.forms.registration import RegistrationForm
-from rest_server.models.dictobject import DictObject
+from api.forms.profile import ProfileForm
+from api.forms.registration import RegistrationForm
+from api.models.dictobject import DictObject
 
 class UserAPI(MethodView):
 

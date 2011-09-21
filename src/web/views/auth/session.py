@@ -11,12 +11,12 @@ from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
 
 from restkit.errors import Unauthorized
 
-from rest_client import app
-from rest_client.models.rest import RestResource
+from web import app
+from web.models.rest import RestResource
 
-from rest_server.forms.login import LoginForm
-from rest_server.models.dictobject import DictObject
-from rest_server.forms.profile import ProfileForm
+from api.forms.login import LoginForm
+from api.models.dictobject import DictObject
+from api.forms.profile import ProfileForm
 
 
 # flask-principal

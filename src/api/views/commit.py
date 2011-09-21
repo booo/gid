@@ -2,9 +2,9 @@ from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
-from rest_server import app
-from rest_server.models.repository import Repository
-from rest_server.models.user import User
+from api import app
+from api.models.repository import Repository
+from api.models.user import User
 
 @app.route('/api/repos/<username>/<repository>/commits')
 def commitsByUserAndRepo(username, repository):
