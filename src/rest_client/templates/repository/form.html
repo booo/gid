@@ -3,19 +3,19 @@
 
 <div id="repos-edit">
   <div class="header">
-    <h2>Edit Repository</h2>
+    <h2>{{ header }}</h2>
   </div>
 
-  {% from "_formhelpers.html" import render_field %}
+  {% from "_formhelpers.html" import render_field, render_reverse_field %}
   <form method="post" action="{{action}}">
     {{ form.hidden_tag() }}
     <ul>
       <li>{{ render_field(form.name) }}</li>
       <li>{{ render_field(form.description) }}</li>
       <li>{{ render_field(form.contributers) }}</li>
-      <li>{{ render_field(form.private) }}</li>
+      <li>{{ render_reverse_field(form.private) }}</li>
     </ul>
-    <p><input class="button gray" type="submit" value="{{submit}}" />
+    <p><input class="button gray" type="submit" value="{{header}}" />
   </form>
 
 </div>

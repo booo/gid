@@ -13,3 +13,19 @@
     {% endif %}
   </p>
 {% endmacro %}
+
+{% macro render_reverse_field(field) %}
+  <p class="inputLabel">
+    {{ field(**kwargs)|safe }}
+    <label>{{ field.label }}</label>
+  </p>
+  <p>
+
+  <p class="input">
+    {% if field.errors %}
+      <ul class="errors">
+        <li>{% for error in field.errors %}<li>{{ error }}{% endfor %}
+      </ul>
+    {% endif %}
+  </p>
+{% endmacro %}

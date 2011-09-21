@@ -130,7 +130,7 @@ class RepositoriesAPI(MethodView):
         action = url_for('repos', username=username)
         return render_template('repository/form.html', form=form,
                                     username=username, action=action,
-                                    submit='Create Repository')
+                                    header='Create Repository')
 
 
 
@@ -160,7 +160,7 @@ class RepositoriesAPI(MethodView):
                             '?__METHOD_OVERRIDE__=PUT'
         return render_template('repository/form.html', form=form,
                                     username=username, action=action,
-                                    submit='Edit Repository')
+                                    header='Edit Repository')
 
 
     @normal_permission.require(http_exception=403)
@@ -200,7 +200,7 @@ def repoNewForm(username):
     action = url_for('repos', username=username)
     return render_template('repository/form.html', form=form,
                                 username=username, action=action,
-                                submit='Create Repository')
+                                header='Create Repository')
 
 
 @app.route('/repos/<username>/<reponame>/edit')
@@ -221,4 +221,4 @@ def repoEditForm(username, reponame):
                         '?__METHOD_OVERRIDE__=PUT'
     return render_template('repository/form.html', form=form,\
                                 username=username, action=action,\
-                                submit='Edit Repository')
+                                header='Edit Repository')
