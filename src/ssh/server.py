@@ -22,7 +22,6 @@ class PubKeyChecker(SSHPublicKeyDatabase):
 
     def checkKey(self, credentials):
         user = User.query.filter_by(
-            username = credentials.username,
             keyBlob = credentials.blob
         ).first()
 
@@ -39,13 +38,29 @@ class PatchedSSHSession(session.SSHSession):
 class GitUser(avatar.ConchUser):
     def __init__(self, name):
         avatar.ConchUser.__init__(self)
+
         self.name = name
+
+        self.user =  User.query.filter_by(
+              username = name
+          ).first()
+
+
+        print self.user
+
         self.channelLookup['session'] = PatchedSSHSession
+
 
     def can(self, perm, repo):
         """ Checks for permission to a repository """
-        if perm == 'write': return True
-        else: return True
+        if repo in [r.name for r in self.user.repos]:
+          return True
+
+        elif 'perm' == 'read' and not repo.private:
+          return True
+
+        else:
+          return False
 
 class GitRealm:
     def requestAvatar(self, avatarId, mind, *interfaces):
