@@ -13,7 +13,6 @@ class GitRepository:
 
     def __init__(self, path, init = False):
         if init :
-          print "Creating Repo: "+path
           os.makedirs(path)
           repo = Repo.init_bare(path)
         else:

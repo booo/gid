@@ -43,19 +43,24 @@ class Repository(db.Model):
     @hybrid_property
     def git(self):
         if not hasattr(self, '_git'):
-            self._git = GitRepository(self.path)
+            path = self._path(self.owner.username, self.name)
+            self._git = GitRepository(path)
 
         return self._git
 
 
+    @staticmethod
+    def _path(username, reponame):
+        return os.path.join(
+                    app.config['GIT_DATA_DIR'],
+                    username,
+                    reponame
+                 )
+
     def __init__(self, reponame, owner):
         self.name  = reponame
         self.owner = owner
-        self.path  = os.path.join(
-                        app.config['GIT_DATA_DIR'],
-                        owner.username,
-                        reponame
-                     )
+        self.path  = self._path(owner.username, reponame) 
         self._git = GitRepository(self.path, True)
 
 
