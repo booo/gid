@@ -74,7 +74,15 @@
 
             back.click(function() {
                 parentElem.css('margin-left', '0px');
-                setTimeout(function() { elem.remove(); }, 1000);
+
+                var f = function() {
+                  elem.remove();
+                }
+
+                parentElem.bind('webkitTransitionEnd', f);
+                parentElem.bind('oTransitionEnd', f);
+                parentElem.bind('transitionend', f);
+
                 return false;
             });
           });
