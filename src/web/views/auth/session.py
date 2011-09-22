@@ -67,6 +67,8 @@ class SessionAPI(MethodView):
                 session['user.password'] = form.password.data
                 session['user.email'] = data['email']
 
+                flash("Successfully logged in!", 'success')
+
                 return redirect(url_for('session'))
 
             except Unauthorized:

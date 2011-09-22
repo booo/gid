@@ -50,6 +50,9 @@ class RepositoriesAPI(MethodView):
         form = RepositoryForm(request.form, csrf_enabled = False)
         reponame = form.name.data
 
+        if not 'private' in request.form or request.form['private'] == "False":
+          form.private.data = False
+
         if form.validate():
             user = User.query.filter_by(username=session['identity.name']).first()
 
@@ -57,7 +60,7 @@ class RepositoriesAPI(MethodView):
                 repo                  = Repository(reponame, user)
                 repo.owner            = user
                 repo.description      = form.description.data
-                repo.private          = form.private.data
+                repo.private          = bool(form.private.data)
                 repo.contributers    = [
                     User.query.filter_by(username=c).first()
                     for c in form.contributers.data.split(',')

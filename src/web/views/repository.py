@@ -168,12 +168,12 @@ class RepositoriesAPI(MethodView):
         if username == session['identity.name']:
             try:
                 response = RepositoriesAPI.rest.deleteWithAuth(
-                    '/%s/%s' % (username, reponame),
-                    username = session['user.username'],
-                    password = session['user.password']
+                    session['user.username'],
+                    session['user.password'],
+                    '/%s/%s' % (username, reponame)
                   )
 
-                flash("Successfully deleted: " + reponame)
+                flash("Successfully deleted: " + reponame, 'success')
 
                 return redirect(url_for('repos', username = username))
 
