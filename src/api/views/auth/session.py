@@ -24,7 +24,12 @@ def check_auth(username, password):
                     ).first()
 
     import hashlib
-    return user != None and user.password == hashlib.sha1(password).hexdigest()
+    if user != None:
+      if user.password == hashlib.sha1(password).hexdigest()\
+        or user.token == password:
+        return True
+
+    return False
 
 
 def authenticate():

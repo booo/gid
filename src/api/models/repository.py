@@ -64,7 +64,8 @@ class Repository(db.Model):
 
 
     def __eq__(self, other):
-        return self.name == other.name and self.owner == other.owner
+        return self.name == other.name\
+          and self.owner.username == other.owner.username
 
     def toDict(self):
         return {

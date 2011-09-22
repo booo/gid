@@ -1,6 +1,7 @@
 from api import app, db
 from api.models.repository import Repository
 from twisted.conch.ssh.keys import Key as SSHKey
+from random import choice
 
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -9,6 +10,13 @@ class _KeyBlobUpdater(db.MapperExtension):
     def before_create(self, mapper, connection, instance):
         if instance.key:
           instance.keyBlob = SSHKey.fromString(data = instance.key).blob()
+
+        instance.token = ''.join(
+           choice(
+              string.ascii_uppercase + string.digits
+           ) for x in range(N)
+        )
+
 
     def before_update(self, mapper, connection, instance):
         if instance.key:
@@ -22,6 +30,7 @@ class User(db.Model):
     email         = db.Column(db.String(120), unique=True)
     passwordHash  = db.Column(db.String(128))
     key           = db.Column(db.String(512))
+    token         = db.Column(db.String(12128))
     keyBlob       = db.Column(db.Binary(512))
 
     __mapper_args__ = {'extension': _KeyBlobUpdater()}
