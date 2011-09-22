@@ -25,7 +25,7 @@ def commitByUserAndRepoAndSha(username, repository, sha):
     urlTree = '/%s/trees/%s' % (urlRepo, commit['tree'])
     response = RepositoriesAPI.rest.get(
         urlTree,
-        recursive=1,
+        recursive=0,
         headers = {'Accept': 'application/json'}
       ).body_string()
     tree = json.loads(response)['tree']

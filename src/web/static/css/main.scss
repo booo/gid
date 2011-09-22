@@ -141,7 +141,7 @@ html, body {
 
 h1, h2, h3 {
   font-family: 'Andika', sans-serif;
-  margin-bottom: $padding;
+  margin-bottom: $padding/2;
 }
 
 h2 {
@@ -249,7 +249,7 @@ a {
   margin-bottom: 8px;
 }
 
-#repos-show {
+#repos-show, #commits-show {
   @include grid(16);
 }
 
@@ -269,7 +269,7 @@ a {
   text-align: right;
 }
 
-#repos-show .description {
+#repos-show .description , #commit-show .message {
   margin-bottom: 10px;
   @include grid(16);
   @include alpha;
@@ -297,15 +297,23 @@ a {
   padding: 0;
 }
 
-.tree {
+.tree, .commits, .info {
   margin-bottom: $padding;
 }
 
-.tree li {
+.tree li, .commits li {
   vertical-align: middle;
   height: 20px;
   line-height: 20px;
   padding: $padding / 2;
+}
+
+.commits li {
+  padding: $padding/2 0;
+}
+
+.commits p {
+  padding: 0 $padding;
 }
 
 .tree li:nth-child(2n+1) {

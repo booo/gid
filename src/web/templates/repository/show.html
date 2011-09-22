@@ -34,7 +34,7 @@
     </p>
 
     <!--
-    <h3>refs</h3>
+    <h3>Branches</h3>
     <ul>
       {% for branch in repo['git']['refs']%}
         <li>{{branch}}</li>
@@ -42,10 +42,8 @@
     </ul>
     -->
 
-    <!--
     <h3>Recent commits</h3>
     {% include 'commit/_list.html' %}
-    -->
 
     <h3>Tree</h3>
     {% include 'tree/_show.html' %}

@@ -65,7 +65,7 @@ html, body {
 
 h1, h2, h3 {
   font-family: 'Andika', sans-serif;
-  margin-bottom: 20px; }
+  margin-bottom: 10px; }
 
 h2 {
   font-size: 120%; }
@@ -193,7 +193,7 @@ a {
   letter-spacing: 1px;
   margin-bottom: 8px; }
 
-#repos-show {
+#repos-show, #commits-show {
   display: inline;
   float: left;
   margin-left: 10px;
@@ -232,7 +232,7 @@ a {
   margin-right: 0;
   text-align: right; }
 
-#repos-show .description {
+#repos-show .description, #commit-show .message {
   margin-bottom: 10px;
   display: inline;
   float: left;
@@ -259,14 +259,20 @@ a {
 .highlighttable .highlight {
   padding: 0; }
 
-.tree {
+.tree, .commits, .info {
   margin-bottom: 20px; }
 
-.tree li {
+.tree li, .commits li {
   vertical-align: middle;
   height: 20px;
   line-height: 20px;
   padding: 10px; }
+
+.commits li {
+  padding: 10px 0; }
+
+.commits p {
+  padding: 0 20px; }
 
 .tree li:nth-child(2n+1) {
   background: #f7f9fe; }

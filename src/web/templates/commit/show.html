@@ -1,22 +1,27 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h1>
-    <a href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
-      {{repo['name']}}
-    </a>
-    /
-    {{commit['sha']}}
-  </h1>
-  <p>
-    {{commit['message']}}
-  </p>
+  <div id="commit-show">
+    <div class="header">
+      <h2>
+        <a href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
+          {{repo['name']}}
+        </a>
+        /
+        {{commit['sha']}}
+      </h2>
+    </div>
+    <p class="message">
+      {{commit['message']}}
+    </p>
 
-  <ul>
-    <li><em>Author</em>: {{commit['author']['name']}}</li>
-    <li><em>Committer</em>: {{commit['committer']['name']}}</li>
-    <li><em>Time</em>: {{commit['committer']['date']}}</li>
-  </ul>
+    <h3>Info</h3>
+    <ul class="info">
+      <li><em>Author</em>: {{commit['author']['name']}}</li>
+      <li><em>Committer</em>: {{commit['committer']['name']}}</li>
+      <li><em>Time</em>: {{commit['committer']['date']}}</li>
+    </ul>
 
-  <h4>Tree</h4>
-  {% include 'tree/_show.html' %}
+    <h3>Tree</h3>
+    {% include 'tree/_show.html' %}
+  </div>
 {%endblock%}

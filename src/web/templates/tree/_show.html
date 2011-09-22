@@ -1,5 +1,5 @@
-{% if tree is sequence %}
-  <ul class="tree">
+<ul class="tree">
+  {% if tree is sequence %}
     {% for item in tree recursive %}
       {% if item['type'] == 'folder' %}
         <li class="directory" data-json="{{url_for('treeByUserAndRepoAndSha',
@@ -18,7 +18,7 @@
         </li>
       {% endif %}
     {%endfor%}
-  </ul>
 {% else %}
-<p>No files yet commited</p>
+  <li>No files yet commited</li>
 {% endif %}
+</ul>
