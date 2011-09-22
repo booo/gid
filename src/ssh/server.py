@@ -65,7 +65,7 @@ class GitUser(avatar.ConchUser):
                   owner = owner
                ).first()
 
-        if reponame in [r.name for r in self.user.repos]:
+        if owner.username == username:
           return True
 
         elif perm == 'read' and not repo.private:

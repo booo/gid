@@ -130,6 +130,8 @@ $light:  #F7F9FE;
 $gray:   #ECF1F2;
 $darkgray:   #CCC;
 $padding: 20px;
+$linkColorHover: #AAF;
+$linkColor: #00F;
 
 html, body {
   background: #fff;
@@ -317,6 +319,15 @@ a {
   margin-right: 5px;
 }
 
+.tree li.directory {
+  color: $linkColor;
+  cursor: pointer;
+}
+
+.tree li.directory:hover {
+  color: $linkColorHover;
+}
+
 #repo-nav .branches {
   @include grid(4);
   @include omega;
@@ -332,11 +343,11 @@ button {
 }
 
 a, a:active, a:visited {
-  color: #00F;
+  color: $linkColor
 }
 
 a:hover {
-  color: #AAF;
+  color: $linkColorHover;
 }
 
 form .inputLabel {

@@ -2,7 +2,8 @@
   <ul class="tree">
     {% for item in tree recursive %}
       {% if item['type'] == 'folder' %}
-        <li class="directory">
+        <li class="directory" data-json="{{url_for('treeByUserAndRepoAndSha',
+        username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
           <img src="{{url_for('static', filename='images/folder.png')}}" alt="directory"  class="directory" />
           {{ item['path'] }}
           <ul>

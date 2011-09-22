@@ -277,6 +277,13 @@ a {
   vertical-align: middle;
   margin-right: 5px; }
 
+.tree li.directory {
+  color: blue;
+  cursor: pointer; }
+
+.tree li.directory:hover {
+  color: #aaaaff; }
+
 #repo-nav .branches {
   display: inline;
   float: left;
@@ -293,10 +300,10 @@ button {
   color: #000; }
 
 a, a:active, a:visited {
-  color: #00F; }
+  color: blue; }
 
 a:hover {
-  color: #AAF; }
+  color: #aaaaff; }
 
 form .inputLabel {
   width: 200px; }

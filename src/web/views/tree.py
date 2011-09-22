@@ -6,8 +6,8 @@ from flask import Flask, request, render_template, json, \
 
 from web.views.repository import  RepositoriesAPI
 
-@app.route('/repos/<username>/<repository>/commits/<sha>')
-def commitByUserAndRepoAndSha(username, repository, sha):
+@app.route('/repos/<username>/<repository>/trees/<sha>')
+def treeByUserAndRepoAndSha(username, repository, sha):
     urlRepo = '/%s/%s' % (username, repository)
     responseRepo = RepositoriesAPI.rest.get(
           urlRepo,
@@ -15,22 +15,12 @@ def commitByUserAndRepoAndSha(username, repository, sha):
         ).body_string()
     repo = json.loads(responseRepo)['repo']
 
-    urlCommit = '/%s/commits/%s' % (urlRepo, sha)
-    response = RepositoriesAPI.rest.get(
-        urlCommit,
-        headers = {'Accept': 'application/json'}
-      ).body_string()
-    commit = json.loads(response)['commit']
-
-    urlTree = '/%s/trees/%s' % (urlRepo, commit['tree'])
+    urlTree = '/%s/trees/%s' % (urlRepo, sha)
     response = RepositoriesAPI.rest.get(
         urlTree,
-        recursive=1,
+        recursive=0,
         headers = {'Accept': 'application/json'}
       ).body_string()
     tree = json.loads(response)['tree']
-    
-    return render_template('commit/show.html', 
-              repo =repo, 
-              commit = commit,
-              tree = tree)
+
+    return render_template('tree/_show.html', tree = tree, repo = repo)

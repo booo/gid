@@ -56,5 +56,35 @@
     <div id="footer">
       Gid is <em>open source</em>.
     </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+      $(function() {
+
+        var history = [];
+
+        $('ul.tree li.directory:not(.back)').live('click', function(evt) {
+          var url = $(evt.target).attr('data-json');
+          $.get(url, function(data) {
+            var originalEl = $('ul.tree').clone();
+            history.push(originalEl);
+
+            var newEl = $(data);
+            var back = $('<li class="directory back"><a href="#">..</a></li>');
+            newEl.prepend(back);
+
+            $('ul.tree').replaceWith(newEl);
+
+          });
+        });
+
+        $('ul.tree li.back').live('click', function(evt) {
+          var el = history.pop();
+          $('ul.tree').replaceWith(el);
+          evt.stopPropagation();
+          return false;
+        });
+      });
+    </script>
   </body>
 </html>
