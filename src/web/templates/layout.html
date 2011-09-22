@@ -61,10 +61,10 @@
 
         $('ul.tree li.directory:not(.back)').live('click', function(evt) {
           var url = $(evt.target).attr('data-json');
+
           $.get(url, function(data) {
             var elem = $(data);
             var back = $('<li class="directory back"><a href="#">..</a></li>');
-
 
             elem.children(".tree").prepend(back);
 
@@ -77,7 +77,6 @@
                 setTimeout(function() { elem.remove(); }, 1000);
                 return false;
             });
-
           });
         });
 

@@ -47,8 +47,8 @@ class GitCommit:
         write_tree_diff(
           changes,
           self._repo.object_store,
-          self.commit.tree,
-          self._repo.commit(self.commit.parents[0]).tree
+          self._repo.commit(self.commit.parents[0]).tree,
+          self.commit.tree
         )
         data['changes'] = changes.getvalue()
         changes.close()

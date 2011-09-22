@@ -22,7 +22,11 @@
     </ul>
 
     <h3>Tree</h3>
-    {% include 'tree/_show.html' %}
+    <div id="slider">
+      <div class="pages">
+        {% include 'tree/_show.html' %}
+      </div>
+    </div>
 
     <h3>Changes</h3>
     {{commit['changes']|safe}}
