@@ -3,7 +3,7 @@ import json
 
 from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
-                                jsonify
+                                jsonify, current_app
 
 from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
             Permission, identity_changed, identity_loaded
@@ -24,7 +24,7 @@ from api.models.dictobject import DictObject
 
 class RepositoriesAPI(MethodView):
 
-    rest = RestResource('http://127.0.0.1:5000/api/repos')
+    rest = RestResource('http://' + app.config['SERVER_NAME_API'] + '/api/repos')
 
     def get(self, username = None, reponame = None):
         if username == None:

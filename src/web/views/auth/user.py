@@ -15,7 +15,7 @@ from api.models.dictobject import DictObject
 
 class UserAPI(MethodView):
 
-    rest = RestResource('http://127.0.0.1:5000/api/users')
+    rest = RestResource('http://' + app.config['SERVER_NAME_API'] + '/api/users')
 
     def get(self, username):
         url = '/%s' % username
