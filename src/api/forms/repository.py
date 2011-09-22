@@ -1,7 +1,7 @@
 from flaskext.wtf import Form, TextField, TextAreaField, BooleanField, validators
 
 class RepositoryForm(Form):
-    name = TextField('Name', [validators.Length(min=4, max=25)])
+    name = TextField('Name', [validators.Length(min=2, max=25)])
     description = TextAreaField('Description')
     contributers = TextField('Contributers')
     private = BooleanField('Private Repository', default = False)

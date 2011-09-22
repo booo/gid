@@ -1,7 +1,7 @@
 from flaskext.wtf import Form, TextField, PasswordField, validators
 
 class RegistrationForm(Form):
-    username = TextField('Username', [validators.Length(min=4, max=25)])
+    username = TextField('Username', [validators.Length(min=2, max=25)])
     email = TextField('Email Address', [validators.Length(min=6, max=35)])
     password = PasswordField('New Password', [
         validators.Required(),
