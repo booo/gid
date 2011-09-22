@@ -8,7 +8,9 @@ from twisted.conch.checkers import SSHPublicKeyDatabase
 from twisted.conch.ssh import factory, userauth, connection, keys, session, channel
 from twisted.internet import reactor, protocol, defer
 from twisted.python import log, components
+
 from api.models.user import User
+from api.models.repository import Repository
 
 log.startLogging(sys.stderr)
 
@@ -51,12 +53,22 @@ class GitUser(avatar.ConchUser):
         self.channelLookup['session'] = PatchedSSHSession
 
 
-    def can(self, perm, repo):
+    def can(self, perm, name):
         """ Checks for permission to a repository """
-        if repo in [r.name for r in self.user.repos]:
+
+        username = name.split('/')[0]
+        reponame = name.split('/')[1]
+
+        owner = User.query.filter_by(username=username).first()
+        repo = Repository.query.filter_by(
+                  name = reponame,
+                  owner = owner
+               ).first()
+
+        if reponame in [r.name for r in self.user.repos]:
           return True
 
-        elif 'perm' == 'read' and not repo.private:
+        elif perm == 'read' and not repo.private:
           return True
 
         else:
