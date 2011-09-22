@@ -49,7 +49,7 @@ class GitRepository:
 
 
     def getCommit(self, sha):
-        return GitCommit(self._repo.commit(sha)).toDict()
+        return GitCommit(self._repo, sha).toDict()
 
 
     def getCommits(self, amount = None, branch = None):
@@ -61,7 +61,7 @@ class GitRepository:
 
             if walker is not None:
               commits = [
-                          GitCommit(entry.commit).toDict(True)
+                          GitCommit(self._repo, entry.commit.id).toDict(True)
                           for entry in walker
                         ]
 

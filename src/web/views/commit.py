@@ -4,6 +4,10 @@ from flask import Flask, request, render_template, json, \
                                 flash, session, redirect, url_for, Response, \
                                 jsonify
 
+from pygments import highlight
+from pygments.lexers import guess_lexer
+from pygments.formatters import HtmlFormatter
+
 from web.views.repository import  RepositoriesAPI
 
 @app.route('/repos/<username>/<repository>/commits/<sha>')
@@ -29,6 +33,10 @@ def commitByUserAndRepoAndSha(username, repository, sha):
         headers = {'Accept': 'application/json'}
       ).body_string()
     tree = json.loads(response)['tree']
+
+    lexer = guess_lexer(commit['changes'])
+    formatter = HtmlFormatter(linenos=True, noclasses=True)
+    commit['changes'] = highlight(commit['changes'], lexer, formatter)
     
     return render_template('commit/show.html', 
               repo =repo, 

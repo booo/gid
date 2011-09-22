@@ -1,9 +1,13 @@
+from dulwich.patch import write_tree_diff
+import sys
+
 from datetime import datetime
 
 class GitCommit:
 
-    def __init__(self, commit):
-        self.commit = commit
+    def __init__(self, repo, sha):
+        self._repo = repo
+        self.commit = repo.commit(sha)
 
     @staticmethod
     def _toDate(timestamp, timezone):
@@ -20,7 +24,7 @@ class GitCommit:
                         self.commit.commit_time,
                         self.commit.commit_timezone
                      )
-        short = {
+        data = {
             "sha"         : self.commit.id,
             "message"     : self.commit.message,
             "tree"        : self.commit.tree,
@@ -36,7 +40,17 @@ class GitCommit:
           }
 
         if short:
-          return short
+          return data
 
-        else:
-          return short
+        import StringIO
+        changes = StringIO.StringIO()
+        write_tree_diff(
+          changes,
+          self._repo.object_store,
+          self.commit.tree,
+          self._repo.commit(self.commit.parents[0]).tree
+        )
+        data['changes'] = changes.getvalue()
+        changes.close()
+
+        return data

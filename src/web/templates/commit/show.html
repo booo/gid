@@ -23,5 +23,8 @@
 
     <h3>Tree</h3>
     {% include 'tree/_show.html' %}
+
+    <h3>Changes</h3>
+    {{commit['changes']|safe}}
   </div>
 {%endblock%}
