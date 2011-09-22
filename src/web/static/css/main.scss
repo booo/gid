@@ -136,11 +136,11 @@ $linkColor: #00F;
 html, body {
   background: #fff;
   padding: 0; margin: 0;
-  font-family: "Open Sans", sans-serif;
+  font-family: Arial, Helvetica;
 }
 
 h1, h2, h3 {
-  font-family: 'Andika', sans-serif;
+  font-family: Arial, Helvetica;
   margin-bottom: $padding/2;
 }
 
@@ -297,15 +297,39 @@ a {
   padding: 0;
 }
 
-.tree, .commits, .info {
+ul.tree, .commits, .info {
   margin-bottom: $padding;
 }
 
-.tree li, .commits li {
+ul.tree li, .commits li {
   vertical-align: middle;
   height: 20px;
   line-height: 20px;
   padding: $padding / 2;
+}
+
+
+#slider {
+  display: block;
+  overflow: hidden;
+  width: 940px;
+}
+
+div.pages {
+  width: 10000px;
+}
+
+div.page {
+  float: left;
+  width: 940px;
+  -webkit-transition-property: margin-left;
+  -webkit-transition-duration: 1s;
+  -moz-transition-property: margin-left;
+  -moz-transition-duration: 1s;
+  -o-transition-property: margin-left;
+  -o-transition-duration: 1s;
+  transition-property: margin-left;
+  transition-duration: 1s;
 }
 
 .commits li {

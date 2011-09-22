@@ -1,24 +1,26 @@
-<ul class="tree">
-  {% if tree is sequence %}
-    {% for item in tree recursive %}
-      {% if item['type'] == 'folder' %}
-        <li class="directory" data-json="{{url_for('treeByUserAndRepoAndSha',
-        username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
-          <img src="{{url_for('static', filename='images/folder.png')}}" alt="directory"  class="directory" />
-          {{ item['path'] }}
-          <ul>
-            {{ loop(item['childs']) }}
-          </ul>
-        </li>
-      {% else %}
-        <li class="file">
-          <a href="{{url_for('blobByUserandRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
+<div class="page">
+  <ul class="tree">
+    {% if tree is sequence %}
+      {% for item in tree recursive %}
+        {% if item['type'] == 'folder' %}
+          <li class="directory" data-json="{{url_for('treeByUserAndRepoAndSha',
+          username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
+            <img src="{{url_for('static', filename='images/folder.png')}}" alt="directory"  class="directory" />
             {{ item['path'] }}
-          </a>
-        </li>
-      {% endif %}
-    {%endfor%}
-{% else %}
-  <li>No files yet commited</li>
-{% endif %}
-</ul>
+            <ul>
+              {{ loop(item['childs']) }}
+            </ul>
+          </li>
+        {% else %}
+          <li class="file">
+            <a href="{{url_for('blobByUserandRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
+              {{ item['path'] }}
+            </a>
+          </li>
+        {% endif %}
+      {%endfor%}
+  {% else %}
+    <li>No files yet commited</li>
+  {% endif %}
+  </ul>
+</div>

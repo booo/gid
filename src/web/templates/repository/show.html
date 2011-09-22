@@ -46,7 +46,11 @@
     {% include 'commit/_list.html' %}
 
     <h3>Tree</h3>
-    {% include 'tree/_show.html' %}
+    <div id="slider">
+      <div class="pages">
+        {% include 'tree/_show.html' %}
+      </div>
+    </div>
 
     {% if readme %}
     <h3>Readme</h3>

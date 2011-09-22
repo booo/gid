@@ -7,8 +7,6 @@
     <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/reset.css')}}" />
     <link rel="stylesheet" type="text/css" media="all" href="{{url_for('static', filename='css/960.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/main.css')}}" />
-    <link href='http://fonts.googleapis.com/css?family=Andika' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
   </head>
 
   <body>
@@ -61,29 +59,28 @@
     <script type="text/javascript">
       $(function() {
 
-        var history = [];
-
         $('ul.tree li.directory:not(.back)').live('click', function(evt) {
           var url = $(evt.target).attr('data-json');
           $.get(url, function(data) {
-            var originalEl = $('ul.tree').clone();
-            history.push(originalEl);
-
-            var newEl = $(data);
+            var elem = $(data);
             var back = $('<li class="directory back"><a href="#">..</a></li>');
-            newEl.prepend(back);
 
-            $('ul.tree').replaceWith(newEl);
+
+            elem.children(".tree").prepend(back);
+
+            var parentElem = $('div.page:last-child')
+            parentElem.css('margin-left', '-1000px');
+            $('#slider div.pages').append(elem);
+
+            back.click(function() {
+                parentElem.css('margin-left', '0px');
+                setTimeout(function() { elem.remove(); }, 1000);
+                return false;
+            });
 
           });
         });
 
-        $('ul.tree li.back').live('click', function(evt) {
-          var el = history.pop();
-          $('ul.tree').replaceWith(el);
-          evt.stopPropagation();
-          return false;
-        });
       });
     </script>
   </body>
