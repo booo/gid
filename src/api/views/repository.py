@@ -62,8 +62,8 @@ class RepositoriesAPI(MethodView):
                 repo.owner            = user
                 repo.description      = form.description.data
                 repo.private          = bool(form.private.data)
-                repo.contributers     = [
-                    User.query.filter_by(username=c).first()
+                repo.contributers     = [user] + [
+                    User.query.filter_by(username=c.strip()).first()
                     for c in form.contributers.data.split(',')
                   ]
 
@@ -88,18 +88,13 @@ class RepositoriesAPI(MethodView):
             repo.name             = self._sanitize(form.name.data)
             repo.description      = form.description.data
             repo.private          = bool(form.private.data)
+            repo.contributers     = [user] + [
+                User.query.filter_by(username=c.strip()).first()
+                for c in form.contributers.data.split(',')
+              ]
 
 
-            def userForName(username):
-                u = User.query.filter_by(username=username).first()
-                if u != None:
-                  return u
-                return None
-
-            repo.contributers     = map(
-                    userForName,
-                    [c for c in form.contributers.data.split(',')]
-                )
+            print "Contributers:" + str(repo.contributers)
 
             db.session.add(repo) 
             db.session.commit()
