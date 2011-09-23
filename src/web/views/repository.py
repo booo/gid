@@ -69,6 +69,19 @@ class RepositoriesAPI(MethodView):
                 ).body_string()
             commits = json.loads(responseCommits)['commits']
 
+            def addDate(c):
+                import pretty
+                from datetime import datetime
+
+                c['date'] = pretty.date(
+                  datetime.strptime(
+                    c['committer']['date'],
+                    '%Y-%m-%d %H:%M:%S'
+                  )
+                )
+
+            map(addDate, commits) 
+
             tree = readme = None
             if repo['git']['head'] != None:
               urlTree = '/%s/trees/%s' % (urlRepo, repo['git']['head']['tree'])

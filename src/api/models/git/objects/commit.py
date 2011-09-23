@@ -12,7 +12,7 @@ class GitCommit:
     @staticmethod
     def _toDate(timestamp, timezone):
           return datetime.fromtimestamp(int(timestamp)).\
-                    strftime('%Y-%m-%d %H:%M:%S') + '+' + str(timezone)
+                    strftime('%Y-%m-%d %H:%M:%S')
     
     def toDict(self, short = False):
         authorDate = GitCommit._toDate(
