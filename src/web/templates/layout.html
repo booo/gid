@@ -61,6 +61,10 @@
 
         $('ul.tree li.directory:not(.back)').live('click', function(evt) {
           var url = $(evt.target).attr('data-json');
+          //If tag has no data-json attribute, bubble
+          if(url == undefined) {
+            return true;
+          }
 
           $.get(url, function(data) {
             var elem = $(data);
@@ -85,6 +89,7 @@
 
                 return false;
             });
+
           });
         });
 
