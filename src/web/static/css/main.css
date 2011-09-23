@@ -67,6 +67,9 @@ h1, h2, h3 {
   font-family: Arial, Helvetica;
   margin-bottom: 10px; }
 
+h1 {
+  font-size: 160%; }
+
 h2 {
   font-size: 140%; }
 
@@ -196,7 +199,7 @@ a {
   letter-spacing: 1px;
   margin-bottom: 8px; }
 
-#repos-show, #commits-show {
+#repos-show, #commits-show, #blob-show {
   display: inline;
   float: left;
   margin-left: 10px;

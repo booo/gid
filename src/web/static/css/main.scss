@@ -144,6 +144,10 @@ h1, h2, h3 {
   margin-bottom: $padding/2;
 }
 
+h1 {
+  font-size: 160%;
+}
+
 h2 {
   font-size: 140%;
 }
@@ -253,7 +257,7 @@ a {
   margin-bottom: 8px;
 }
 
-#repos-show, #commits-show {
+#repos-show, #commits-show, #blob-show {
   @include grid(16);
 }
 

@@ -26,10 +26,18 @@ class UserAPI(MethodView):
               ).body_string()
 
           user = json.loads(response)['user']
+          amountOfRepositories= len(
+              filter(
+                lambda x: x['owner']['username'] == user['username'],
+                user['repos']
+              )
+            )
+
 
           return render_template('auth/user.html',
-                        user=user
-                 )
+                        user=user, amountOfRepositories=amountOfRepositories
+                    )
+
         except ResourceNotFound:
           pass
 

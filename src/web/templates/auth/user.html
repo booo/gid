@@ -2,14 +2,18 @@
 {% block body %}
 <h1>
   {{user['username']}}
- -
- <small>{{user['email']}}</small>
 </h1>
 
-<h2>Public repositories</h2>
-<ul class="repos">
+<h3>General</h3>
+<ul class="info">
+  <li>Email: {{user['email']}}</li>
+  <li>Amount of Repositories: {{amountOfRepositories}}</li>
+</ul>
+
+<h3>Public repositories</h3>
+<ul>
   {% for repo in user['repos']%}
-    <li class="button repo white">
+    <li>
       <a
       href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
         {{repo['name']}}

@@ -7,8 +7,8 @@
   <div class="grid_3 omega right">
    {% if session["identity.name"] %}
     <p>
-      <a class="button orange" href="{{url_for('repoNewForm',username=session['identity.name'])}}">
-        create repository
+      <a href="{{url_for('repoNewForm',username=session['identity.name'])}}">
+        create new repository
       </a>
     </p>
   {%endif%}
