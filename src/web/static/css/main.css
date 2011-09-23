@@ -268,6 +268,9 @@ a {
 ul.tree, .commits, .info {
   margin-bottom: 20px; }
 
+ol.commits li {
+  margin: 0px 0px 15px 15px; }
+
 ul.tree li, .commits li {
   vertical-align: middle;
   height: 20px;
