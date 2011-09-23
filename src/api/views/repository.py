@@ -32,7 +32,8 @@ class RepositoriesAPI(MethodView):
             user = User.query.filter_by(username=username).first()
             repos = [ 
                 repo.toDict() 
-                for repo in Repository.query.filter_by(owner = user).all()
+                for repo in Repository.query.filter_by(owner = user,
+                  private=False).all()
               ]
 
             return jsonify(repos=repos)
