@@ -6,6 +6,9 @@
       href="{{url_for('commitByUserAndRepoAndSha',username=repo['owner']['username'],repository=repo['name'],sha=commit['sha'])}}">
         {{commit['sha']}}
       </a>
+      -
+      {{commit['committer']['name']}}
+      <!--{{commit['committer']['date']}}-->
     </h4>
     <p>
       {{commit['message']}}
