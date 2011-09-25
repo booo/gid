@@ -6,7 +6,7 @@ class RestResource(Resource):
 
     def basicAuth(username, password):
         return BasicAuth(username, password)
-        
+
     def getWithAuth(self, username, password, path = None):
         reqHeaders = {}
 
@@ -51,7 +51,7 @@ class RestResource(Resource):
               headers=reqHeaders,
               payload=reqPayload
             )
-        
+
 
         return response.body_string()
 
@@ -72,11 +72,11 @@ class RestResource(Resource):
               headers=reqHeaders,
               payload=reqPayload
             )
-        
+
 
         return response.body_string()
 
-    
+
     @staticmethod
     def _payloadToStr(data):
         return '&'.join(

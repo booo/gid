@@ -21,7 +21,7 @@ Install virtualenv with your package manager of choice
 or
   $ sudo apt-get install python-virtualenv
 
-Then you need to create your environment 
+Then you need to create your environment
 
   $ virtualenv env
 
@@ -59,7 +59,7 @@ for the actual frontend
   $ bin/web
 
 for the ssh daemon
-  $ bin/ssh
+  $ bin/sshd
 
 Now you should be able to view the web frontend with your browser of choice:
 
