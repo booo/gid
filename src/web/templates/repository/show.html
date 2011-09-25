@@ -30,6 +30,7 @@
 
 {% block repo %}
 
+  {% if commits %}
     {% from "commit/_list.html" import render_commit %}
 
     <div class="commit">
@@ -41,5 +42,8 @@
         {% include 'tree/_show.html' %}
       </div>
     </div>
+  {% else %}
+    Nothing yet commited
+  {% endif %}
 
 {% endblock %}
