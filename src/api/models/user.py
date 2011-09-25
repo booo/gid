@@ -1,5 +1,6 @@
 from api import app, db
 from api.models.repository import Repository
+from api.models.activity import Activity
 from twisted.conch.ssh.keys import Key as SSHKey
 from random import choice
 
@@ -32,6 +33,7 @@ class User(db.Model):
     key           = db.Column(db.String(512))
     token         = db.Column(db.String(12128))
     keyBlob       = db.Column(db.Binary(512))
+    activities    = db.relationship("Activity")
 
     __mapper_args__ = {'extension': _KeyBlobUpdater()}
 
@@ -69,5 +71,6 @@ class User(db.Model):
             repos = self.repos
 
           user['repos'] = [r.toDict() for r in repos]
+          user['activities'] = [a.toDict() for a in self.activities]
 
         return user

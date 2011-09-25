@@ -215,10 +215,15 @@ a {
 }
 
 #footer {
-  @include grid(16);
+  @include grid_container;
+  @include clearfix;
   margin-top: 25;
   text-align: center;
   font-size: 90%;
+}
+
+#user-show ol {
+  padding-bottom: 10px;
 }
 
 #repos-index, #repos-edit {
@@ -294,9 +299,8 @@ a {
   text-align: right;
 }
 
-#repos-show .description , #commit-show .message {
+#repos-show .description {
   margin-bottom: 10px;
-  @include grid(16);
 }
 
 
@@ -320,11 +324,14 @@ ul.tabs li {
 
 .highlight, .highlighttable {
   font-family: monospace;
-  padding: $padding;
 }
 
 .highlighttable .highlight {
   padding: 0;
+}
+
+.highlighttable {
+  margin-bottom: 15px;
 }
 
 #repo-content {

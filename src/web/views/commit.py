@@ -8,7 +8,7 @@ from pygments import highlight
 from pygments.lexers import guess_lexer
 from pygments.formatters import HtmlFormatter
 
-from web.views.repository import  RepositoriesAPI
+from web.views.repository import  RepositoriesAPI, _dateInWords
 
 
 @app.route('/repos/<username>/<repository>/commits')
@@ -29,6 +29,9 @@ def commitsByUserAndRepo(username, repository):
           headers = {'Accept': 'application/json'}
         ).body_string()
     commits = json.loads(responseCommits)['commits']
+
+    for c in commits:
+      c['date'] = _dateInWords(c['committer']['date'])
 
     tree = readmeSha = None
     if repo['git']['head'] != None:
@@ -88,6 +91,8 @@ def commitByUserAndRepoAndSha(username, repository, sha):
     lexer = guess_lexer(commit['changes'])
     formatter = HtmlFormatter(linenos=True, noclasses=True)
     commit['changes'] = highlight(commit['changes'], lexer, formatter)
+
+    commit['date'] = _dateInWords(commit['committer']['date'])
     
     return render_template('commit/show.html', 
               repo =repo, 

@@ -5,6 +5,11 @@ It's a simple git server with web a frontend.
 Getting Started
 ===============
 
+Clone the repository
+
+  $ git clone https://github.com/cholin/gid
+  $ cd gid
+
 Virtual environment
 -------------------
 
@@ -12,46 +17,53 @@ First you need to configure a virtual python environment.
 
 Install virtualenv with your package manager of choice
 
-  pip install virtualenv
+  $ pip install virtualenv
 or
-  sudo apt-get install python-virtualenv
+  $ sudo apt-get install python-virtualenv
 
 Then you need to create your environment
 
-  virtualenv env
+  $ virtualenv env
 
 After that you activate your environment in your shell with the following
 command
 
-  . env/bin/activate
+  $ . env/bin/activate
 
 
 Install Dependencies
 --------------------
 
-sudo apt-get install python-twisted-conch
+  $ sudo apt-get install python-twisted-conch
 
-pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy pyyaml dulwich \
-pyasn1 pygments restkit py-pretty
+  $ pip install Flask Flask-Principal Flask-WTF Flask-SQLAlchemy pyyaml dulwich\
+ pyasn1 pygments restkit py-pretty
 
 
 Creating the database
 ---------------------
 
-bin/api-create-db
+  $ bin/api-create-db
 
 if you want some samples for testing
-  bin/api-seed-db
+  $ bin/api-seed-db
 
 
 Start everything
 ----------------
 
 for the rest api
-  bin/api
+  $ bin/api
 
 for the actual frontend
-  bin/web
+  $ bin/web
 
 for the ssh daemon
-  bin/sshd
+  $ bin/sshd
+
+Now you should be able to view the web frontend with your browser of choice:
+
+  http://localhost:5001/
+
+If you create a user and save your public ssh key through the web frontend,
+you will be able to push to your git repositories.
