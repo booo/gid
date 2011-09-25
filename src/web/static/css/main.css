@@ -278,7 +278,7 @@ ul.tabs {
   font-size: 105%; }
 
 ul.tabs li {
-  padding-right: 10px;
+  padding: 15px 10px 15px 0px;
   float: left; }
 
 .cloneUrl {
@@ -304,12 +304,7 @@ ul.tabs li {
   padding: 5px 0; }
 
 .commit {
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 820px;
-  margin-bottom: 10px; }
+  margin-bottom: 35px; }
 
 .commit .info .author, .commit .info .sha {
   font-size: 80%;
@@ -317,7 +312,7 @@ ul.tabs li {
   float: left;
   margin-left: 10px;
   margin-right: 10px;
-  width: 400px; }
+  width: 460px; }
 
 .commit .info .author {
   margin-left: 0; }
@@ -335,11 +330,8 @@ ul.tree li {
 #slider {
   display: block;
   overflow: hidden;
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 820px; }
+  padding: 5px 0px;
+  width: 940px; }
 
 div.pages {
   width: 10000px; }
@@ -350,7 +342,7 @@ div.page {
   float: left;
   margin-left: 10px;
   margin-right: 10px;
-  width: 820px;
+  width: 940px;
   margin: 0px;
   -webkit-transition-property: margin-left;
   -webkit-transition-duration: 1s;

@@ -12,10 +12,10 @@
             </ul>
           </li>
         {% else %}
-          <li class="file">
-            <a href="{{url_for('blobByUserAndRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
+          <li class="file" data-json="{{url_for('blobByUserAndRepoAndSha',
+          username=repo['owner']['username'],repository=repo['name'],sha=item['sha'],
+          standalone = True)}}">
               {{ item['path'] }}
-            </a>
           </li>
         {% endif %}
       {%endfor%}

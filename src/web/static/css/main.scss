@@ -306,11 +306,8 @@ ul.tabs {
 }
 
 ul.tabs li {
-  padding-right: 10px;
+  padding: 15px 10px 15px 0px;
   float: left;
-}
-
-ul.tabs li.active {
 }
 
 .cloneUrl {
@@ -336,13 +333,12 @@ ul.tabs li.active {
 }
 
 .commit {
-  @include grid(14);
-  margin-bottom: 10px;
+  margin-bottom: 35px;
 }
 
 .commit .info .author, .commit .info .sha {
   font-size: 80%;
-  @include grid(7);
+  @include grid(8);
 }
 
 .commit .info .author {
@@ -365,7 +361,8 @@ ul.tree li {
 #slider {
   display: block;
   overflow: hidden;
-  @include grid(14);
+  padding: 5px 0px;
+  width: 940px;
 }
 
 div.pages {
@@ -374,7 +371,7 @@ div.pages {
 
 div.page {
   float: left;
-  @include grid(14);
+  @include grid(16);
   margin: 0px;
   -webkit-transition-property: margin-left;
   -webkit-transition-duration: 1s;

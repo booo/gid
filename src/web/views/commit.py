@@ -30,6 +30,20 @@ def commitsByUserAndRepo(username, repository):
         ).body_string()
     commits = json.loads(responseCommits)['commits']
 
+    tree = readmeSha = None
+    if repo['git']['head'] != None:
+      urlTree = '/%s/trees/%s' % (urlRepo, repo['git']['head']['tree'])
+      response = RepositoriesAPI.rest.get(
+          urlTree,
+          recursive=0,
+          headers = {'Accept': 'application/json'}
+        ).body_string()
+      tree = json.loads(response)['tree']
+
+      readmeFile = filter((lambda x: 'README' in x['path']), tree)
+      if len(readmeFile) > 0:
+          readmeSha = readmeFile[0]['sha']
+
     def addDate(c):
         import pretty
         from datetime import datetime
@@ -43,7 +57,8 @@ def commitsByUserAndRepo(username, repository):
 
     map(addDate, commits) 
 
-    return render_template('commit/list.html', commits = commits, repo = repo)
+    return render_template('commit/list.html', commits = commits, repo = repo,
+    readmeSha = readmeSha)
 
 
 @app.route('/repos/<username>/<repository>/commits/<sha>')

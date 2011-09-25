@@ -59,7 +59,7 @@
     <script type="text/javascript">
       $(function() {
 
-        $('ul.tree li.directory:not(.back)').live('click', function(evt) {
+        $('ul.tree li:not(.back)').live('click', function(evt) {
           var url = $(evt.target).attr('data-json');
           //If tag has no data-json attribute, bubble
           if(url == undefined) {
@@ -68,9 +68,15 @@
 
           $.get(url, function(data) {
             var elem = $(data);
-            var back = $('<li class="directory back"><a href="#">..</a></li>');
-
-            elem.children(".tree").prepend(back);
+            var back = null;
+            
+            if(elem.is('#blob-show')) {
+                back = $('<h3 class="back">back</h3>')
+                elem.prepend(back);
+            } else {
+                back = $('<li class="directory back"><a href="#">..</a></li>');
+                elem.children(".tree").prepend(back);
+            }
 
             var parentElem = $('div.page:last-child')
             parentElem.css('margin-left', '-1000px');

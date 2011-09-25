@@ -34,7 +34,10 @@ def blobByUserAndRepoAndSha(username, repository, sha):
     formatter = HtmlFormatter(linenos=True, noclasses=True)
     blob['content'] = highlight(blob['content'], lexer, formatter)
 
+    standalone = request.args.get('standalone', False)
+
     return render_template('blob/show.html', 
               repo =repo, 
-              blob = blob)
+              blob = blob,
+              standalone = standalone)
 

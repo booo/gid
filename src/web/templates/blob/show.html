@@ -1,39 +1,41 @@
-{% extends "repository/_base.html" %}
+{% if not standalone %}
+  {% extends "repository/_base.html" %}
 
-{% block navigation %}
-    <ul class="tabs">
-      <li>
-        <a href="{{
-                url_for('repos',
-                    username = repo['owner']['username'],
-                    reponame = repo['name'])
-        }}">
-          Source
-        </a>
-      </li>
-      <li>
-        <a href="{{
-                url_for('commitsByUserAndRepo',
-                    username = repo['owner']['username'],
-                    repository = repo['name'])
-        }}">
-          Commits
-        </a>
-      </li>
-      {% if readmeSha %}
+  {% block navigation %}
+      <ul class="tabs">
         <li>
           <a href="{{
-                 url_for('blobByUserAndRepoAndSha',
-                    username = repo['owner']['username'],
-                    repository = repo['name'],
-                    sha = readmeSha)
+                  url_for('repos',
+                      username = repo['owner']['username'],
+                      reponame = repo['name'])
           }}">
-            Readme
+            Source
           </a>
         </li>
-      {% endif %}
-    </ul>
-{% endblock %}
+        <li>
+          <a href="{{
+                  url_for('commitsByUserAndRepo',
+                      username = repo['owner']['username'],
+                      repository = repo['name'])
+          }}">
+            Commits
+          </a>
+        </li>
+        {% if readmeSha %}
+          <li>
+            <a href="{{
+                   url_for('blobByUserAndRepoAndSha',
+                      username = repo['owner']['username'],
+                      repository = repo['name'],
+                      sha = readmeSha)
+            }}">
+              Readme
+            </a>
+          </li>
+        {% endif %}
+      </ul>
+  {% endblock %}
+{% endif %}
 
 {% block repo %}
 <div id="blob-show">
