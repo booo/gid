@@ -10,10 +10,6 @@ from flaskext.principal import Identity, Principal, RoleNeed, UserNeed, \
 
 from flask.views import MethodView
 
-from pygments import highlight
-from pygments.lexers import guess_lexer
-from pygments.formatters import HtmlFormatter
-
 from restkit.errors import Unauthorized
 from web import app
 from web.models.rest import RestResource
@@ -64,7 +60,7 @@ class RepositoriesAPI(MethodView):
             urlCommits = '%s/commits' % urlRepo
             responseCommits = RepositoriesAPI.rest.get(
                   urlCommits,
-                  amount = 3,
+                  amount = 1,
                   headers = {'Accept': 'application/json'}
                 ).body_string()
             commits = json.loads(responseCommits)['commits']
@@ -82,7 +78,7 @@ class RepositoriesAPI(MethodView):
 
             map(addDate, commits) 
 
-            tree = readme = None
+            tree = readmeSha = None
             if repo['git']['head'] != None:
               urlTree = '/%s/trees/%s' % (urlRepo, repo['git']['head']['tree'])
               response = RepositoriesAPI.rest.get(
@@ -94,18 +90,7 @@ class RepositoriesAPI(MethodView):
 
               readmeFile = filter((lambda x: 'README' in x['path']), tree)
               if len(readmeFile) > 0:
-                  urlBlob = '/%s/blobs/%s' % (urlRepo, readmeFile[0]['sha'])
-                  response = RepositoriesAPI.rest.get(
-                      urlBlob,
-                      headers = {'Accept': 'application/json'}
-                    ).body_string()
-                  blob = json.loads(response)['blob']
-
-                  blob['content'] = "".join(blob['content'])
-
-                  lexer = guess_lexer(blob['content'])
-                  formatter = HtmlFormatter(noclasses=True)
-                  readme = highlight(blob['content'], lexer, formatter)
+                  readmeSha = readmeFile[0]['sha']
 
 
             return render_template('repository/show.html',
@@ -114,7 +99,7 @@ class RepositoriesAPI(MethodView):
                           repo=repo,
                           commits=commits,
                           tree = tree,
-                          readme = readme
+                          readmeSha = readmeSha
                    )
 
 

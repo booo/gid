@@ -52,8 +52,11 @@ class GitRepository:
         return GitCommit(self._repo, sha).toDict()
 
 
-    def getCommits(self, amount = None, branch = None):
+    def getCommits(self, amount = None, start = None, branch = None):
         commits = []
+
+        if start:
+          amount += start
 
         try:
             sha = [ branch if branch else self._repo.head() ]
@@ -70,7 +73,7 @@ class GitRepository:
         except KeyError:
           pass
 
-        return commits
+        return commits[start:]
 
     def getBlob(self, sha):
         return GitBlob(self._repo.get_blob(sha)).toDict()

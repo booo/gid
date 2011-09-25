@@ -154,6 +154,7 @@ h2 {
 
 h3 {
   font-size: 120%;
+  clear: both;
 }
 
 a {
@@ -214,7 +215,8 @@ a {
 }
 
 #footer {
-  margin-top: 50px;
+  @include grid(16);
+  margin-top: 25;
   text-align: center;
   font-size: 90%;
 }
@@ -227,7 +229,7 @@ a {
   text-align: center;
 }
 
-.repo, .commit {
+.repo {
   padding: 0; margin: 0;
 }
 
@@ -263,37 +265,60 @@ a {
 
 #repos-show .header {
   @include clearfix;
+  padding-bottom: $padding/2;
+}
+
+#repos-show .edit {
+  @include grid(16);
+  text-align: right;
+  padding-bottom: $padding;
 }
 
 #repos-show h2 {
-  @include grid(10);
-  @include alpha;
-  margin-bottom: 10px;
+  float: left;
 }
 
-#repos-show .actions {
-  @include grid(6);
+#repos-show div.headline {
+  @include grid(8);
+  @include alpha;
+  line-height: 100%;
+  vertical-align: middle;
+}
+
+#repos-show div.clone {
+  @include grid(8);
   @include omega;
+  font-size: 80%;
+  vertical-align: middle;
+  line-height: 100%;
   text-align: right;
 }
 
 #repos-show .description , #commit-show .message {
   margin-bottom: 10px;
   @include grid(16);
-  @include alpha;
-  @include omega;
 }
 
-#repos-show .clone {
-  margin-bottom: $padding;
+
+ul.tabs {
+  @include grid(16);
+  font-size: 105%;
 }
 
-#repos-show .clone input {
+ul.tabs li {
+  padding-right: 10px;
+  float: left;
+}
+
+ul.tabs li.active {
+}
+
+.cloneUrl {
   border: 1px solid $gray;
+  padding: 2px;
   font-size: 100%;
-  padding: 5px;
   margin-left: 10px;
-  width: 400px;
+  width: 250px;
 }
 
 .highlight, .highlighttable {
@@ -305,26 +330,42 @@ a {
   padding: 0;
 }
 
-ul.tree, .commits, .info {
-  margin-bottom: $padding;
+#repo-content {
+  @include grid(16);
+  padding: $padding/4 0;
 }
 
-ol.commits li {
-  margin: 0px 0px 15px 15px;
+.commit {
+  @include grid(14);
+  margin-bottom: 10px;
 }
 
-ul.tree li, .commits li {
+.commit .info .author, .commit .info .sha {
+  font-size: 80%;
+  @include grid(7);
+}
+
+.commit .info .author {
+  @include alpha;
+}
+
+.commit .info .sha {
+  @include omega;
+  text-align: right;
+}
+
+ul.tree li {
   vertical-align: middle;
   height: 20px;
   line-height: 20px;
-  padding: $padding / 2;
+  padding: $padding / 3;
 }
 
 
 #slider {
   display: block;
   overflow: hidden;
-  width: 940px;
+  @include grid(14);
 }
 
 div.pages {
@@ -333,7 +374,8 @@ div.pages {
 
 div.page {
   float: left;
-  width: 940px;
+  @include grid(14);
+  margin: 0px;
   -webkit-transition-property: margin-left;
   -webkit-transition-duration: 1s;
   -moz-transition-property: margin-left;
@@ -344,15 +386,8 @@ div.page {
   transition-duration: 1s;
 }
 
-.commits li {
-  padding: $padding/2 0;
-}
-
-.commits p {
-  padding: 0 $padding;
-}
-
 .tree li:nth-child(2n+1) {
+  width: 100%;
   background: $light;
 }
 

@@ -1,27 +1,53 @@
-{% extends "layout.html" %}
-{% block body %}
-  <div id="commit-show">
-    <div class="header">
-      <h2>
-        <a href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
-          {{repo['name']}}
+{% extends "repository/_base.html" %}
+
+{% block navigation %}
+    <ul class="tabs">
+      <li>
+        <a href="{{
+                url_for('repos',
+                    username = repo['owner']['username'],
+                    reponame = repo['name'])
+        }}">
+          Source
         </a>
-        /
-        {{commit['sha']}}
-      </h2>
-    </div>
+      </li>
+      <li>
+        <a href="{{
+                url_for('commitsByUserAndRepo',
+                    username = repo['owner']['username'],
+                    repository = repo['name'])
+        }}">
+          Commits
+        </a>
+      </li>
+      {% if readmeSha %}
+        <li>
+          <a href="{{
+                 url_for('blobByUserAndRepoAndSha',
+                    username = repo['owner']['username'],
+                    repository = repo['name'],
+                    sha = readmeSha)
+          }}">
+            Readme
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+{% endblock %}
+
+{% block repo %}
+  <div id="commit-show">
     <p class="message">
       {{commit['message']}}
     </p>
 
-    <h3>Info</h3>
     <ul class="info">
-      <li><em>Author</em>: {{commit['author']['name']}}</li>
-      <li><em>Committer</em>: {{commit['committer']['name']}}</li>
-      <li><em>Time</em>: {{commit['committer']['date']}}</li>
+      <li>Author: {{commit['author']['name']}}</li>
+      <li>Committer: {{commit['committer']['name']}}</li>
+      <li>Time: {{commit['committer']['date']}}</li>
     </ul>
 
-    <h3>Tree</h3>
+    <h3>Source</h3>
     <div id="slider">
       <div class="pages">
         {% include 'tree/_show.html' %}

@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div id="repos-show">
+    <div class="header">
+      {% if repo['owner']['username'] == session['identity.name'] %}
+      <div class="edit">
+          <a href="{{url_for('repoEditForm',username=session['identity.name'],reponame=repo['name'])}}">Edit</a>
+      </div>
+      {% endif %}
+
+      <div class="headline">
+        <h2>
+          <a href="{{url_for('users', username=repo['owner']['username'])}}">{{repo['owner']['username']}}</a>
+          /
+          {{repo['name']}}
+
+        </h2>
+      </div>
+
+      <div class="clone">
+        Clone this repository at
+        <input type="text" class="cloneUrl" value="{{repo['cloneUrl']}}" />
+      </div>
+    </div>
+    <p class="description">
+      {% if repo['description'] %}
+      {{ repo['description'] }}
+      {% else %}
+      No description available
+      {% endif %}
+    </p>
+
+    <!--
+    <h3>Branches</h3>
+    <ul>
+      {% for branch in repo['git']['refs']%}
+        <li>{{branch}}</li>
+      {% endfor %}
+    </ul>
+    -->
+
+
+
+    {% block navigation %}{% endblock %}
+
+    <div id="repo-content">
+      {% block repo %}{% endblock %}
+    </div>
+{% endblock %}

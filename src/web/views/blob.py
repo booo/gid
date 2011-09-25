@@ -12,7 +12,7 @@ from web.views.repository import  RepositoriesAPI
 
 
 @app.route('/repos/<username>/<repository>/blobs/<sha>')
-def blobByUserandRepoAndSha(username, repository, sha):
+def blobByUserAndRepoAndSha(username, repository, sha):
     urlRepo = '/%s/%s' % (username, repository)
     responseRepo = RepositoriesAPI.rest.get(
           urlRepo,

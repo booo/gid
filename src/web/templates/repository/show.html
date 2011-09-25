@@ -1,61 +1,45 @@
-{% extends "layout.html" %}
-{% block body %}
-  <div id="repos-show">
-    <div class="header">
-      <h2>
-        <a href="{{url_for('users', username=repo['owner']['username'])}}">{{repo['owner']['username']}}</a>
-        /
-        {{repo['name']}}
-      </h2>
-
-      <div class="right">
-        {% if repo['owner']['username'] == session['identity.name'] %}
-          <a href="{{url_for('repoEditForm',username=session['identity.name'],reponame=repo['name'])}}">Edit</a>
-        {% endif %}
-      </div>
-    </div>
-    <p class="description">
-      {% if repo['description'] %}
-      {{ repo['description'] }}
-      {% else %}
-      No description available
-      {% endif %}
-    </p>
-
-    <!--
+{% extends "repository/_base.html" %}
+{% block navigation %}
     <ul class="tabs">
-      <li class="active"><a href="#">Commits</a></li>
-      <li><a href="#">Source</a></li>
-    </ul>-->
-
-    <p class="clone">
-      Clone this repository at
-      <input type="text" class="cloneUrl" value="{{repo['cloneUrl']}}" />
-    </p>
-
-    <!--
-    <h3>Branches</h3>
-    <ul>
-      {% for branch in repo['git']['refs']%}
-        <li>{{branch}}</li>
-      {% endfor %}
+      <li>
+          Source
+      </li>
+      <li>
+        <a href="{{
+                url_for('commitsByUserAndRepo',
+                    username = repo['owner']['username'],
+                    repository = repo['name'])
+        }}">
+          Commits
+        </a>
+      </li>
+      {% if readmeSha %}
+        <li>
+          <a href="{{
+                 url_for('blobByUserAndRepoAndSha',
+                    username = repo['owner']['username'],
+                    repository = repo['name'],
+                    sha = readmeSha)
+          }}">
+            Readme
+          </a>
+        </li>
+      {% endif %}
     </ul>
-    -->
+{% endblock %}
 
-    <h3>Recent commits</h3>
-    {% include 'commit/_list.html' %}
+{% block repo %}
 
-    <h3>Tree</h3>
+    {% from "commit/_list.html" import render_commit %}
+
+    <div class="commit">
+      {{ render_commit(commits[0], repo)}}
+    </div>
+
     <div id="slider">
       <div class="pages">
         {% include 'tree/_show.html' %}
       </div>
     </div>
 
-    {% if readme %}
-    <h3>Readme</h3>
-      {{ readme|safe }}
-    {% endif %}
-
-    {%endblock%}
-</div>
+{% endblock %}

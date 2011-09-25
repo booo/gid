@@ -1,19 +1,28 @@
-<ol class="commits">
-{% for commit in commits %}
-  <li>
-    <h4>
-      {{commit['date']}}
-      -
-      <a
-      href="{{url_for('commitByUserAndRepoAndSha',username=repo['owner']['username'],repository=repo['name'],sha=commit['sha'])}}">
-        {{commit['sha']}}
-      </a>
-      by
-      {{commit['committer']['name']}}
-    </h4>
-    <p>
+{% macro render_commit(commit, repo) %}
+    <p class="message">
       {{commit['message']}}
     </p>
+
+    <div class="info">
+      <div class="author">
+        {{commit['date']}}
+        by
+        {{commit['committer']['name']}}
+      </div>
+
+      <div class="sha">
+        <a
+        href="{{url_for('commitByUserAndRepoAndSha',username=repo['owner']['username'],repository=repo['name'],sha=commit['sha'])}}">
+          {{commit['sha']}}
+        </a>
+      </div>
+    </div>
+{% endmacro %}
+
+<ol class="commits">
+{% for commit in commits %}
+  <li class="commit">
+    {{ render_commit(commit,repo) }}
   </li>
 {% else %}
   <li>No commits so far</li>

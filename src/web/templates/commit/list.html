@@ -12,13 +12,7 @@
         </a>
       </li>
       <li>
-        <a href="{{
-                url_for('commitsByUserAndRepo',
-                    username = repo['owner']['username'],
-                    repository = repo['name'])
-        }}">
           Commits
-        </a>
       </li>
       {% if readmeSha %}
         <li>
@@ -36,7 +30,7 @@
 {% endblock %}
 
 {% block repo %}
-<div id="blob-show">
-  {{blob['content']|safe}}
+<div id="commit-list">
+{% include 'commit/_list.html' %}
 </div>
-{%endblock%}
+{% endblock %}

@@ -13,7 +13,7 @@
           </li>
         {% else %}
           <li class="file">
-            <a href="{{url_for('blobByUserandRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
+            <a href="{{url_for('blobByUserAndRepoAndSha', username=repo['owner']['username'],repository=repo['name'],sha=item['sha'])}}">
               {{ item['path'] }}
             </a>
           </li>
