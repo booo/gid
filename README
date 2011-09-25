@@ -16,7 +16,7 @@ Install virtualenv with your package manager of choice
 or
   sudo apt-get install python-virtualenv
 
-Then you need to create your environment 
+Then you need to create your environment
 
   virtualenv env
 
@@ -38,10 +38,10 @@ pyasn1 pygments restkit py-pretty
 Creating the database
 ---------------------
 
-bin/rest-server-db-create
+bin/api-create-db
 
 if you want some samples for testing
-  bin/rest-server-db-samples
+  bin/api-seed-db
 
 
 Start everything
@@ -54,4 +54,4 @@ for the actual frontend
   bin/web
 
 for the ssh daemon
-  bin/ssh
+  bin/sshd
