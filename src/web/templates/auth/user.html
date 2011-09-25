@@ -1,26 +1,36 @@
 {% extends "layout.html" %}
 {% block body %}
-<h1>
-  {{user['username']}}
-</h1>
+<div id="user-show">
+  <h1> {{user['username']}}</h1> 
+  <h3>{{user['email']}}</h3>
 
-<h3>General</h3>
-<ul class="info">
-  <li>Email: {{user['email']}}</li>
-  <li>Amount of Repositories: {{amountOfRepositories}}</li>
-</ul>
-
-<h3>Public repositories</h3>
-<ul>
-  {% for repo in user['repos']%}
+  <h3>Recent Activities</h3>
+  <ol>
+  {% for activity in user['activities']%}
     <li>
-      <a
-      href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
-        {{repo['name']}}
-      </a>
+      {{activity['date']}}
+      -
+      {{activity['type']}}
+       on 
+      {{activity['repo']}}
     </li>
   {% else %}
-    <li>No Repositories</li>
+  <li>No public activities yet seen</li>
   {% endfor %}
-</ul>
+  </ol>
+
+  <h3>Public repositories</h3>
+  <ol>
+    {% for repo in user['repos']%}
+      <li>
+        <a
+        href="{{url_for('repos',username=repo['owner']['username'],reponame=repo['name'])}}">
+          {{repo['name']}}
+        </a>
+      </li>
+    {% else %}
+      <li>No Repositories</li>
+    {% endfor %}
+  </ol>
+</div>
 {%endblock%}

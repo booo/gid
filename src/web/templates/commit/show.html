@@ -37,15 +37,16 @@
 
 {% block repo %}
   <div id="commit-show">
-    <p class="message">
-      {{commit['message']}}
-    </p>
 
-    <ul class="info">
-      <li>Author: {{commit['author']['name']}}</li>
-      <li>Committer: {{commit['committer']['name']}}</li>
-      <li>Time: {{commit['committer']['date']}}</li>
-    </ul>
+    {% from "commit/_list.html" import render_commit %}
+
+    <div class="commit">
+      {{ render_commit(commit, repo)}}
+    </div>
+
+
+    <h3>Changes</h3>
+    {{commit['changes']|safe}}
 
     <h3>Source</h3>
     <div id="slider">
@@ -53,8 +54,5 @@
         {% include 'tree/_show.html' %}
       </div>
     </div>
-
-    <h3>Changes</h3>
-    {{commit['changes']|safe}}
   </div>
 {%endblock%}

@@ -8,6 +8,7 @@ from flask.views import MethodView
 from web import app
 from web.models.rest import RestResource, ResourceNotFound
 from web.views.auth.session import normal_permission
+from web.views.repository import _dateInWords
 
 from api.forms.profile import ProfileForm
 from api.forms.registration import RegistrationForm
@@ -32,6 +33,10 @@ class UserAPI(MethodView):
                 user['repos']
               )
             )
+
+
+          for a in user['activities']:
+              a['date'] = _dateInWords(a['date'])
 
 
           return render_template('auth/user.html',

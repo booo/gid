@@ -11,6 +11,8 @@ from twisted.python import log, components
 
 from api.models.user import User
 from api.models.repository import Repository
+from api.models.activity import Activity
+from api import db
 
 log.startLogging(sys.stderr)
 
@@ -53,11 +55,18 @@ class GitUser(avatar.ConchUser):
         self.channelLookup['session'] = PatchedSSHSession
 
 
+    @staticmethod
+    def _getUserAndRepo(name):
+        username = name.split('/')[0]
+        reponame = name.split('/')[1]
+
+        return username, reponame
+
+
     def can(self, perm, name):
         """ Checks for permission to a repository """
 
-        username = name.split('/')[0]
-        reponame = name.split('/')[1]
+        username, reponame = self._getUserAndRepo(name)
 
         owner = User.query.filter_by(username=username).first()
         repo = Repository.query.filter_by(
@@ -73,6 +82,27 @@ class GitUser(avatar.ConchUser):
 
         else:
           return False
+
+
+    def addActivity(self, command, name):
+        """ Adds push activity into the database """
+        
+        username, reponame = self._getUserAndRepo(name)
+
+        owner = User.query.filter_by(username=username).first()
+        repo = Repository.query.filter_by(
+                  name = reponame,
+                  owner = owner
+               ).first()
+
+        if "git-receive-pack" in command:
+            activityType = "push"
+            activity = Activity(activityType, repo)
+            owner.activities.append(activity)
+
+            db.session.add(activity)
+            db.session.commit()
+
 
 class GitRealm:
     def requestAvatar(self, avatarId, mind, *interfaces):
@@ -154,6 +184,9 @@ class GitCommand:
 
         # Actually fire the whole thing.
         reactor.spawnProcess(self.protocol, shell, [shell, '-c', command])
+
+        # Add activity entry
+        self.avatar.addActivity(self.command, self.repository)
 
     def validate(self):
         """ Validates this request before actually executing anything. """

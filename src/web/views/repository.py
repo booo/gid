@@ -65,18 +65,8 @@ class RepositoriesAPI(MethodView):
                 ).body_string()
             commits = json.loads(responseCommits)['commits']
 
-            def addDate(c):
-                import pretty
-                from datetime import datetime
-
-                c['date'] = pretty.date(
-                  datetime.strptime(
-                    c['committer']['date'],
-                    '%Y-%m-%d %H:%M:%S'
-                  )
-                )
-
-            map(addDate, commits) 
+            for c in commits:
+              c['date'] = _dateInWords(c['committer']['date'])
 
             tree = readmeSha = None
             if repo['git']['head'] != None:
@@ -220,3 +210,12 @@ def repoEditForm(username, reponame):
     return render_template('repository/form.html', form=form,\
                                 username=username, action=action,\
                                 header='Edit Repository', repo=repo)
+
+
+def _dateInWords(d):
+    import pretty
+    from datetime import datetime
+
+    return pretty.date(
+      datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
+    )

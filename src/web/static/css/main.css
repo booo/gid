@@ -161,14 +161,27 @@ a {
     clear: both; }
 
 #footer {
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 960px;
+  zoom: 1;
   margin-top: 25;
   text-align: center;
   font-size: 90%; }
+  #footer:before {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden; }
+  #footer:after {
+    content: "\0020";
+    display: block;
+    height: 0;
+    overflow: hidden;
+    clear: both; }
+
+#user-show ol {
+  padding-bottom: 10px; }
 
 #repos-index, #repos-edit {
   display: inline;
@@ -261,13 +274,8 @@ a {
   line-height: 100%;
   text-align: right; }
 
-#repos-show .description, #commit-show .message {
-  margin-bottom: 10px;
-  display: inline;
-  float: left;
-  margin-left: 10px;
-  margin-right: 10px;
-  width: 940px; }
+#repos-show .description {
+  margin-bottom: 10px; }
 
 ul.tabs {
   display: inline;
@@ -289,11 +297,13 @@ ul.tabs li {
   width: 250px; }
 
 .highlight, .highlighttable {
-  font-family: monospace;
-  padding: 20px; }
+  font-family: monospace; }
 
 .highlighttable .highlight {
   padding: 0; }
+
+.highlighttable {
+  margin-bottom: 15px; }
 
 #repo-content {
   display: inline;
