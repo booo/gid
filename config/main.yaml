@@ -4,16 +4,15 @@
 DEBUG                   : True
 SECRET_KEY              : 'algjsgASKSAGs72385hbq1bnaskghJSGSGASGjkjk898909'
 SQLALCHEMY_DATABASE_URI : 'sqlite:///../../data/db/sqlite.db'
-GIT_DATA_DIR            : 'data/git/'
-SSH_USER                : 'git'
+GIT_DATA_DIR            : 'data/git/' 
 SERVER_NAME_GIT         : 'localhost:5022'
 SERVER_NAME_API         : 'localhost:5000'
 
 
 
 #
-# SSH Daemon
-#
+# SSH Daemon 
+# 
 SSH_PUBLIC_KEY          : "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAGEArzJx8OYOnJmzf4tfBEvLi8DVPrJ3/c9k2I/Az64fxjHf9imyRJbixtQhlH9lfNjUIx+4LmrJH5QNRsFporcHDKOTwTTYLh5KmRpslkYHRivcJSkbh/C+BR3utDS555mV"
 SSH_PRIVATE_KEY         : "-----BEGIN RSA PRIVATE KEY-----\n
 MIIByAIBAAJhAK8ycfDmDpyZs3+LXwRLy4vA1T6yd/3PZNiPwM+uH8Yx3/YpskSW\n
