@@ -26,10 +26,10 @@ class PubKeyChecker(SSHPublicKeyDatabase):
 
     def checkKey(self, credentials):
         user = User.query.filter_by(
-            keyBlob = credentials.blob
+            username = credentials.username
         ).first()
 
-        return user != None
+        return user != None and user.keyBlob == credentials.blob
 
 # Work around weird bug in Conch.
 class PatchedSSHSession(session.SSHSession):
@@ -74,19 +74,20 @@ class GitUser(avatar.ConchUser):
                   owner = owner
                ).first()
 
-        if owner.username == username:
-          return True
 
+        if owner.username == self.user.username:
+            return True
+        elif self.user in repo.contributers:
+            return True
         elif perm == 'read' and not repo.private:
           return True
-
         else:
           return False
 
 
     def addActivity(self, command, name):
         """ Adds push activity into the database """
-        
+
         username, reponame = self._getUserAndRepo(name)
 
         owner = User.query.filter_by(username=username).first()
@@ -199,7 +200,6 @@ class GitCommand:
     def authorize(self):
         """ Makes sure that the current user has permission to execute. """
         permission = self.command_permissions[self.command]
-
         if permission and self.avatar.can(permission, self.repository):
             return True
         else:
