@@ -74,16 +74,17 @@ class GitUser(avatar.ConchUser):
                   owner = owner
                ).first()
 
-
-        if owner.username == self.user.username:
-            return True
-        elif self.user in repo.contributers:
-            return True
-        elif perm == 'read' and not repo.private:
-          return True
+        if repo:
+            if repo.owner == self.user:
+              return True
+            elif self.user in repo.contributers:
+              return True
+            elif perm == 'read' and not repo.private:
+              return True
+            else:
+              return False
         else:
-          return False
-
+            return False
 
     def addActivity(self, command, name):
         """ Adds push activity into the database """
