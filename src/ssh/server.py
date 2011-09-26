@@ -29,7 +29,7 @@ class PubKeyChecker(SSHPublicKeyDatabase):
             username = credentials.username
         ).first()
 
-        return user != None and user.keyBlob == credentials.blob
+        return credentials.username == "anon" or (user != None and user.keyBlob == credentials.blob)
 
 # Work around weird bug in Conch.
 class PatchedSSHSession(session.SSHSession):
@@ -44,11 +44,12 @@ class GitUser(avatar.ConchUser):
         avatar.ConchUser.__init__(self)
 
         self.name = name
-
-        self.user =  User.query.filter_by(
-              username = name
-          ).first()
-
+        if not name == "anon":
+            self.user =  User.query.filter_by(
+                  username = name
+              ).first()
+        else:
+            self.user = None
 
         print self.user
 
