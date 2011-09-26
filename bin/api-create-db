@@ -2,7 +2,7 @@
 
 import path
 
-from api.models.user import db
+from api import db
 
 print "Dropping database"
 db.drop_all()
